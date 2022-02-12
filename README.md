@@ -12,7 +12,7 @@ Code generation tool is used to generate boilerplate server code, allowing devel
   It is a modern compiled programming language, with strong typing, low-level capabilities and code generation tools.\
   *Link to [documentation](https://go.dev/doc/), [specification](https://go.dev/ref/spec) and [project layout](https://github.com/golang-standards/project-layout).*
 
-- **PostGreSQL (or any SQL database)**\
+- **PostGreSQL _(or any SQL database)_**\
   A SQL relationnal database, which run in a container in development phase and with a cloud provider in production.\
   *Links to [documentation](https://www.postgresql.org/docs/14/index.html) and [DockerHub](https://hub.docker.com/_/postgres).*
 
