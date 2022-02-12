@@ -1,6 +1,6 @@
 # ent-goswagger-app
 
-A back end api, with authentication and authorization delegation.
+A back end API written in Go programming language, with authentication and authorization delegation.
 
 ## Software Stack
 
