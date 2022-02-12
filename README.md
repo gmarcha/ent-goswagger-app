@@ -24,7 +24,7 @@ A back end api, with authentication and authorization delegation.
 - **Swagger**\
   An Open Api Specification is a json file which documents routes, data schemas, and furthermore, authentication model about an API.\
   Spec is generated from comments in source code (as with gin-swagger), or it is written to generate server code (as with go-swagger). It could even be generated from data models (as with elk or entoas, from entgo).\
-  *Link to [Swagger specification](https://swagger.io/specification/v2/).*
+  *Links to [documentation](https://swagger.io/docs/specification/2-0/basic-structure/) and [specification](https://swagger.io/specification/v2/).*
   
 - **SwaggerEditor**\
   A tool to write and generate Swagger Specification online.\
