@@ -1,14 +1,18 @@
 # ent-goswagger-app
 
-A back end api, with authentication and authorization delegation.
+A back end API written in Go programming language, with authentication and authorization delegation.
 
 ## Software Stack
+
+The API coding follows a design first approach: a Swagger Specification is written, and from this specification, server code will be generated.\
+The specification functions as a documentation for the API, containing all routes, response formats, and authentication models.\
+Code generation tool is used to generate boilerplate server code, allowing developers to focus on implementation of database transactions.
 
 - **Go**\
   It is a modern compiled programming language, with strong typing, low-level capabilities and code generation tools.\
   *Link to [documentation](https://go.dev/doc/), [specification](https://go.dev/ref/spec) and [project layout](https://github.com/golang-standards/project-layout).*
 
-- **PostGreSQL**\
+- **PostGreSQL _(or any SQL database)_**\
   A SQL relationnal database, which run in a container in development phase and with a cloud provider in production.\
   *Links to [documentation](https://www.postgresql.org/docs/14/index.html) and [DockerHub](https://hub.docker.com/_/postgres).*
 
@@ -18,13 +22,13 @@ A back end api, with authentication and authorization delegation.
   *Link to [documentation](https://entgo.io/docs/getting-started/).*
   
 - **GoSwagger**\
-  A very powerful code generation tool, to generate boilerplate server code from a Swagger specification (OAPIv2).\
+  A very powerful code generation tool, to generate server code from a Swagger specification (OAPIv2).\
   *Link to [documentation](https://goswagger.io/).*
   
 - **Swagger**\
   An Open Api Specification is a json file which documents routes, data schemas, and furthermore, authentication model about an API.\
   Spec is generated from comments in source code (as with gin-swagger), or it is written to generate server code (as with go-swagger). It could even be generated from data models (as with elk or entoas, from entgo).\
-  *Link to [Swagger specification](https://swagger.io/specification/v2/).*
+  *Links to [documentation](https://swagger.io/docs/specification/2-0/basic-structure/) and [specification](https://swagger.io/specification/v2/).*
   
 - **SwaggerEditor**\
   A tool to write and generate Swagger Specification online.\
