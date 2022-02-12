@@ -4,6 +4,10 @@ A back end api, with authentication and authorization delegation.
 
 ## Software Stack
 
+The API coding follows a design first approach: a Swagger Specification is written, and from this specification, server code will be generated.\
+The specification functions as a documentation for the API, containing all routes, response formats, and authentication models.\
+Code generation tool is used to generate boilerplate server code, allowing developers to focus on implementation of database transactions.
+
 - **Go**\
   It is a modern compiled programming language, with strong typing, low-level capabilities and code generation tools.\
   *Link to [documentation](https://go.dev/doc/), [specification](https://go.dev/ref/spec) and [project layout](https://github.com/golang-standards/project-layout).*
@@ -18,7 +22,7 @@ A back end api, with authentication and authorization delegation.
   *Link to [documentation](https://entgo.io/docs/getting-started/).*
   
 - **GoSwagger**\
-  A very powerful code generation tool, to generate boilerplate server code from a Swagger specification (OAPIv2).\
+  A very powerful code generation tool, to generate server code from a Swagger specification (OAPIv2).\
   *Link to [documentation](https://goswagger.io/).*
   
 - **Swagger**\
