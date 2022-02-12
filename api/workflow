@@ -1,0 +1,57 @@
+  ┌────────────────────────────┐           ╔════════════════════════╗
+  │                            │           ║                        ║
+  │         main file          │           ║    server http init    ║
+  │ swagger/cmd/server/main.go │──────────▶║  1) api configuration  ║
+  │                            │           ║                        ║               ┌───────────────────────┐
+  └────────────────────────────┘           ╚════════════════════════╝               │                       │
+                                                        │                           │  clients init files   │
+                                                                            ┌ ─ ─ ─▶│  clients/xxx/init.go  │
+                    ┌ ─ ─ ─ ─ ─ ─ ─ ─1) api ─ ─ ─ ─ ─ ─ ┘                           │                       │
+                                                                            │       └───────────────────────┘
+                    ▼                      ╔════════════════════════╗  2-1) config              │
+  ┌──────────────────────────────────┐     ║                        ║       │
+  │                                  │     ║      parse config      ║                           │
+  │          api conf file           │     ║    2) init clients.    ║       │
+  │ swagger/restapi/configure_api.go │────▶║  3) configure modules  ║◀─┬───── ─ ─ 2-2) client ─ ┘
+  │                                  │     ║      middlewares       ║
+  └──────────────────────────────────┘     ║                        ║  │
+                                           ╚════════════════════════╝
+                                                        │              │
+
+              ┌ ─ ─ ─ ─ ─ ─ 3) api, clients, services ─ ┘            4-4)
+                                                        ┌ ─ ─ ─ ─ ─services
+              ▼
+  ┌───────────────────────┐                             │
+  │                       │               ╔══════════════════════════╗
+  │   module init file    │               ║                          ║
+  │  modules/xxx/init.go  │──────────────▶║ 4) configure module xxx  ║◀ ─ ─ ─ ─ ─ ─ ┐
+  │                       │               ║                          ║
+  └───────────────────────┘               ╚══════════════════════════╝              │
+                                                        │                     4-2) service
+                                                                                    │
+                      ┌ ─ ─ ─ ─ ─4-3) services─ ─ ─ ─ ─ ┴ ─ ─ ─ ─4-1) client- ─ ─ ─ ┐
+                                                                                    │
+                      │                                                             │
+                      ▼                                                             ▼
+         ┌────────────────────────┐                                   ┌──────────────────────────┐     ╔═════════════════════╗
+         │                        │      ╔═════════════════════╗      │                          │     ║                     ║
+         │     handlers file      │      ║                     ║      │       service file       │     ║  methods that give  ║
+         │  modules/xxx/handlers  │─────▶║   route handlers    ║─────▶│  modules/xxx/service.go  │────▶║  actions on client  ║
+         │                        │      ║                     ║      │                          │     ║                     ║
+         └────────────────────────┘      ╚═════════════════════╝      └──────────────────────────┘     ╚═════════════════════╝
+                      ▲                                                             │
+
+                      │               ┌────────────────────────────┐                │
+             api response object      │                            │           db response
+                      │               │    transformation file     │                │
+                       ─ ─ ─ ─ ─ ─ ─ ─│  modules/xxx/transform.go  │◀─ ─ ─ ─ ─ ─ ─ ─
+                                      │                            │
+                                      └────────────────────────────┘
+                                                     │
+                                                     ▼
+                                     ╔══════════════════════════════╗
+                                     ║                              ║
+                                     ║ transform db response to api ║
+                                     ║    response with filters     ║
+                                     ║                              ║
+                                     ╚══════════════════════════════╝
