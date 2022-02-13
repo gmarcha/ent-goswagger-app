@@ -3,6 +3,7 @@ swagger: "2.0"
 info:
   title: 42 Tutors API
   description: An API for 42 tutors.
+  contact: {}
   version: 0.0.1
 
 consumes:
@@ -11,6 +12,93 @@ produces:
   - application/json
 
 definitions:
+
+  Event:
+    type: object
+    properties:
+      id:
+        type: string
+        format: uuid
+        readOnly: true
+        example: 123e4567-e89b-12d3-a456-426614174000
+      name:
+        type: string
+        format: string
+        minLength: 1
+        example: Exam Stud
+      tutorsRequired:
+        type: integer
+        format: int64
+      # Is it really necessary ? (If yes, so we need to update this field on each subscription ? Or if no, can we retrieve number of subscription by counting items in eventUsers ?)
+      tutorsSubscribed:
+        type: integer
+        format: int64
+      walletsReward:
+        type: integer
+        format: int64
+      createdAt:
+        type: string
+        format: date-time
+        readOnly: true
+        example: "2022-02-15T09:00:00Z"
+      startAt:
+        type: string
+        format: date-time
+        example: "2022-02-15T10:00:00+01:00"
+      endAt:
+        type: string
+        format: date-time
+        example: "2022-02-15T13:00:00+01:00"
+      edges:
+        $ref: '#/definitions/EventEdges'
+
+  EventEdges:
+    type: object
+    properties:
+      users:
+        type: array
+        items:
+          $ref: '#/definitions/User'
+
+  User:
+    type: object
+    properties:
+      id:
+        type: string
+        format: uuid
+        readOnly: true
+        example: 123e4567-e89b-12d3-a456-426614174000
+      login:
+        type: string
+        format: string
+        minLength: 2
+        example: gamarcha
+      firstName:
+        type: string
+        format: string
+      lastName:
+        type: string
+        format: string
+      # Is it really necessary ? (If yes, update on event subscription or when event is done ? And if no, how to implement it ?)
+      hoursDone:
+        type: integer
+        format: int64
+      # Are these booleans necessary ? Why do we need them, whereas securityDefinitions normally rule authentication issues ?
+      tutorScope:
+        type: boolean
+      adminScope:
+        type: boolean
+      edges:
+        $ref: '#/definitions/UserEdges'
+
+  UserEdges:
+    type: object
+    properties:
+      events:
+        type: array
+        items:
+          $ref: '#/definitions/Event'
+
   Error:
     type: object
     properties:
@@ -24,23 +112,30 @@ definitions:
       - code
       - message
 
+# What kind of new fields are needed in the specification ? Need to ask.
+
 responses:
+
   400:
     description: Bad request
     schema:
       $ref: '#/definitions/Error'
+
   401:
     description: Unauthorized
     schema:
       $ref: '#/definitions/Error'
+
   403:
     description: Forbidden
     schema:
       $ref: '#/definitions/Error'
+
   404:
     description: Not Found
     schema:
       $ref: '#/definitions/Error'
+
   500:
     description: Internal Server Error
     schema:
