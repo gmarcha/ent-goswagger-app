@@ -1,0 +1,49 @@
+swagger: "2.0"
+
+info:
+  title: 42 Tutors API
+  description: An API for 42 tutors.
+  version: 0.0.1
+
+consumes:
+  - application/json
+produces:
+  - application/json
+
+paths: {}
+
+responses:
+  400:
+    description: Bad request
+    schema:
+      $ref: '#/definitions/Error'
+  401:
+    description: Unauthorized
+    schema:
+      $ref: '#/definitions/Error'
+  403:
+    description: Forbidden
+    schema:
+      $ref: '#/definitions/Error'
+  404:
+    description: Not Found
+    schema:
+      $ref: '#/definitions/Error'
+  500:
+    description: Internal Server Error
+    schema:
+      $ref: '#/definitions/Error'
+
+definitions:
+  Error:
+    type: object
+    properties:
+      code:
+        type: integer
+        example: 500
+      message:
+        type: string
+        example: Internal Server Error
+    required:
+      - code
+      - message
