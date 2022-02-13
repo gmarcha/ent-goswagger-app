@@ -29,13 +29,16 @@ definitions:
       tutorsRequired:
         type: integer
         format: int64
+        example: 3
       # Is it really necessary ? (If yes, so we need to update this field on each subscription ? Or if no, can we retrieve number of subscription by counting items in eventUsers ?)
       tutorsSubscribed:
         type: integer
         format: int64
+        example: 0
       walletsReward:
         type: integer
         format: int64
+        example: 200
       createdAt:
         type: string
         format: date-time
@@ -76,18 +79,23 @@ definitions:
       firstName:
         type: string
         format: string
+        example: Gaëtan
       lastName:
         type: string
         format: string
+        example: Marchal
       # Is it really necessary ? (If yes, update on event subscription or when event is done ? And if no, how to implement it ?)
       hoursDone:
         type: integer
         format: int64
+        example: 6
       # Are these booleans necessary ? Why do we need them, whereas securityDefinitions normally rule authentication issues ?
       tutorScope:
         type: boolean
+        example: true
       adminScope:
         type: boolean
+        example: false
       edges:
         $ref: '#/definitions/UserEdges'
 
@@ -141,4 +149,45 @@ responses:
     schema:
       $ref: '#/definitions/Error'
 
-paths: {}
+paths:
+
+  /event:
+    get:
+      summary: List events
+      description: List all events.
+      tags:
+        - Event
+      operationId: listEvent
+      parameters:
+      - in: query
+        name: week
+        description: Week index.
+        type: string
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Event'
+        "500":
+          $ref: '#/responses/500'
+    post:
+      summary: Create event
+      description: Create a new event.
+      tags:
+        - Event
+      operationId: createEvent
+      parameters:
+      - in: body
+        name: event
+        description: Event to create.
+        schema:
+          $ref: '#/definitions/Event'
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/Event'
+        "500":
+          $ref: '#/responses/500'
