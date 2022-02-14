@@ -35,10 +35,6 @@ paths:
       responses:
         "302":
           description: Found
-        "400":
-          $ref: '#/responses/400'
-        "401":
-          $ref: '#/responses/401'
         "500":
           $ref: '#/responses/500'
 
