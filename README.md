@@ -4,9 +4,9 @@ A back end API written in Go programming language, with authentication and autho
 
 ## Software Stack
 
-The API coding follows a design first approach: a Swagger Specification is written, and from this specification, server code will be generated.\
+The API development follows a design first approach: a Swagger Specification is written, and from this specification, server code will be generated.\
 The specification functions as a documentation for the API, containing all routes, response formats, and authentication models.\
-Code generation tool is used to generate boilerplate server code, allowing developers to focus on implementation of database transactions.
+Code generation tool is used to generate boilerplate server code, allowing developers to focus on implementation of business logic.
 
 - **Go**\
   It is a modern compiled programming language, with strong typing, low-level capabilities and code generation tools.\
