@@ -8,4 +8,5 @@
 # mv $GOPATH/bin/swagger $GOPATH/bin/goswagger
 
 # - Generate configuration files (and server):
-# goswagger generate server -A tutorsAPI -f api/swagger.yaml -t goswagger
+# mkdir goswagger
+# goswagger generate server -A tutorAPI -f api/swagger.yaml -t goswagger
