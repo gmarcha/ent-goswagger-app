@@ -11,6 +11,402 @@ consumes:
 produces:
   - application/json
 
+securityDefinitions:
+
+  OauthSecurity:
+    type: oauth2
+    flow: accessCode
+    authorizationUrl: 'https://api.intra.42.fr/oauth/authorize'
+    tokenUrl: 'https://api.intra.42.fr/oauth/token'
+    scopes:
+      admin: Admin scope
+      tutor: Tutor scope
+      user: User scope
+
+paths:
+
+  /login:
+    get:
+      summary: Login user
+      description: Login to 42 API with OAuth 2.0.
+      tags:
+        - Authentication
+      security: []
+      responses:
+        "302":
+          description: Found
+        "400":
+          $ref: '#/responses/400'
+        "401":
+          $ref: '#/responses/401'
+        "500":
+          $ref: '#/responses/500'
+
+  /auth/callback:
+    get:
+      summary: Return user token
+      description: Retrieve token from 42 API.
+      tags:
+        - Authentication
+      security: []
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+        "500":
+          $ref: '#/responses/500'
+
+  /event:
+    get:
+      summary: List events
+      description: List all events.
+      tags:
+        - Event
+      operationId: listEvent
+      parameters:
+      - in: query
+        name: day
+        description: Day filter.
+        type: string
+      - in: query
+        name: week
+        description: Week filter.
+        type: string
+      - in: query
+        name: month
+        description: Month filter.
+        type: string
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Event'
+        "400":
+          $ref: '#/responses/400'
+        "500":
+          $ref: '#/responses/500'
+    post:
+      summary: Create event
+      description: Create a new event.
+      tags:
+        - Event
+      operationId: createEvent
+      parameters:
+      - in: body
+        name: event
+        required: true
+        description: Event to create.
+        schema:
+          $ref: '#/definitions/Event'
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/Event'
+        "400":
+          $ref: '#/responses/400'
+        "500":
+          $ref: '#/responses/500'
+
+  /event/{id}:
+    parameters:
+      - in: path
+        name: id
+        required: true
+        description: Event ID.
+        type: string
+    get:
+      summary: Read event
+      description: Read an event by ID.
+      tags:
+        - Event
+      operationId: readEvent
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/Event'
+        "400":
+          $ref: '#/responses/400'
+        "404":
+          $ref: '#/responses/404'
+        "500":
+          $ref: '#/responses/500'
+    put:
+      summary: Update event
+      description: Update an event by ID.
+      tags:
+        - Event
+      operationId: updateEvent
+      parameters:
+      - in: body
+        name: event
+        required: true
+        description: Event to update.
+        schema:
+          $ref: '#/definitions/Event'
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/Event'
+        "400":
+          $ref: '#/responses/400'
+        "404":
+          $ref: '#/responses/404'
+        "500":
+          $ref: '#/responses/500'
+    delete:
+      summary: Delete event
+      description: Delete an event by ID.
+      tags:
+        - Event
+      operationId: deleteEvent
+      responses:
+        "204":
+          description: No Content
+        "400":
+          $ref: '#/responses/400'
+        "404":
+          $ref: '#/responses/404'
+        "500":
+          $ref: '#/responses/500'
+
+  /event/{id}/user:
+    parameters:
+      - in: path
+        name: id
+        required: true
+        description: Event ID.
+        type: string
+    get:
+      summary: List event users
+      description: List users subscribed to an event.
+      tags:
+        - Event
+      operationId: listEventUsers
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/User'
+        "400":
+          $ref: '#/responses/400'
+        "404":
+          $ref: '#/responses/404'
+        "500":
+          $ref: '#/responses/500'
+
+  /user:
+    get:
+      summary: List users
+      description: List all users.
+      tags:
+        - User
+      operationId: listUser
+      parameters:
+      - in: query
+        name: tutor
+        description: List all tutors.
+        type: boolean
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/User'
+        "400":
+          $ref: '#/responses/400'
+        "500":
+          $ref: '#/responses/500'
+    post:
+      summary: Create user
+      description: Create a new user.
+      tags:
+        - User
+      operationId: createUser
+      parameters:
+      - in: body
+        name: user
+        required: true
+        description: User to create.
+        schema:
+          $ref: '#/definitions/User'
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/User'
+        "400":
+          $ref: '#/responses/400'
+        "500":
+          $ref: '#/responses/500'
+
+  /user/{id}:
+    parameters:
+      - in: path
+        name: id
+        required: true
+        description: User ID.
+        type: string
+    get:
+      summary: Read user
+      description: Read an user by ID.
+      tags:
+        - User
+      operationId: readUser
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/User'
+        "400":
+          $ref: '#/responses/400'
+        "404":
+          $ref: '#/responses/404'
+        "500":
+          $ref: '#/responses/500'
+    put:
+      summary: Update user
+      description: Update an user by ID.
+      tags:
+        - User
+      operationId: updateUser
+      parameters:
+      - in: body
+        name: user
+        required: true
+        description: User to update.
+        schema:
+          $ref: '#/definitions/User'
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/User'
+        "400":
+          $ref: '#/responses/400'
+        "404":
+          $ref: '#/responses/404'
+        "500":
+          $ref: '#/responses/500'
+    delete:
+      summary: Delete user
+      description: Delete an user by ID.
+      tags:
+        - User
+      operationId: deleteUser
+      responses:
+        "204":
+          description: No Content
+        "400":
+          $ref: '#/responses/400'
+        "404":
+          $ref: '#/responses/404'
+        "500":
+          $ref: '#/responses/500'
+
+  /user/{id}/event:
+    parameters:
+      - in: path
+        name: id
+        required: true
+        description: User ID.
+        type: string
+    get:
+      summary: List user events
+      description: List user's subscribed events.
+      tags:
+        - User
+      operationId: listUserEvents
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Event'
+        "400":
+          $ref: '#/responses/400'
+        "404":
+          $ref: '#/responses/404'
+        "500":
+          $ref: '#/responses/500'
+
+  /user/{userId}/event/{eventId}:
+    parameters:
+      - in: path
+        name: userId
+        required: true
+        description: User ID.
+        type: string
+      - in: path
+        name: eventId
+        required: true
+        description: Event ID.
+        type: string
+    post:
+      summary: Subscribe user
+      description: Subscribe user to an event.
+      tags:
+        - User
+      operationId: subscribeUser
+      responses:
+        "201":
+          description: OK
+          schema:
+            type: string
+        "400":
+          $ref: '#/responses/400'
+        "404":
+          $ref: '#/responses/404'
+        "500":
+          $ref: '#/responses/500'
+    delete:
+      summary: Unsubscribe user
+      description: Unsubscribe user to an event.
+      tags:
+        - User
+      operationId: unsubscribeUser
+      responses:
+        "204":
+          description: No Content
+        "400":
+          $ref: '#/responses/400'
+        "404":
+          $ref: '#/responses/404'
+        "500":
+          $ref: '#/responses/500'
+
+responses:
+
+  400:
+    description: Bad request
+    schema:
+      $ref: '#/definitions/Error'
+  401:
+    description: Unauthorized
+    schema:
+      $ref: '#/definitions/Error'
+  403:
+    description: Forbidden
+    schema:
+      $ref: '#/definitions/Error'
+  404:
+    description: Not Found
+    schema:
+      $ref: '#/definitions/Error'
+  500:
+    description: Internal Server Error
+    schema:
+      $ref: '#/definitions/Error'
+
 definitions:
 
   Event:
@@ -120,74 +516,7 @@ definitions:
       - code
       - message
 
+  principal:
+    type: string
+
 # What kind of new fields are needed in the specification ? Need to ask.
-
-responses:
-
-  400:
-    description: Bad request
-    schema:
-      $ref: '#/definitions/Error'
-
-  401:
-    description: Unauthorized
-    schema:
-      $ref: '#/definitions/Error'
-
-  403:
-    description: Forbidden
-    schema:
-      $ref: '#/definitions/Error'
-
-  404:
-    description: Not Found
-    schema:
-      $ref: '#/definitions/Error'
-
-  500:
-    description: Internal Server Error
-    schema:
-      $ref: '#/definitions/Error'
-
-paths:
-
-  /event:
-    get:
-      summary: List events
-      description: List all events.
-      tags:
-        - Event
-      operationId: listEvent
-      parameters:
-      - in: query
-        name: week
-        description: Week index.
-        type: string
-      responses:
-        "200":
-          description: OK
-          schema:
-            type: array
-            items:
-              $ref: '#/definitions/Event'
-        "500":
-          $ref: '#/responses/500'
-    post:
-      summary: Create event
-      description: Create a new event.
-      tags:
-        - Event
-      operationId: createEvent
-      parameters:
-      - in: body
-        name: event
-        description: Event to create.
-        schema:
-          $ref: '#/definitions/Event'
-      responses:
-        "201":
-          description: Created
-          schema:
-            $ref: '#/definitions/Event'
-        "500":
-          $ref: '#/responses/500'
