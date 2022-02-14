@@ -1,7 +1,7 @@
 #! /bin/bash
 
-# Installing EntGo:
+# - Installing EntGo:
 # go get -d entgo.io/ent/cmd/ent
 
-# Generate data models:
+# - Generate data models:
 # ent init User Event
