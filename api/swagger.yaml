@@ -57,7 +57,7 @@ paths:
         "500":
           $ref: '#/responses/500'
 
-  /event:
+  /events:
     get:
       summary: List events
       description: List all events.
@@ -111,7 +111,7 @@ paths:
         "500":
           $ref: '#/responses/500'
 
-  /event/{id}:
+  /events/{id}:
     parameters:
       - in: path
         name: id
@@ -175,7 +175,7 @@ paths:
         "500":
           $ref: '#/responses/500'
 
-  /event/{id}/user:
+  /events/{id}/users:
     parameters:
       - in: path
         name: id
@@ -202,7 +202,7 @@ paths:
         "500":
           $ref: '#/responses/500'
 
-  /user:
+  /users:
     get:
       summary: List users
       description: List all users.
@@ -248,7 +248,7 @@ paths:
         "500":
           $ref: '#/responses/500'
 
-  /user/{id}:
+  /users/{id}:
     parameters:
       - in: path
         name: id
@@ -312,7 +312,7 @@ paths:
         "500":
           $ref: '#/responses/500'
 
-  /user/{id}/event:
+  /users/{id}/events:
     parameters:
       - in: path
         name: id
@@ -339,7 +339,7 @@ paths:
         "500":
           $ref: '#/responses/500'
 
-  /user/{userId}/event/{eventId}:
+  /users/{userId}/events/{eventId}:
     parameters:
       - in: path
         name: userId
@@ -362,6 +362,7 @@ paths:
           description: OK
           schema:
             type: string
+            example: Done
         "400":
           $ref: '#/responses/400'
         "404":
