@@ -9,4 +9,4 @@
 
 # - Generate configuration files (and server):
 # mkdir goswagger
-# goswagger generate server -A tutorAPI -f api/swagger.yaml -t goswagger
+# goswagger generate server -A tutorAPI -f api/swagger.yaml -P models.Principal -t goswagger
