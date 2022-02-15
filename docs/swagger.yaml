@@ -12,16 +12,17 @@ produces:
   - application/json
 
 securityDefinitions:
-
   OauthSecurity:
     type: oauth2
     flow: accessCode
     authorizationUrl: 'https://api.intra.42.fr/oauth/authorize'
     tokenUrl: 'https://api.intra.42.fr/oauth/token'
     scopes:
-      admin: Admin scope
-      tutor: Tutor scope
       user: User scope
+
+security:
+  - OauthSecurity:
+    - user
 
 paths:
 
