@@ -1,9 +1,23 @@
 NAME := tutor
 
-all:		gen run
+all:		build up
+
+build:
+			docker-compose -f ./config/docker-compose.yaml build
+
+up:
+			docker-compose -f ./config/docker-compose.yaml up
+
+down:
+			docker-compose -f ./config/docker-compose.yaml down --remove-orphans
+
+re:			down all
+
+delete:
+			docker-compose -f ./config/docker-compose.yaml down --volumes
 
 run:
-			go run ./cmd/$(NAME)-server/main.go --port 5000
+			go run ./cmd/$(NAME)-server/main.go --host 0.0.0.0 --port 5000
 
 install:
 			go install ./cmd/$(NAME)-server/
@@ -11,10 +25,10 @@ install:
 gen:		gen.ent gen.swag
 
 gen.ent:
-			go generate ./ent
+			go generate ./internal/ent
 
 gen.swag:
-			go generate ./goswagger/...
+			go generate ./internal/goswagger/restapi
 
 validate:
-			swagger validate ./api/swagger.yaml
+			swagger validate ./docs/swagger.yaml
