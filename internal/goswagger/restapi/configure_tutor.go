@@ -4,11 +4,13 @@ package restapi
 
 import (
 	"crypto/tls"
+	"log"
 	"net/http"
 
 	"github.com/go-openapi/errors"
 	"github.com/go-openapi/runtime"
 	"github.com/go-openapi/runtime/middleware"
+	"github.com/joho/godotenv"
 
 	"github.com/gamarcha/ent-goswagger-app/internal/clients/database"
 	"github.com/gamarcha/ent-goswagger-app/internal/goswagger/models"
@@ -41,6 +43,11 @@ func configureAPI(api *operations.TutorAPI) http.Handler {
 	api.JSONConsumer = runtime.JSONConsumer()
 
 	api.JSONProducer = runtime.JSONProducer()
+
+	err := godotenv.Load("config/.env")
+	if err != nil {
+		log.Fatalf("Error loading .env file")
+	}
 
 	db := database.Init()
 
@@ -139,7 +146,9 @@ func configureAPI(api *operations.TutorAPI) http.Handler {
 
 	api.PreServerShutdown = func() {}
 
-	api.ServerShutdown = func() {}
+	api.ServerShutdown = func() {
+		db.Close()
+	}
 
 	return setupGlobalMiddleware(api.Serve(setupMiddlewares))
 }
