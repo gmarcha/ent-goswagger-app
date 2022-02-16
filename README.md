@@ -47,8 +47,8 @@ Code generation tool is used to generate boilerplate server code, allowing us to
   *Links to [documentation](https://www.postgresql.org/docs/14/index.html) and [DockerHub](https://hub.docker.com/_/postgres).*
   
  - **Docker** and **Compose**\
-  Docker is an operating system level virtualisation technology based on container.\
-  It allows us to run our application in an isolated, platform independent environment.\
+  Docker is an os-level virtualisation technology based on container.\
+  They allow us to run our application in an isolated, platform independent environment.\
   Compose is a container orchestrator, used to manage a group of containers.\
   *Links to [Docker documentation](https://docs.docker.com/get-started/overview/) and to [Compose manual](https://docs.docker.com/compose/).*
   
