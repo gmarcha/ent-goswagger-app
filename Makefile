@@ -32,3 +32,6 @@ gen.swag:
 
 validate:
 			swagger validate ./docs/swagger.yaml
+
+markdown:
+			swagger generate markdown --output ./docs/swagger.md -f ./docs/swagger.yaml
