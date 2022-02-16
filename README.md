@@ -1,12 +1,14 @@
 # ent-goswagger-app
 
-A web API written in Go programming language, with code generation tool, ORM, and authentication based on authorization delegation.
+A web API written in Go programming language with code generation tool, ORM and authentication based on authorization delegation.
+
+To launch API, you need to have Docker and Compose installed and setup, and to create `.env` file next to `.env.sample` in `config/`.
 
 ## Software Stack
 
-The API development follows a design first approach: a Swagger Specification is written, and server code is generated from this specification.\
-The specification functions as a documentation for the API, containing all routes, response formats, and authentication models.\
-Code generation tool is used to generate boilerplate server code, allowing us to focus on implementation of api logic.
+The API development follows a design first approach: a Swagger Specification is written and server code is generated from this specification.\
+The specification works as a documentation for the API, containing all routes, response formats and authentication models.\
+Code generation tool is used to generate boilerplate server code, allowing us to focus on implementation of API logics.
 
 ---
 
