@@ -1,0 +1,15 @@
+{
+    "User Snippet": {
+		"prefix": "snippet",
+		"body": [
+			"\"${1:Name}\": {",
+			"    \"prefix\": \"${2:prefix}\",",
+			"    \"body\": [",
+			"        \"${4:body}\"",
+			"    ],",
+			"    \"description\": \"${3:description}\"",
+			"}"
+		],
+		"description": "Snippet inception"
+	}
+}

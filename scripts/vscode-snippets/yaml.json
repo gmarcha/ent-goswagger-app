@@ -1,0 +1,32 @@
+{
+    "Swagger": {
+        "prefix": "swagger",
+        "body": [
+            "swagger: \"2.0\""
+        ],
+        "description": "specification version"
+    },
+
+    "Swagger Info": {
+        "prefix": "info",
+        "body": [
+            "info:",
+            "  title: ${1:title}",
+            "  description: ${2:description}",
+            "  contact: {}",
+            "  version: 0.0.1"
+        ],
+        "description": "api metadata"
+    },
+
+    "Swagger JSON": {
+        "prefix": "jsonType",
+        "body": [
+            "consumes:",
+            "  - ${1:application/json}",
+            "produces:",
+            "  - ${1:application/json}"
+        ],
+        "description": "api data type"
+    }
+}
