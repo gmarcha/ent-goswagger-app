@@ -1,0 +1,26 @@
+version: "3.9"
+
+services:
+  postgres:
+    image: postgres:alpine
+    env_file:
+      - .env
+    volumes:
+      - postgres-volume:/var/lib/postgresql/data/
+  goswagger:
+    build:
+      context: ../
+      dockerfile: ./config/Dockerfile
+    image: goswagger
+    depends_on:
+      - postgres
+    ports:
+      - "5000:5000"
+    env_file:
+      - .env
+    volumes:
+      - goswagger-volume:/go/pkg/mod/cache/download
+
+volumes:
+  postgres-volume:
+  goswagger-volume:
