@@ -36,7 +36,7 @@ jobs:
           echo ${GOROOT}
           go install $dir/cmd/swagger
         env:
-          GOPATH: /home/runner/work/ent-goswagger-app/go
+          GOPATH: ${GITHUB_WORKSPACE}/go
       - name: Perform Swagger specification validation
         run: make validate
       - name: Generate a markdown file from specification
