@@ -1,0 +1,42 @@
+name: treeci
+on:
+  push:
+    branches:
+      - master
+      - main
+    tags:
+      - v*
+  pull_request:
+# permissions:
+#   contents: read
+  # Optional: allow read access to pull request. Use with `only-new-issues` option.
+  # pull-requests: read
+jobs:
+  tree:
+    name: Print project tree in docs
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checks-out repository under workspace
+        uses: actions/checkout@v2
+      - name: Install and launch tree
+        run: |
+          apt-get install tree
+          tree > docs/tree
+      - name: Commit files
+        id: commit
+        run: |
+          git add docs/tree
+          if [[ -z "$(git status --porcelain)" ]]; then
+            echo "::set-output name=push::false"
+          else
+            git config --local user.email "$(git log --format='%ae' HEAD^!)"
+            git config --local user.name "$(git log --format='%an' HEAD^!)"
+            git commit -m "update docs: auto-commit to update tree from github-actions"
+            echo "::set-output name=push::true"
+          fi
+      - name: Push changes
+        if: steps.commit.outputs.push == 'true'
+        uses: ad-m/github-push-action@master
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+
