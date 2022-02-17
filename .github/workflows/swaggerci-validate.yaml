@@ -20,11 +20,15 @@ jobs:
     name: Validate Swagger specification
     runs-on: ubuntu-latest
     steps:
-      - name: Check out code into the Go module directory
+      - name: Checks-out code into the Go module directory
         uses: actions/checkout@v2
         with:
           fetch-depth: 1
           path: go/src/github.com/gmarcha/ent-goswagger-app
+      - name: Setup Go workspace
+        uses: actions/setup-go@v2
+        with:
+          go-version: '1.17.7'
       - name: Install GoSwagger tool
         run: |
           git clone https://github.com/go-swagger/go-swagger 
