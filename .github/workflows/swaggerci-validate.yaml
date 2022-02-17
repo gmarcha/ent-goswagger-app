@@ -24,13 +24,15 @@ jobs:
         uses: actions/checkout@v2
         with:
           fetch-depth: 1
-          path: go/src/github.com/laszlocph/woodpecker
+          path: go/src/github.com/gmarcha/ent-goswagger-app
       - name: Install GoSwagger tool
         run: |
           dir=$(mktemp -d)
           git clone https://github.com/go-swagger/go-swagger "$dir" 
           cd "$dir"
           go install ./cmd/swagger
+        env:
+          GOPATH: /home/runner/work/ent-goswagger-app/go
       - name: Perform Swagger specification validation
         run: make validate
       - name: Generate a markdown file from specification
