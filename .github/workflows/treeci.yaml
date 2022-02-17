@@ -20,7 +20,7 @@ jobs:
         uses: actions/checkout@v2
       - name: Install and launch tree
         run: |
-          apt-get install tree
+          sudo apt-get install -y tree
           tree > docs/tree
       - name: Commit files
         id: commit
