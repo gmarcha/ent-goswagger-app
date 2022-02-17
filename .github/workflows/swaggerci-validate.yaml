@@ -31,4 +31,4 @@ jobs:
       - name: Perform Swagger specification validation
         run: make validate
       - name: Generate a markdown file from specification
-        run: make markdwon
+        run: make markdown
