@@ -42,7 +42,7 @@ jobs:
           else
             git config --local user.email "$(git log --format='%ae' HEAD^!)"
             git config --local user.name "$(git log --format='%an' HEAD^!)"
-            git commit -m "update markdown: auto-commit from github-actions"
+            git commit -m "update docs: auto-commit to update markdown from github-actions"
             echo "::set-output name=push::true"
           fi
       - name: Push changes
