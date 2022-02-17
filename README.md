@@ -58,7 +58,7 @@ Code generation tool is used to generate boilerplate server code, allowing us to
   GH-Actions are CI (Continuous Integration) tools. They allow us to run automated processes triggered by specific events on our repository.\
   Processes can be linters, validators or testers among other things.\
   Events can be `push`, `pull-request` or issue creation for example.\
-  *Links to [documentation](https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions) and a workflow [example](https://medium.com/swlh/setting-up-github-actions-for-go-project-ea84f4ed3a40).*
+  *Links to [documentation](https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions) and a Go workflow [example](https://medium.com/swlh/setting-up-github-actions-for-go-project-ea84f4ed3a40).*
 
 - **Make**\
   Make is a build automation tool used to build executables files. Furthermore, it can be used to manage a project.\
