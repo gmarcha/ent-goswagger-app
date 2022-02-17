@@ -63,13 +63,13 @@ func configureAPI(api *operations.TutorAPI) http.Handler {
 	// Example:
 	// api.APIAuthorizer = security.Authorized()
 
-	if api.AuthenticationGetAuthCallbackHandler == nil {
-		api.AuthenticationGetAuthCallbackHandler = authentication.GetAuthCallbackHandlerFunc(func(params authentication.GetAuthCallbackParams) middleware.Responder {
+	if api.AuthenticationCallbackHandler == nil {
+		api.AuthenticationCallbackHandler = authentication.CallbackHandlerFunc(func(params authentication.GetAuthCallbackParams) middleware.Responder {
 			return middleware.NotImplemented("operation authentication.GetAuthCallback has not yet been implemented")
 		})
 	}
-	if api.AuthenticationGetLoginHandler == nil {
-		api.AuthenticationGetLoginHandler = authentication.GetLoginHandlerFunc(func(params authentication.GetLoginParams) middleware.Responder {
+	if api.AuthenticationLoginHandler == nil {
+		api.AuthenticationLoginHandler = authentication.LoginHandlerFunc(func(params authentication.GetLoginParams) middleware.Responder {
 			return middleware.NotImplemented("operation authentication.GetLogin has not yet been implemented")
 		})
 	}
