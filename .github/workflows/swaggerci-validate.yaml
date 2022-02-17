@@ -22,22 +22,13 @@ jobs:
     steps:
       - name: Checks-out code into the Go module directory
         uses: actions/checkout@v2
-        # with:
-        #   fetch-depth: 1
-        #   path: go/src/github.com/gmarcha/ent-goswagger-app
       - name: Setup Go workspace
         uses: actions/setup-go@v2
         with:
           go-version: '1.17.7'
       - name: Install GoSwagger tool
-        run: |
-          echo ${GITHUB_WORKSPACE}
-          echo ${GOPATH}
-          echo ${GOROOT}
-          go get github.com/go-swagger/go-swagger/cmd/swagger
-        # env:
-        #   GOPATH: /home/runner/work/ent-goswagger-app/ent-goswagger-app/go
+        run: go get github.com/go-swagger/go-swagger/cmd/swagger
       - name: Perform Swagger specification validation
         run: make validate
       - name: Generate a markdown file from specification
-        run: make generate
+        run: make markdwon
