@@ -32,6 +32,7 @@ paths:
       description: Login to 42 API with OAuth 2.0.
       tags:
         - Authentication
+      operationId: login
       security: []
       responses:
         "302":
@@ -45,6 +46,7 @@ paths:
       description: Retrieve token from 42 API.
       tags:
         - Authentication
+      operationId: callback
       security: []
       responses:
         "200":
