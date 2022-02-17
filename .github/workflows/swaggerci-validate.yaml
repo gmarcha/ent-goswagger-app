@@ -11,8 +11,8 @@ on:
   pull_request:
     # paths:
     #   - 'docs/swagger.yaml'
-permissions:
-  contents: read
+# permissions:
+#   contents: read
   # Optional: allow read access to pull request. Use with `only-new-issues` option.
   # pull-requests: read
 jobs:
@@ -33,7 +33,7 @@ jobs:
         run: make validate
       - name: Generate a markdown file from specification
         run: make markdown
-      - name: Commit changes to docs/swagger.md
+      - name: Commit files
         id: commit
         run: |
           git add docs/swagger.md
