@@ -27,14 +27,11 @@ jobs:
           path: go/src/github.com/gmarcha/ent-goswagger-app
       - name: Install GoSwagger tool
         run: |
-          dir=$(mktemp -d)
-          git clone https://github.com/go-swagger/go-swagger "$dir" 
-          pwd
-          ls -la
+          git clone https://github.com/go-swagger/go-swagger 
           echo ${GITHUB_WORKSPACE}
           echo ${GOPATH}
           echo ${GOROOT}
-          go install $dir/cmd/swagger
+          go install ./go-swagger/cmd/swagger
         env:
           GOPATH: /home/runner/work/ent-goswagger-app/ent-goswagger-app/go
       - name: Perform Swagger specification validation
