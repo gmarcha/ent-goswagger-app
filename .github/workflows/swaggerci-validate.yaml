@@ -33,3 +33,17 @@ jobs:
         run: make validate
       - name: Generate a markdown file from specification
         run: make markdown
+      - name: Commit changes to docs/swagger.md
+        id: commit
+        run: |
+          git add docs/swagger.md
+          if [[ -z "$(git status --porcelain)" ]]; then
+            echo "::set-output name=push::false"
+          else
+            git config --local user.email "$(git log --format='%ae' HEAD^!)"
+            git config --local user.name "$(git log --format='%an' HEAD^!)"
+            git commit -m "update markdown: auto-commit from github-actions"
+            echo "::set-output name=push::true"
+          fi
+        shell: bash
+
