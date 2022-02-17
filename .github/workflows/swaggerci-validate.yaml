@@ -30,6 +30,11 @@ jobs:
           dir=$(mktemp -d)
           git clone https://github.com/go-swagger/go-swagger "$dir" 
           cd "$dir"
+          pwd
+          echo ${HOME}
+          echo ${GITHUB_WORKSPACE}
+          echo ${GOPATH}
+          echo ${GOROOT}
           go install ./cmd/swagger
         env:
           GOPATH: /home/runner/work/ent-goswagger-app/go
