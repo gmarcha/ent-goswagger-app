@@ -450,12 +450,6 @@ definitions:
         type: string
         format: date-time
         example: "2022-02-15T13:00:00+01:00"
-      edges:
-        $ref: '#/definitions/EventEdges'
-
-  EventEdges:
-    type: object
-    properties:
       users:
         type: array
         items:
@@ -494,12 +488,6 @@ definitions:
       adminScope:
         type: boolean
         example: false
-      edges:
-        $ref: '#/definitions/UserEdges'
-
-  UserEdges:
-    type: object
-    properties:
       events:
         type: array
         items:
