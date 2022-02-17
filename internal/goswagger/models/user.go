@@ -7,6 +7,7 @@ package models
 
 import (
 	"context"
+	"strconv"
 
 	"github.com/go-openapi/errors"
 	"github.com/go-openapi/strfmt"
@@ -23,8 +24,8 @@ type User struct {
 	// Example: false
 	AdminScope bool `json:"adminScope,omitempty"`
 
-	// edges
-	Edges *UserEdges `json:"edges,omitempty"`
+	// events
+	Events []*Event `json:"events"`
 
 	// first name
 	// Example: Gaëtan
@@ -58,7 +59,7 @@ type User struct {
 func (m *User) Validate(formats strfmt.Registry) error {
 	var res []error
 
-	if err := m.validateEdges(formats); err != nil {
+	if err := m.validateEvents(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -76,20 +77,27 @@ func (m *User) Validate(formats strfmt.Registry) error {
 	return nil
 }
 
-func (m *User) validateEdges(formats strfmt.Registry) error {
-	if swag.IsZero(m.Edges) { // not required
+func (m *User) validateEvents(formats strfmt.Registry) error {
+	if swag.IsZero(m.Events) { // not required
 		return nil
 	}
 
-	if m.Edges != nil {
-		if err := m.Edges.Validate(formats); err != nil {
-			if ve, ok := err.(*errors.Validation); ok {
-				return ve.ValidateName("edges")
-			} else if ce, ok := err.(*errors.CompositeError); ok {
-				return ce.ValidateName("edges")
-			}
-			return err
+	for i := 0; i < len(m.Events); i++ {
+		if swag.IsZero(m.Events[i]) { // not required
+			continue
 		}
+
+		if m.Events[i] != nil {
+			if err := m.Events[i].Validate(formats); err != nil {
+				if ve, ok := err.(*errors.Validation); ok {
+					return ve.ValidateName("events" + "." + strconv.Itoa(i))
+				} else if ce, ok := err.(*errors.CompositeError); ok {
+					return ce.ValidateName("events" + "." + strconv.Itoa(i))
+				}
+				return err
+			}
+		}
+
 	}
 
 	return nil
@@ -123,7 +131,7 @@ func (m *User) validateLogin(formats strfmt.Registry) error {
 func (m *User) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
 	var res []error
 
-	if err := m.contextValidateEdges(ctx, formats); err != nil {
+	if err := m.contextValidateEvents(ctx, formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -137,17 +145,21 @@ func (m *User) ContextValidate(ctx context.Context, formats strfmt.Registry) err
 	return nil
 }
 
-func (m *User) contextValidateEdges(ctx context.Context, formats strfmt.Registry) error {
+func (m *User) contextValidateEvents(ctx context.Context, formats strfmt.Registry) error {
 
-	if m.Edges != nil {
-		if err := m.Edges.ContextValidate(ctx, formats); err != nil {
-			if ve, ok := err.(*errors.Validation); ok {
-				return ve.ValidateName("edges")
-			} else if ce, ok := err.(*errors.CompositeError); ok {
-				return ce.ValidateName("edges")
+	for i := 0; i < len(m.Events); i++ {
+
+		if m.Events[i] != nil {
+			if err := m.Events[i].ContextValidate(ctx, formats); err != nil {
+				if ve, ok := err.(*errors.Validation); ok {
+					return ve.ValidateName("events" + "." + strconv.Itoa(i))
+				} else if ce, ok := err.(*errors.CompositeError); ok {
+					return ce.ValidateName("events" + "." + strconv.Itoa(i))
+				}
+				return err
 			}
-			return err
 		}
+
 	}
 
 	return nil

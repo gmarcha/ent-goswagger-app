@@ -584,9 +584,6 @@ func init() {
           "format": "string",
           "example": "Exam Alone in the Dark - Exam Rank 2/3/4/5/6"
         },
-        "edges": {
-          "$ref": "#/definitions/EventEdges"
-        },
         "endAt": {
           "type": "string",
           "format": "date-time",
@@ -619,21 +616,16 @@ func init() {
           "format": "int64",
           "example": 0
         },
-        "walletsReward": {
-          "type": "integer",
-          "format": "int64",
-          "example": 200
-        }
-      }
-    },
-    "EventEdges": {
-      "type": "object",
-      "properties": {
         "users": {
           "type": "array",
           "items": {
             "$ref": "#/definitions/User"
           }
+        },
+        "walletsReward": {
+          "type": "integer",
+          "format": "int64",
+          "example": 200
         }
       }
     },
@@ -644,8 +636,11 @@ func init() {
           "type": "boolean",
           "example": false
         },
-        "edges": {
-          "$ref": "#/definitions/UserEdges"
+        "events": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Event"
+          }
         },
         "firstName": {
           "type": "string",
@@ -677,17 +672,6 @@ func init() {
         "tutorScope": {
           "type": "boolean",
           "example": true
-        }
-      }
-    },
-    "UserEdges": {
-      "type": "object",
-      "properties": {
-        "events": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/Event"
-          }
         }
       }
     },
@@ -1433,9 +1417,6 @@ func init() {
           "format": "string",
           "example": "Exam Alone in the Dark - Exam Rank 2/3/4/5/6"
         },
-        "edges": {
-          "$ref": "#/definitions/EventEdges"
-        },
         "endAt": {
           "type": "string",
           "format": "date-time",
@@ -1468,21 +1449,16 @@ func init() {
           "format": "int64",
           "example": 0
         },
-        "walletsReward": {
-          "type": "integer",
-          "format": "int64",
-          "example": 200
-        }
-      }
-    },
-    "EventEdges": {
-      "type": "object",
-      "properties": {
         "users": {
           "type": "array",
           "items": {
             "$ref": "#/definitions/User"
           }
+        },
+        "walletsReward": {
+          "type": "integer",
+          "format": "int64",
+          "example": 200
         }
       }
     },
@@ -1493,8 +1469,11 @@ func init() {
           "type": "boolean",
           "example": false
         },
-        "edges": {
-          "$ref": "#/definitions/UserEdges"
+        "events": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Event"
+          }
         },
         "firstName": {
           "type": "string",
@@ -1526,17 +1505,6 @@ func init() {
         "tutorScope": {
           "type": "boolean",
           "example": true
-        }
-      }
-    },
-    "UserEdges": {
-      "type": "object",
-      "properties": {
-        "events": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/Event"
-          }
         }
       }
     },

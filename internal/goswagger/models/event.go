@@ -7,6 +7,7 @@ package models
 
 import (
 	"context"
+	"strconv"
 
 	"github.com/go-openapi/errors"
 	"github.com/go-openapi/strfmt"
@@ -28,9 +29,6 @@ type Event struct {
 	// description
 	// Example: Exam Alone in the Dark - Exam Rank 2/3/4/5/6
 	Description string `json:"description,omitempty"`
-
-	// edges
-	Edges *EventEdges `json:"edges,omitempty"`
 
 	// end at
 	// Example: 2022-02-15T13:00:00+01:00
@@ -61,6 +59,9 @@ type Event struct {
 	// Example: 0
 	TutorsSubscribed int64 `json:"tutorsSubscribed,omitempty"`
 
+	// users
+	Users []*User `json:"users"`
+
 	// wallets reward
 	// Example: 200
 	WalletsReward int64 `json:"walletsReward,omitempty"`
@@ -71,10 +72,6 @@ func (m *Event) Validate(formats strfmt.Registry) error {
 	var res []error
 
 	if err := m.validateCreatedAt(formats); err != nil {
-		res = append(res, err)
-	}
-
-	if err := m.validateEdges(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -94,6 +91,10 @@ func (m *Event) Validate(formats strfmt.Registry) error {
 		res = append(res, err)
 	}
 
+	if err := m.validateUsers(formats); err != nil {
+		res = append(res, err)
+	}
+
 	if len(res) > 0 {
 		return errors.CompositeValidationError(res...)
 	}
@@ -107,25 +108,6 @@ func (m *Event) validateCreatedAt(formats strfmt.Registry) error {
 
 	if err := validate.FormatOf("createdAt", "body", "date-time", m.CreatedAt.String(), formats); err != nil {
 		return err
-	}
-
-	return nil
-}
-
-func (m *Event) validateEdges(formats strfmt.Registry) error {
-	if swag.IsZero(m.Edges) { // not required
-		return nil
-	}
-
-	if m.Edges != nil {
-		if err := m.Edges.Validate(formats); err != nil {
-			if ve, ok := err.(*errors.Validation); ok {
-				return ve.ValidateName("edges")
-			} else if ce, ok := err.(*errors.CompositeError); ok {
-				return ce.ValidateName("edges")
-			}
-			return err
-		}
 	}
 
 	return nil
@@ -179,6 +161,32 @@ func (m *Event) validateStartAt(formats strfmt.Registry) error {
 	return nil
 }
 
+func (m *Event) validateUsers(formats strfmt.Registry) error {
+	if swag.IsZero(m.Users) { // not required
+		return nil
+	}
+
+	for i := 0; i < len(m.Users); i++ {
+		if swag.IsZero(m.Users[i]) { // not required
+			continue
+		}
+
+		if m.Users[i] != nil {
+			if err := m.Users[i].Validate(formats); err != nil {
+				if ve, ok := err.(*errors.Validation); ok {
+					return ve.ValidateName("users" + "." + strconv.Itoa(i))
+				} else if ce, ok := err.(*errors.CompositeError); ok {
+					return ce.ValidateName("users" + "." + strconv.Itoa(i))
+				}
+				return err
+			}
+		}
+
+	}
+
+	return nil
+}
+
 // ContextValidate validate this event based on the context it is used
 func (m *Event) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
 	var res []error
@@ -187,11 +195,11 @@ func (m *Event) ContextValidate(ctx context.Context, formats strfmt.Registry) er
 		res = append(res, err)
 	}
 
-	if err := m.contextValidateEdges(ctx, formats); err != nil {
+	if err := m.contextValidateID(ctx, formats); err != nil {
 		res = append(res, err)
 	}
 
-	if err := m.contextValidateID(ctx, formats); err != nil {
+	if err := m.contextValidateUsers(ctx, formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -210,26 +218,30 @@ func (m *Event) contextValidateCreatedAt(ctx context.Context, formats strfmt.Reg
 	return nil
 }
 
-func (m *Event) contextValidateEdges(ctx context.Context, formats strfmt.Registry) error {
+func (m *Event) contextValidateID(ctx context.Context, formats strfmt.Registry) error {
 
-	if m.Edges != nil {
-		if err := m.Edges.ContextValidate(ctx, formats); err != nil {
-			if ve, ok := err.(*errors.Validation); ok {
-				return ve.ValidateName("edges")
-			} else if ce, ok := err.(*errors.CompositeError); ok {
-				return ce.ValidateName("edges")
-			}
-			return err
-		}
+	if err := validate.ReadOnly(ctx, "id", "body", strfmt.UUID(m.ID)); err != nil {
+		return err
 	}
 
 	return nil
 }
 
-func (m *Event) contextValidateID(ctx context.Context, formats strfmt.Registry) error {
+func (m *Event) contextValidateUsers(ctx context.Context, formats strfmt.Registry) error {
 
-	if err := validate.ReadOnly(ctx, "id", "body", strfmt.UUID(m.ID)); err != nil {
-		return err
+	for i := 0; i < len(m.Users); i++ {
+
+		if m.Users[i] != nil {
+			if err := m.Users[i].ContextValidate(ctx, formats); err != nil {
+				if ve, ok := err.(*errors.Validation); ok {
+					return ve.ValidateName("users" + "." + strconv.Itoa(i))
+				} else if ce, ok := err.(*errors.CompositeError); ok {
+					return ce.ValidateName("users" + "." + strconv.Itoa(i))
+				}
+				return err
+			}
+		}
+
 	}
 
 	return nil
