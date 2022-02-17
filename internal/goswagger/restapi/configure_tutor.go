@@ -64,12 +64,12 @@ func configureAPI(api *operations.TutorAPI) http.Handler {
 	// api.APIAuthorizer = security.Authorized()
 
 	if api.AuthenticationCallbackHandler == nil {
-		api.AuthenticationCallbackHandler = authentication.CallbackHandlerFunc(func(params authentication.GetAuthCallbackParams) middleware.Responder {
+		api.AuthenticationCallbackHandler = authentication.CallbackHandlerFunc(func(params authentication.CallbackParams) middleware.Responder {
 			return middleware.NotImplemented("operation authentication.GetAuthCallback has not yet been implemented")
 		})
 	}
 	if api.AuthenticationLoginHandler == nil {
-		api.AuthenticationLoginHandler = authentication.LoginHandlerFunc(func(params authentication.GetLoginParams) middleware.Responder {
+		api.AuthenticationLoginHandler = authentication.LoginHandlerFunc(func(params authentication.LoginParams) middleware.Responder {
 			return middleware.NotImplemented("operation authentication.GetLogin has not yet been implemented")
 		})
 	}
