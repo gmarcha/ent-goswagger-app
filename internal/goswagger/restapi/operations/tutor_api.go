@@ -47,11 +47,8 @@ func NewTutorAPI(spec *loads.Document) *TutorAPI {
 
 		JSONProducer: runtime.JSONProducer(),
 
-		AuthenticationGetAuthCallbackHandler: authentication.GetAuthCallbackHandlerFunc(func(params authentication.GetAuthCallbackParams) middleware.Responder {
-			return middleware.NotImplemented("operation authentication.GetAuthCallback has not yet been implemented")
-		}),
-		AuthenticationGetLoginHandler: authentication.GetLoginHandlerFunc(func(params authentication.GetLoginParams) middleware.Responder {
-			return middleware.NotImplemented("operation authentication.GetLogin has not yet been implemented")
+		AuthenticationCallbackHandler: authentication.CallbackHandlerFunc(func(params authentication.CallbackParams) middleware.Responder {
+			return middleware.NotImplemented("operation authentication.Callback has not yet been implemented")
 		}),
 		EventCreateEventHandler: event.CreateEventHandlerFunc(func(params event.CreateEventParams, principal *models.Principal) middleware.Responder {
 			return middleware.NotImplemented("operation event.CreateEvent has not yet been implemented")
@@ -76,6 +73,9 @@ func NewTutorAPI(spec *loads.Document) *TutorAPI {
 		}),
 		UserListUserEventsHandler: user.ListUserEventsHandlerFunc(func(params user.ListUserEventsParams, principal *models.Principal) middleware.Responder {
 			return middleware.NotImplemented("operation user.ListUserEvents has not yet been implemented")
+		}),
+		AuthenticationLoginHandler: authentication.LoginHandlerFunc(func(params authentication.LoginParams) middleware.Responder {
+			return middleware.NotImplemented("operation authentication.Login has not yet been implemented")
 		}),
 		EventReadEventHandler: event.ReadEventHandlerFunc(func(params event.ReadEventParams, principal *models.Principal) middleware.Responder {
 			return middleware.NotImplemented("operation event.ReadEvent has not yet been implemented")
@@ -144,10 +144,8 @@ type TutorAPI struct {
 	// APIAuthorizer provides access control (ACL/RBAC/ABAC) by providing access to the request and authenticated principal
 	APIAuthorizer runtime.Authorizer
 
-	// AuthenticationGetAuthCallbackHandler sets the operation handler for the get auth callback operation
-	AuthenticationGetAuthCallbackHandler authentication.GetAuthCallbackHandler
-	// AuthenticationGetLoginHandler sets the operation handler for the get login operation
-	AuthenticationGetLoginHandler authentication.GetLoginHandler
+	// AuthenticationCallbackHandler sets the operation handler for the callback operation
+	AuthenticationCallbackHandler authentication.CallbackHandler
 	// EventCreateEventHandler sets the operation handler for the create event operation
 	EventCreateEventHandler event.CreateEventHandler
 	// UserCreateUserHandler sets the operation handler for the create user operation
@@ -164,6 +162,8 @@ type TutorAPI struct {
 	UserListUserHandler user.ListUserHandler
 	// UserListUserEventsHandler sets the operation handler for the list user events operation
 	UserListUserEventsHandler user.ListUserEventsHandler
+	// AuthenticationLoginHandler sets the operation handler for the login operation
+	AuthenticationLoginHandler authentication.LoginHandler
 	// EventReadEventHandler sets the operation handler for the read event operation
 	EventReadEventHandler event.ReadEventHandler
 	// UserReadUserHandler sets the operation handler for the read user operation
@@ -257,11 +257,8 @@ func (o *TutorAPI) Validate() error {
 		unregistered = append(unregistered, "OauthSecurityAuth")
 	}
 
-	if o.AuthenticationGetAuthCallbackHandler == nil {
-		unregistered = append(unregistered, "authentication.GetAuthCallbackHandler")
-	}
-	if o.AuthenticationGetLoginHandler == nil {
-		unregistered = append(unregistered, "authentication.GetLoginHandler")
+	if o.AuthenticationCallbackHandler == nil {
+		unregistered = append(unregistered, "authentication.CallbackHandler")
 	}
 	if o.EventCreateEventHandler == nil {
 		unregistered = append(unregistered, "event.CreateEventHandler")
@@ -286,6 +283,9 @@ func (o *TutorAPI) Validate() error {
 	}
 	if o.UserListUserEventsHandler == nil {
 		unregistered = append(unregistered, "user.ListUserEventsHandler")
+	}
+	if o.AuthenticationLoginHandler == nil {
+		unregistered = append(unregistered, "authentication.LoginHandler")
 	}
 	if o.EventReadEventHandler == nil {
 		unregistered = append(unregistered, "event.ReadEventHandler")
@@ -406,11 +406,7 @@ func (o *TutorAPI) initHandlerCache() {
 	if o.handlers["GET"] == nil {
 		o.handlers["GET"] = make(map[string]http.Handler)
 	}
-	o.handlers["GET"]["/auth/callback"] = authentication.NewGetAuthCallback(o.context, o.AuthenticationGetAuthCallbackHandler)
-	if o.handlers["GET"] == nil {
-		o.handlers["GET"] = make(map[string]http.Handler)
-	}
-	o.handlers["GET"]["/login"] = authentication.NewGetLogin(o.context, o.AuthenticationGetLoginHandler)
+	o.handlers["GET"]["/auth/callback"] = authentication.NewCallback(o.context, o.AuthenticationCallbackHandler)
 	if o.handlers["POST"] == nil {
 		o.handlers["POST"] = make(map[string]http.Handler)
 	}
@@ -443,6 +439,10 @@ func (o *TutorAPI) initHandlerCache() {
 		o.handlers["GET"] = make(map[string]http.Handler)
 	}
 	o.handlers["GET"]["/users/{id}/events"] = user.NewListUserEvents(o.context, o.UserListUserEventsHandler)
+	if o.handlers["GET"] == nil {
+		o.handlers["GET"] = make(map[string]http.Handler)
+	}
+	o.handlers["GET"]["/login"] = authentication.NewLogin(o.context, o.AuthenticationLoginHandler)
 	if o.handlers["GET"] == nil {
 		o.handlers["GET"] = make(map[string]http.Handler)
 	}

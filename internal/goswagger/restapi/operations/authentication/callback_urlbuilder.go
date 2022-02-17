@@ -11,15 +11,15 @@ import (
 	golangswaggerpaths "path"
 )
 
-// GetAuthCallbackURL generates an URL for the get auth callback operation
-type GetAuthCallbackURL struct {
+// CallbackURL generates an URL for the callback operation
+type CallbackURL struct {
 	_basePath string
 }
 
 // WithBasePath sets the base path for this url builder, only required when it's different from the
 // base path specified in the swagger spec.
 // When the value of the base path is an empty string
-func (o *GetAuthCallbackURL) WithBasePath(bp string) *GetAuthCallbackURL {
+func (o *CallbackURL) WithBasePath(bp string) *CallbackURL {
 	o.SetBasePath(bp)
 	return o
 }
@@ -27,12 +27,12 @@ func (o *GetAuthCallbackURL) WithBasePath(bp string) *GetAuthCallbackURL {
 // SetBasePath sets the base path for this url builder, only required when it's different from the
 // base path specified in the swagger spec.
 // When the value of the base path is an empty string
-func (o *GetAuthCallbackURL) SetBasePath(bp string) {
+func (o *CallbackURL) SetBasePath(bp string) {
 	o._basePath = bp
 }
 
 // Build a url path and query string
-func (o *GetAuthCallbackURL) Build() (*url.URL, error) {
+func (o *CallbackURL) Build() (*url.URL, error) {
 	var _result url.URL
 
 	var _path = "/auth/callback"
@@ -44,7 +44,7 @@ func (o *GetAuthCallbackURL) Build() (*url.URL, error) {
 }
 
 // Must is a helper function to panic when the url builder returns an error
-func (o *GetAuthCallbackURL) Must(u *url.URL, err error) *url.URL {
+func (o *CallbackURL) Must(u *url.URL, err error) *url.URL {
 	if err != nil {
 		panic(err)
 	}
@@ -55,17 +55,17 @@ func (o *GetAuthCallbackURL) Must(u *url.URL, err error) *url.URL {
 }
 
 // String returns the string representation of the path with query string
-func (o *GetAuthCallbackURL) String() string {
+func (o *CallbackURL) String() string {
 	return o.Must(o.Build()).String()
 }
 
 // BuildFull builds a full url with scheme, host, path and query string
-func (o *GetAuthCallbackURL) BuildFull(scheme, host string) (*url.URL, error) {
+func (o *CallbackURL) BuildFull(scheme, host string) (*url.URL, error) {
 	if scheme == "" {
-		return nil, errors.New("scheme is required for a full url on GetAuthCallbackURL")
+		return nil, errors.New("scheme is required for a full url on CallbackURL")
 	}
 	if host == "" {
-		return nil, errors.New("host is required for a full url on GetAuthCallbackURL")
+		return nil, errors.New("host is required for a full url on CallbackURL")
 	}
 
 	base, err := o.Build()
@@ -79,6 +79,6 @@ func (o *GetAuthCallbackURL) BuildFull(scheme, host string) (*url.URL, error) {
 }
 
 // StringFull returns the string representation of a complete url
-func (o *GetAuthCallbackURL) StringFull(scheme, host string) string {
+func (o *CallbackURL) StringFull(scheme, host string) string {
 	return o.Must(o.BuildFull(scheme, host)).String()
 }

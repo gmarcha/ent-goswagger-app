@@ -40,6 +40,7 @@ func init() {
           "Authentication"
         ],
         "summary": "Return user token",
+        "operationId": "callback",
         "responses": {
           "200": {
             "description": "OK",
@@ -274,6 +275,7 @@ func init() {
           "Authentication"
         ],
         "summary": "Login user",
+        "operationId": "login",
         "responses": {
           "302": {
             "description": "Found"
@@ -753,6 +755,7 @@ func init() {
           "Authentication"
         ],
         "summary": "Return user token",
+        "operationId": "callback",
         "responses": {
           "200": {
             "description": "OK",
@@ -1038,6 +1041,7 @@ func init() {
           "Authentication"
         ],
         "summary": "Login user",
+        "operationId": "login",
         "responses": {
           "302": {
             "description": "Found"

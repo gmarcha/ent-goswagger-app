@@ -12,19 +12,19 @@ import (
 	"github.com/go-openapi/runtime/middleware"
 )
 
-// NewGetLoginParams creates a new GetLoginParams object
+// NewCallbackParams creates a new CallbackParams object
 //
 // There are no default values defined in the spec.
-func NewGetLoginParams() GetLoginParams {
+func NewCallbackParams() CallbackParams {
 
-	return GetLoginParams{}
+	return CallbackParams{}
 }
 
-// GetLoginParams contains all the bound params for the get login operation
+// CallbackParams contains all the bound params for the callback operation
 // typically these are obtained from a http.Request
 //
-// swagger:parameters GetLogin
-type GetLoginParams struct {
+// swagger:parameters callback
+type CallbackParams struct {
 
 	// HTTP Request Object
 	HTTPRequest *http.Request `json:"-"`
@@ -33,8 +33,8 @@ type GetLoginParams struct {
 // BindRequest both binds and validates a request, it assumes that complex things implement a Validatable(strfmt.Registry) error interface
 // for simple values it will use straight method calls.
 //
-// To ensure default values, the struct must have been initialized with NewGetLoginParams() beforehand.
-func (o *GetLoginParams) BindRequest(r *http.Request, route *middleware.MatchedRoute) error {
+// To ensure default values, the struct must have been initialized with NewCallbackParams() beforehand.
+func (o *CallbackParams) BindRequest(r *http.Request, route *middleware.MatchedRoute) error {
 	var res []error
 
 	o.HTTPRequest = r
