@@ -20,22 +20,18 @@ jobs:
     name: Validate Swagger specification
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - run: |
+      - name: Check out code into the Go module directory
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 1
+          path: go/src/github.com/laszlocph/woodpecker
+      - name: Install GoSwagger tool
+        run: |
           dir=$(mktemp -d)
           git clone https://github.com/go-swagger/go-swagger "$dir" 
           cd "$dir"
           go install ./cmd/swagger
-      - run: make validate
-  markdown:
-    name: Generate markdown from specification
-    runs-on: ubuntu-latest
-    needs: validate
-    steps:
-      - uses: actions/checkout@v2
-      - run: |
-          dir=$(mktemp -d)
-          git clone https://github.com/go-swagger/go-swagger "$dir" 
-          cd "$dir"
-          go install ./cmd/swagger
-      - run: make generate
+      - name: Perform Swagger specification validation
+        run: make validate
+      - name: Generate a markdown file from specification
+        run: make generate
