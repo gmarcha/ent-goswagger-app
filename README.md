@@ -52,4 +52,15 @@ Code generation tool is used to generate boilerplate server code, allowing us to
   Compose is a container orchestrator, used to manage a group of containers.\
   *Links to [Docker documentation](https://docs.docker.com/get-started/overview/) and to [Compose manual](https://docs.docker.com/compose/).*
   
+---
   
+- **GitHub Actions**\
+  GH-Actions are CI (Continuous Integration) tools. They allow us to run automated processes triggered by specific events on our repository.\
+  Processes can be linters, validators or testers among other things.\
+  Events can be `push`, `pull-request` or issue creation for example.\
+  *Links to [documentation](https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions) and a workflow [example](https://medium.com/swlh/setting-up-github-actions-for-go-project-ea84f4ed3a40).*
+
+- **Make**\
+  Make is a build automation tool used to build executables files. Furthermore, it can be used to manage a project.\
+  We use a file called Makefile, which contains rules. These rules function as scripts.\
+  *Links to [documentation](https://www.gnu.org/software/make/manual/make.html) and [wikipedia](https://en.wikipedia.org/wiki/Make_(software)).*
