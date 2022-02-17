@@ -30,7 +30,7 @@ jobs:
           dir=$(mktemp -d)
           git clone https://github.com/go-swagger/go-swagger "$dir" 
           pwd
-          echo ${HOME}
+          ls -la
           echo ${GITHUB_WORKSPACE}
           echo ${GOPATH}
           echo ${GOROOT}
