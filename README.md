@@ -1,12 +1,14 @@
 # ent-goswagger-app
 
-A web API written in Go programming language, with code generation tool, ORM, and authentication based on authorization delegation.
+A web API written in Go programming language with code generation tool, ORM and authentication based on authorization delegation.
+
+To launch API, you need to have Docker and Compose installed and setup, and to create `.env` file next to `.env.sample` in `config/`.
 
 ## Software Stack
 
-The API development follows a design first approach: a Swagger Specification is written, and server code is generated from this specification.\
-The specification functions as a documentation for the API, containing all routes, response formats, and authentication models.\
-Code generation tool is used to generate boilerplate server code, allowing us to focus on implementation of api logic.
+The API development follows a design first approach: a Swagger Specification is written and server code is generated from this specification.\
+The specification works as a documentation for the API, containing all routes, response formats and authentication models.\
+Code generation tool is used to generate boilerplate server code, allowing us to focus on implementation of API logics.
 
 ---
 
@@ -16,17 +18,17 @@ Code generation tool is used to generate boilerplate server code, allowing us to
 
 - **OAuth 2.0**\
   An authorization delegation protocol. In this application, authentication depends on this authorization.\
-  *Links to [documentation](https://oauth.net/2/), and how to use it to implement [user authentication](https://oauth.net/articles/authentication/).*
+  *Links to [documentation](https://oauth.net/2/) and how to use it to implement [user authentication](https://oauth.net/articles/authentication/).*
 
 ---
 
 - **GoSwagger**\
   A very powerful code generation tool, to generate server code from a Swagger specification (OAPIv2).\
-  *Links to [documentation](https://goswagger.io/), and how to use [external models](https://goswagger.io/use/models/schemas.html#external-types) for code generation.*
+  *Links to [documentation](https://goswagger.io/) and how to use [external models](https://goswagger.io/use/models/schemas.html#external-types) for code generation.*
   
 - **Swagger**\
-  A Swagger Specification is a json/yaml file which documents routes, data schemas, and possibly authentication model about an API.\
-  A specification can be written to serve as a model to generate server code (as with goswagger), or it can be generated from comments in source code (as with gin-swagger). It is also possible to generate it from go data schemas (as with elk or entoas, from entgo).\
+  A Swagger Specification is a json/yaml file which documents routes, data schemas and possibly authentication model about an API.\
+  A specification can be written to serve as a model to generate server code (as with goswagger), or it can be generated from comments in source code (as with gin-swagger). It is also possible to generate it from Go data schemas (as with elk or entoas, from entgo).\
   *Links to [documentation](https://swagger.io/docs/specification/2-0/basic-structure/) and [specification](https://swagger.io/specification/v2/).*
   
 - **SwaggerEditor**\
@@ -41,12 +43,12 @@ Code generation tool is used to generate boilerplate server code, allowing us to
   *Link to [documentation](https://entgo.io/docs/getting-started/).*
 
 - **PostGreSQL _(or any SQL database)_**\
-  A SQL relationnal database, which run in a container in development phase and with a cloud provider in production.\
+  A SQL relationnal database, running in a container in development phase or with a cloud provider in production.\
   *Links to [documentation](https://www.postgresql.org/docs/14/index.html) and [DockerHub](https://hub.docker.com/_/postgres).*
   
  - **Docker** and **Compose**\
-  Docker is an operating system level virtualisation technology, based on container.\
-  It allows us to run our application in an isolated and plateform independant environment.\
+  Docker is an os-level virtualisation technology based on container.\
+  They allow us to run our application in an isolated, platform independent environment.\
   Compose is a container orchestrator, used to manage a group of containers.\
   *Links to [Docker documentation](https://docs.docker.com/get-started/overview/) and to [Compose manual](https://docs.docker.com/compose/).*
   
