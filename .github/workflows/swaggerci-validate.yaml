@@ -18,7 +18,7 @@ permissions:
 jobs:
   validate:
     name: Validate Swagger specification
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-latest
     steps:
       - name: Check out code into the Go module directory
         uses: actions/checkout@v2
@@ -29,13 +29,12 @@ jobs:
         run: |
           dir=$(mktemp -d)
           git clone https://github.com/go-swagger/go-swagger "$dir" 
-          cd "$dir"
           pwd
           echo ${HOME}
           echo ${GITHUB_WORKSPACE}
           echo ${GOPATH}
           echo ${GOROOT}
-          go install ./cmd/swagger
+          go install $dir/cmd/swagger
         env:
           GOPATH: /home/runner/work/ent-goswagger-app/go
       - name: Perform Swagger specification validation
