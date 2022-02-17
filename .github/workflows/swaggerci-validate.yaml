@@ -6,11 +6,11 @@ on:
       - main
     tags:
       - v*
-    paths:
-      - 'docs/swagger.yaml'
+    # paths:
+    #   - 'docs/swagger.yaml'
   pull_request:
-    paths:
-      - 'docs/swagger.yaml'
+    # paths:
+    #   - 'docs/swagger.yaml'
 permissions:
   contents: read
   # Optional: allow read access to pull request. Use with `only-new-issues` option.
@@ -20,10 +20,12 @@ jobs:
     name: Validate Swagger specification
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v2
       - run: make validate
   markdown:
     name: Generate markdown from specification
     runs-on: ubuntu-latest
     needs: validate
     steps:
+      - uses: actions/checkout@v2
       - run: make generate
