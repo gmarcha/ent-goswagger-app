@@ -21,6 +21,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
+      - run: |
+          dir=$(mktemp -d)
+          git clone https://github.com/go-swagger/go-swagger "$dir" 
+          cd "$dir"
+          go install ./cmd/swagger
       - run: make validate
   markdown:
     name: Generate markdown from specification
@@ -28,4 +33,9 @@ jobs:
     needs: validate
     steps:
       - uses: actions/checkout@v2
+      - run: |
+          dir=$(mktemp -d)
+          git clone https://github.com/go-swagger/go-swagger "$dir" 
+          cd "$dir"
+          go install ./cmd/swagger
       - run: make generate
