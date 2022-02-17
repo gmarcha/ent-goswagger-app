@@ -998,29 +998,14 @@ Status: Internal Server Error
 |------|------|---------|:--------:| ------- |-------------|---------|
 | createdAt | date-time (formatted string)| `strfmt.DateTime` |  | |  | `2022-02-15T09:00:00Z` |
 | description | string (formatted string)| `string` |  | |  | `Exam Alone in the Dark - Exam Rank 2/3/4/5/6` |
-| edges | [EventEdges](#event-edges)| `EventEdges` |  | |  |  |
 | endAt | date-time (formatted string)| `strfmt.DateTime` |  | |  | `2022-02-15T13:00:00+01:00` |
 | id | uuid (formatted string)| `strfmt.UUID` |  | |  | `123e4567-e89b-12d3-a456-426614174000` |
 | name | string (formatted string)| `string` |  | |  | `Exam Stud` |
 | startAt | date-time (formatted string)| `strfmt.DateTime` |  | |  | `2022-02-15T10:00:00+01:00` |
 | tutorsRequired | int64 (formatted integer)| `int64` |  | |  | `3` |
 | tutorsSubscribed | int64 (formatted integer)| `int64` |  | |  | `0` |
-| walletsReward | int64 (formatted integer)| `int64` |  | |  | `200` |
-
-
-
-### <span id="event-edges"></span> EventEdges
-
-
-  
-
-
-
-**Properties**
-
-| Name | Type | Go type | Required | Default | Description | Example |
-|------|------|---------|:--------:| ------- |-------------|---------|
 | users | [][User](#user)| `[]*User` |  | |  |  |
+| walletsReward | int64 (formatted integer)| `int64` |  | |  | `200` |
 
 
 
@@ -1036,28 +1021,13 @@ Status: Internal Server Error
 | Name | Type | Go type | Required | Default | Description | Example |
 |------|------|---------|:--------:| ------- |-------------|---------|
 | adminScope | boolean| `bool` |  | |  | `false` |
-| edges | [UserEdges](#user-edges)| `UserEdges` |  | |  |  |
+| events | [][Event](#event)| `[]*Event` |  | |  |  |
 | firstName | string (formatted string)| `string` |  | |  | `Gaëtan` |
 | hoursDone | int64 (formatted integer)| `int64` |  | |  | `6` |
 | id | uuid (formatted string)| `strfmt.UUID` |  | |  | `123e4567-e89b-12d3-a456-426614174000` |
 | lastName | string (formatted string)| `string` |  | |  | `Marchal` |
 | login | string (formatted string)| `string` |  | |  | `gamarcha` |
 | tutorScope | boolean| `bool` |  | |  | `true` |
-
-
-
-### <span id="user-edges"></span> UserEdges
-
-
-  
-
-
-
-**Properties**
-
-| Name | Type | Go type | Required | Default | Description | Example |
-|------|------|---------|:--------:| ------- |-------------|---------|
-| events | [][Event](#event)| `[]*Event` |  | |  |  |
 
 
 
