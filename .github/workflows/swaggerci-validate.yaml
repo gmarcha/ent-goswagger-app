@@ -22,9 +22,9 @@ jobs:
     steps:
       - name: Checks-out code into the Go module directory
         uses: actions/checkout@v2
-        with:
-          fetch-depth: 1
-          path: go/src/github.com/gmarcha/ent-goswagger-app
+        # with:
+        #   fetch-depth: 1
+        #   path: go/src/github.com/gmarcha/ent-goswagger-app
       - name: Setup Go workspace
         uses: actions/setup-go@v2
         with:
@@ -36,8 +36,8 @@ jobs:
           echo ${GOPATH}
           echo ${GOROOT}
           go install ./go-swagger/cmd/swagger
-        env:
-          GOPATH: /home/runner/work/ent-goswagger-app/ent-goswagger-app/go
+        # env:
+        #   GOPATH: /home/runner/work/ent-goswagger-app/ent-goswagger-app/go
       - name: Perform Swagger specification validation
         run: make validate
       - name: Generate a markdown file from specification
