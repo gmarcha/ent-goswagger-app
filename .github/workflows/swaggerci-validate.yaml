@@ -1,0 +1,29 @@
+name: swaggerci-validate
+on:
+  push:
+    branches:
+      - master
+      - main
+    tags:
+      - v*
+    paths:
+      - 'docs/swagger.yaml'
+  pull_request:
+    paths:
+      - 'docs/swagger.yaml'
+permissions:
+  contents: read
+  # Optional: allow read access to pull request. Use with `only-new-issues` option.
+  # pull-requests: read
+jobs:
+  validate:
+    name: Validate Swagger specification
+    runs-on: ubuntu-latest
+    steps:
+      - run: make validate
+  markdown:
+    name: Generate markdown from specification
+    runs-on: ubuntu-latest
+    needs: validate
+    steps:
+      - run: make generate
