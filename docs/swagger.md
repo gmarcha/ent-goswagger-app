@@ -58,8 +58,8 @@ user | User scope
 
 | Method  | URI     | Name   | Summary |
 |---------|---------|--------|---------|
-| GET | /auth/callback | [get auth callback](#get-auth-callback) | Return user token |
-| GET | /login | [get login](#get-login) | Login user |
+| GET | /auth/callback | [callback](#callback) | Return user token |
+| GET | /login | [login](#login) | Login user |
   
 
 
@@ -93,7 +93,7 @@ user | User scope
 
 ## Paths
 
-### <span id="get-auth-callback"></span> Return user token (*GetAuthCallback*)
+### <span id="callback"></span> Return user token (*callback*)
 
 ```
 GET /auth/callback
@@ -104,56 +104,25 @@ Retrieve token from 42 API.
 #### All responses
 | Code | Status | Description | Has headers | Schema |
 |------|--------|-------------|:-----------:|--------|
-| [200](#get-auth-callback-200) | OK | OK |  | [schema](#get-auth-callback-200-schema) |
-| [500](#get-auth-callback-500) | Internal Server Error | Internal Server Error |  | [schema](#get-auth-callback-500-schema) |
+| [200](#callback-200) | OK | OK |  | [schema](#callback-200-schema) |
+| [500](#callback-500) | Internal Server Error | Internal Server Error |  | [schema](#callback-500-schema) |
 
 #### Responses
 
 
-##### <span id="get-auth-callback-200"></span> 200 - OK
+##### <span id="callback-200"></span> 200 - OK
 Status: OK
 
-###### <span id="get-auth-callback-200-schema"></span> Schema
+###### <span id="callback-200-schema"></span> Schema
    
   
 
 
 
-##### <span id="get-auth-callback-500"></span> 500 - Internal Server Error
+##### <span id="callback-500"></span> 500 - Internal Server Error
 Status: Internal Server Error
 
-###### <span id="get-auth-callback-500-schema"></span> Schema
-   
-  
-
-[Error](#error)
-
-### <span id="get-login"></span> Login user (*GetLogin*)
-
-```
-GET /login
-```
-
-Login to 42 API with OAuth 2.0.
-
-#### All responses
-| Code | Status | Description | Has headers | Schema |
-|------|--------|-------------|:-----------:|--------|
-| [302](#get-login-302) | Found | Found |  | [schema](#get-login-302-schema) |
-| [500](#get-login-500) | Internal Server Error | Internal Server Error |  | [schema](#get-login-500-schema) |
-
-#### Responses
-
-
-##### <span id="get-login-302"></span> 302 - Found
-Status: Found
-
-###### <span id="get-login-302-schema"></span> Schema
-
-##### <span id="get-login-500"></span> 500 - Internal Server Error
-Status: Internal Server Error
-
-###### <span id="get-login-500-schema"></span> Schema
+###### <span id="callback-500-schema"></span> Schema
    
   
 
@@ -596,6 +565,37 @@ Status: Not Found
 Status: Internal Server Error
 
 ###### <span id="list-user-events-500-schema"></span> Schema
+   
+  
+
+[Error](#error)
+
+### <span id="login"></span> Login user (*login*)
+
+```
+GET /login
+```
+
+Login to 42 API with OAuth 2.0.
+
+#### All responses
+| Code | Status | Description | Has headers | Schema |
+|------|--------|-------------|:-----------:|--------|
+| [302](#login-302) | Found | Found |  | [schema](#login-302-schema) |
+| [500](#login-500) | Internal Server Error | Internal Server Error |  | [schema](#login-500-schema) |
+
+#### Responses
+
+
+##### <span id="login-302"></span> 302 - Found
+Status: Found
+
+###### <span id="login-302-schema"></span> Schema
+
+##### <span id="login-500"></span> 500 - Internal Server Error
+Status: Internal Server Error
+
+###### <span id="login-500-schema"></span> Schema
    
   
 
