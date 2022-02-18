@@ -47,7 +47,7 @@ func (this *callback) Handle(params authentication.CallbackParams) middleware.Re
 	
 	// With that token, make a /me on 42 API.
 	// --> handle back id and login;
-	// --> it exists in our user, cool!
+	// --> it exists in our user, cool, create a JWT;
 	// --> it doesn't exist throw CallBackNotOK.
 	
 	return authentication.NewCallbackOK().WithPayload(token.AccessToken)
