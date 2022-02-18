@@ -57,88 +57,93 @@
 │   │   ├── user_delete.go
 │   │   ├── user_query.go
 │   │   └── user_update.go
-│   └── goswagger
-│       ├── models
-│       │   ├── error.go
-│       │   ├── event.go
-│       │   ├── event_edges.go
-│       │   ├── principal.go
-│       │   ├── user.go
-│       │   └── user_edges.go
-│       └── restapi
-│           ├── configure_tutor.go
-│           ├── doc.go
-│           ├── embedded_spec.go
-│           ├── operations
-│           │   ├── authentication
-│           │   │   ├── callback.go
-│           │   │   ├── callback_parameters.go
-│           │   │   ├── callback_responses.go
-│           │   │   ├── callback_urlbuilder.go
-│           │   │   ├── login.go
-│           │   │   ├── login_parameters.go
-│           │   │   ├── login_responses.go
-│           │   │   └── login_urlbuilder.go
-│           │   ├── event
-│           │   │   ├── create_event.go
-│           │   │   ├── create_event_parameters.go
-│           │   │   ├── create_event_responses.go
-│           │   │   ├── create_event_urlbuilder.go
-│           │   │   ├── delete_event.go
-│           │   │   ├── delete_event_parameters.go
-│           │   │   ├── delete_event_responses.go
-│           │   │   ├── delete_event_urlbuilder.go
-│           │   │   ├── list_event.go
-│           │   │   ├── list_event_parameters.go
-│           │   │   ├── list_event_responses.go
-│           │   │   ├── list_event_urlbuilder.go
-│           │   │   ├── list_event_users.go
-│           │   │   ├── list_event_users_parameters.go
-│           │   │   ├── list_event_users_responses.go
-│           │   │   ├── list_event_users_urlbuilder.go
-│           │   │   ├── read_event.go
-│           │   │   ├── read_event_parameters.go
-│           │   │   ├── read_event_responses.go
-│           │   │   ├── read_event_urlbuilder.go
-│           │   │   ├── update_event.go
-│           │   │   ├── update_event_parameters.go
-│           │   │   ├── update_event_responses.go
-│           │   │   └── update_event_urlbuilder.go
-│           │   ├── tutor_api.go
-│           │   └── user
-│           │       ├── create_user.go
-│           │       ├── create_user_parameters.go
-│           │       ├── create_user_responses.go
-│           │       ├── create_user_urlbuilder.go
-│           │       ├── delete_user.go
-│           │       ├── delete_user_parameters.go
-│           │       ├── delete_user_responses.go
-│           │       ├── delete_user_urlbuilder.go
-│           │       ├── list_user.go
-│           │       ├── list_user_events.go
-│           │       ├── list_user_events_parameters.go
-│           │       ├── list_user_events_responses.go
-│           │       ├── list_user_events_urlbuilder.go
-│           │       ├── list_user_parameters.go
-│           │       ├── list_user_responses.go
-│           │       ├── list_user_urlbuilder.go
-│           │       ├── read_user.go
-│           │       ├── read_user_parameters.go
-│           │       ├── read_user_responses.go
-│           │       ├── read_user_urlbuilder.go
-│           │       ├── subscribe_user.go
-│           │       ├── subscribe_user_parameters.go
-│           │       ├── subscribe_user_responses.go
-│           │       ├── subscribe_user_urlbuilder.go
-│           │       ├── unsubscribe_user.go
-│           │       ├── unsubscribe_user_parameters.go
-│           │       ├── unsubscribe_user_responses.go
-│           │       ├── unsubscribe_user_urlbuilder.go
-│           │       ├── update_user.go
-│           │       ├── update_user_parameters.go
-│           │       ├── update_user_responses.go
-│           │       └── update_user_urlbuilder.go
-│           └── server.go
+│   ├── goswagger
+│   │   ├── models
+│   │   │   ├── error.go
+│   │   │   ├── event.go
+│   │   │   ├── event_edges.go
+│   │   │   ├── principal.go
+│   │   │   ├── user.go
+│   │   │   └── user_edges.go
+│   │   └── restapi
+│   │       ├── configure_tutor.go
+│   │       ├── doc.go
+│   │       ├── embedded_spec.go
+│   │       ├── operations
+│   │       │   ├── authentication
+│   │       │   │   ├── callback.go
+│   │       │   │   ├── callback_parameters.go
+│   │       │   │   ├── callback_responses.go
+│   │       │   │   ├── callback_urlbuilder.go
+│   │       │   │   ├── login.go
+│   │       │   │   ├── login_parameters.go
+│   │       │   │   ├── login_responses.go
+│   │       │   │   └── login_urlbuilder.go
+│   │       │   ├── event
+│   │       │   │   ├── create_event.go
+│   │       │   │   ├── create_event_parameters.go
+│   │       │   │   ├── create_event_responses.go
+│   │       │   │   ├── create_event_urlbuilder.go
+│   │       │   │   ├── delete_event.go
+│   │       │   │   ├── delete_event_parameters.go
+│   │       │   │   ├── delete_event_responses.go
+│   │       │   │   ├── delete_event_urlbuilder.go
+│   │       │   │   ├── list_event.go
+│   │       │   │   ├── list_event_parameters.go
+│   │       │   │   ├── list_event_responses.go
+│   │       │   │   ├── list_event_urlbuilder.go
+│   │       │   │   ├── list_event_users.go
+│   │       │   │   ├── list_event_users_parameters.go
+│   │       │   │   ├── list_event_users_responses.go
+│   │       │   │   ├── list_event_users_urlbuilder.go
+│   │       │   │   ├── read_event.go
+│   │       │   │   ├── read_event_parameters.go
+│   │       │   │   ├── read_event_responses.go
+│   │       │   │   ├── read_event_urlbuilder.go
+│   │       │   │   ├── update_event.go
+│   │       │   │   ├── update_event_parameters.go
+│   │       │   │   ├── update_event_responses.go
+│   │       │   │   └── update_event_urlbuilder.go
+│   │       │   ├── tutor_api.go
+│   │       │   └── user
+│   │       │       ├── create_user.go
+│   │       │       ├── create_user_parameters.go
+│   │       │       ├── create_user_responses.go
+│   │       │       ├── create_user_urlbuilder.go
+│   │       │       ├── delete_user.go
+│   │       │       ├── delete_user_parameters.go
+│   │       │       ├── delete_user_responses.go
+│   │       │       ├── delete_user_urlbuilder.go
+│   │       │       ├── list_user.go
+│   │       │       ├── list_user_events.go
+│   │       │       ├── list_user_events_parameters.go
+│   │       │       ├── list_user_events_responses.go
+│   │       │       ├── list_user_events_urlbuilder.go
+│   │       │       ├── list_user_parameters.go
+│   │       │       ├── list_user_responses.go
+│   │       │       ├── list_user_urlbuilder.go
+│   │       │       ├── read_user.go
+│   │       │       ├── read_user_parameters.go
+│   │       │       ├── read_user_responses.go
+│   │       │       ├── read_user_urlbuilder.go
+│   │       │       ├── subscribe_user.go
+│   │       │       ├── subscribe_user_parameters.go
+│   │       │       ├── subscribe_user_responses.go
+│   │       │       ├── subscribe_user_urlbuilder.go
+│   │       │       ├── unsubscribe_user.go
+│   │       │       ├── unsubscribe_user_parameters.go
+│   │       │       ├── unsubscribe_user_responses.go
+│   │       │       ├── unsubscribe_user_urlbuilder.go
+│   │       │       ├── update_user.go
+│   │       │       ├── update_user_parameters.go
+│   │       │       ├── update_user_responses.go
+│   │       │       └── update_user_urlbuilder.go
+│   │       └── server.go
+│   └── modules
+│       └── auth
+│           ├── auth.go
+│           ├── handle.go
+│           └── init.go
 └── scripts
     ├── README.md
     ├── entgo.sh
@@ -148,4 +153,4 @@
         ├── json.json
         └── yaml.json
 
-25 directories, 123 files
+27 directories, 126 files
