@@ -16,3 +16,4 @@
 
 # Specific to project
 .env
+test.cpp
