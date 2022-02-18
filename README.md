@@ -1,23 +1,54 @@
 # ent-goswagger-app
 
-A web API written in Go programming language with code generation tool, ORM and authentication based on authorization delegation.
+A web API written in Go programming language with entgo and goswagger.
 
-To launch API, you need to have Docker and Compose installed and setup, and to create `.env` file next to `.env.sample` in `config/`.
+[![Golang Lint](https://github.com/gmarcha/ent-goswagger-app/actions/workflows/golangci-lint.yaml/badge.svg)](https://github.com/gmarcha/ent-goswagger-app/actions/workflows/golangci-lint.yaml)
+[![Swagger Validation](https://github.com/gmarcha/ent-goswagger-app/actions/workflows/swaggerci-validate.yaml/badge.svg)](https://github.com/gmarcha/ent-goswagger-app/actions/workflows/swaggerci-validate.yaml)
+[![Project Tree](https://github.com/gmarcha/ent-goswagger-app/actions/workflows/treeci.yaml/badge.svg)](https://github.com/gmarcha/ent-goswagger-app/actions/workflows/treeci.yaml)
 
-![golangci-lint](https://github.com/gmarcha/ent-goswagger-app/actions/workflows/golangci-lint.yaml/badge.svg)
-![swaggerci-validate](https://github.com/gmarcha/ent-goswagger-app/actions/workflows/swaggerci-validate.yaml/badge.svg)
-![treeci](https://github.com/gmarcha/ent-goswagger-app/actions/workflows/treeci.yaml/badge.svg)
+## Prerequesites
 
-## Software Stack
+- A Go [workspace](https://go.dev/doc/gopath_code) with Make *(`sudo apt install make`)* and [Go Swagger](https://goswagger.io/install.html) already setup.
+- Install [Docker](https://docs.docker.com/get-docker/) and [Docker Compose](https://docs.docker.com/compose/install/).
+- Create `./config/.env` file next to `./config/.env.sample` file (with valid credentials).
 
-The API development follows a design first approach: a Swagger Specification is written and server code is generated from this specification.\
-The specification works as a documentation for the API, containing all routes, response formats and authentication models.\
-Code generation tool is used to generate boilerplate server code, allowing us to focus on implementation of API logics.
+## Usage
 
----
+Use Makefile rules to build and run application (see comments in `Makefile`).
+
+- `make` uses `make build` and `make up` internally;
+- `make build` builds docker-compose images;
+- `make up` starts docker-compose containers;
+- `make down` stops docker-compose containers;
+- `make re` uses `make down` and `make` internally;
+- `make delete` stops docker-compose containers and erases docker-compose volumes.
+
+Use them to perform code generation with entgo and goswagger.
+ 
+- `make gen` uses `make gen.ent` and `make gen.swag` internally;
+- `make gen.ent` generates entgo model code from data schemas in `./internal/ent/schema/`;
+- `make gen.swag` generates goswagger server code from swagger specification in `./docs/`.
+
+Other rules are used by application Dockerfile (in `./config/`) and Github Actions (in `./.github/workflows/`).
+
+## Development
+
+Application development follows a design-first approach. It uses two code generation tools, and it can be separated in three steps.
+
+1. Entgo generates Go types and methods to perform database access from data schemas directly written in Go code.\
+   It enforces validation based on schema rules, which are applied to database-level (as foreign keys or SQL constraints).
+
+2. Go Swagger generates server code from a swagger specification using version 2.0.\
+   All security definitions, route paths and model definitions are written in the specification.\
+   It can use external data models with swagger extension to avoid multiple data models in the application.\
+   Specification serves as an API documentation for other developers.
+   
+3. API routes are interfaces with `Handle` method which need to be implemented by developer, as authentication mechanism.
+
+## Stack
 
 - **Go**\
-  It is a modern compiled programming language, with strong typing, low-level capabilities and code generation tools.\
+  Golang is a modern compiled programming language, with strong typing, low-level capabilities and code generation tools.\
   *Links to [documentation](https://go.dev/doc/), [specification](https://go.dev/ref/spec) and [project layout](https://github.com/golang-standards/project-layout) examples.*
 
 - **OAuth 2.0**\
@@ -68,3 +99,10 @@ Code generation tool is used to generate boilerplate server code, allowing us to
   Make is a build automation tool used to build executables files. Furthermore, it can be used to manage a project.\
   We use a file called Makefile, which contains rules. These rules function as scripts.\
   *Links to [documentation](https://www.gnu.org/software/make/manual/make.html) and [wikipedia](https://en.wikipedia.org/wiki/Make_(software)).*
+
+- **Useful links**\
+  How to [makeareadme](https://www.makeareadme.com/) ? Or how to [record](https://asciinema.org/) a terminal session.
+
+## Author
+
+- [@gmarcha](https://github.com/gmarcha)
