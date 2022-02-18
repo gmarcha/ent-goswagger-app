@@ -106,3 +106,7 @@ Application development follows a design-first approach. It uses two code genera
 ## Author
 
 - [@gmarcha](https://github.com/gmarcha)
+
+## License
+
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
