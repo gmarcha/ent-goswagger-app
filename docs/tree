@@ -71,14 +71,14 @@
 │           ├── embedded_spec.go
 │           ├── operations
 │           │   ├── authentication
-│           │   │   ├── get_auth_callback.go
-│           │   │   ├── get_auth_callback_parameters.go
-│           │   │   ├── get_auth_callback_responses.go
-│           │   │   ├── get_auth_callback_urlbuilder.go
-│           │   │   ├── get_login.go
-│           │   │   ├── get_login_parameters.go
-│           │   │   ├── get_login_responses.go
-│           │   │   └── get_login_urlbuilder.go
+│           │   │   ├── callback.go
+│           │   │   ├── callback_parameters.go
+│           │   │   ├── callback_responses.go
+│           │   │   ├── callback_urlbuilder.go
+│           │   │   ├── login.go
+│           │   │   ├── login_parameters.go
+│           │   │   ├── login_responses.go
+│           │   │   └── login_urlbuilder.go
 │           │   ├── event
 │           │   │   ├── create_event.go
 │           │   │   ├── create_event_parameters.go
