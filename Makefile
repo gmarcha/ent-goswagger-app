@@ -1,6 +1,8 @@
 NAME := tutor
 
-DOCKER-COMPOSE := COMPOSE_PROJECT_NAME=$(NAME) docker-compose
+include config/.env
+
+DOCKER-COMPOSE := COMPOSE_PROJECT_NAME=$(NAME) PORT=$(PORT) docker-compose
 DOCKER-COMPOSE-PATH := ./config/docker-compose.yaml
 
 SWAGGER-SPEC-PATH := ./docs/swagger.yaml
@@ -25,7 +27,7 @@ SWAGGER-MD-PATH := ./docs/swagger.md
 all:		build up
 
 build:
-			$(DOCKER-COMPOSE) -f $(DOCKER-COMPOSE-PATH) build
+			$(DOCKER-COMPOSE) -f $(DOCKER-COMPOSE-PATH) build --build-arg PORT=$(PORT)
 
 up:
 			$(DOCKER-COMPOSE) -f $(DOCKER-COMPOSE-PATH) up
@@ -54,7 +56,7 @@ install:
 			go install ./cmd/$(NAME)-server/
 
 run:		install
-			./tutor-server --host 0.0.0.0 --port 5000
+			$(NAME)-server --host $(HOST) --port $(PORT)
 
 ###################################################################################
 #
