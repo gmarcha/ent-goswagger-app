@@ -44,6 +44,11 @@ func (this *callback) Handle(params authentication.CallbackParams) middleware.Re
 	if err != nil {
 		return middleware.Error(500, fmt.Sprintln("failed to fetch token"))
 	}
-
+	
+	// With that token, make a /me on 42 API.
+	// --> handle back id and login;
+	// --> it exists in our user, cool, create a JWT;
+	// --> it doesn't exist throw CallBackNotOK.
+	
 	return authentication.NewCallbackOK().WithPayload(token.AccessToken)
 }
