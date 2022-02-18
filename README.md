@@ -4,6 +4,10 @@ A web API written in Go programming language with code generation tool, ORM and 
 
 To launch API, you need to have Docker and Compose installed and setup, and to create `.env` file next to `.env.sample` in `config/`.
 
+![golangci-lint](https://github.com/gmarcha/ent-goswagger-app/actions/workflows/golangci-lint.yaml/badge.svg)
+![swaggerci-validate](https://github.com/gmarcha/ent-goswagger-app/actions/workflows/swaggerci-validate.yaml/badge.svg)
+![treeci](https://github.com/gmarcha/ent-goswagger-app/actions/workflows/treeci.yaml/badge.svg)
+
 ## Software Stack
 
 The API development follows a design first approach: a Swagger Specification is written and server code is generated from this specification.\
