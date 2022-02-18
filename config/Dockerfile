@@ -2,6 +2,8 @@
 
 FROM golang:alpine
 
+ARG PORT
+
 RUN apk add make
 
 WORKDIR /app
@@ -9,4 +11,4 @@ COPY . .
 
 CMD [ "make", "run" ]
 
-EXPOSE 5000
+EXPOSE ${PORT}
