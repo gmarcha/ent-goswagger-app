@@ -11,6 +11,8 @@ import (
 )
 
 func Init() (client *ent.Client) {
+
+	database := "postgres"
 	infos := []string{
 		"host=" + os.Getenv("POSTGRES_HOST"),
 		"port=" + os.Getenv("POSTGRES_PORT"),
@@ -20,13 +22,13 @@ func Init() (client *ent.Client) {
 		"sslmode=" + os.Getenv("POSTGRES_SSLMODE"),
 	}
 	info := strings.Join(infos, " ")
-	client, err := ent.Open("postgres", info)
+
+	client, err := ent.Open(database, info)
 	if err != nil {
 		log.Fatalf("failed connecting to postgres: %v", err)
 	}
 	log.Println("Database connected")
-	ctx := context.Background()
-	if err := client.Schema.Create(ctx); err != nil {
+	if err := client.Schema.Create(context.Background()); err != nil {
 		log.Fatalf("failed creating schema resources: %v", err)
 	}
 	log.Println("Schemas created")
