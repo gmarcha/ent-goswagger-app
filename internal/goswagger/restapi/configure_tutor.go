@@ -18,6 +18,7 @@ import (
 	"github.com/gamarcha/ent-goswagger-app/internal/goswagger/restapi/operations/authentication"
 	"github.com/gamarcha/ent-goswagger-app/internal/goswagger/restapi/operations/event"
 	"github.com/gamarcha/ent-goswagger-app/internal/goswagger/restapi/operations/user"
+	"github.com/gamarcha/ent-goswagger-app/internal/modules/auth"
 )
 
 //go:generate swagger generate server --target ../../goswagger --name Tutor --spec ../../../docs/swagger.yaml --principal models.Principal --exclude-main
@@ -50,6 +51,8 @@ func configureAPI(api *operations.TutorAPI) http.Handler {
 	}
 
 	db := database.Init()
+
+	auth.Init(api)
 
 	if api.OauthSecurityAuth == nil {
 		api.OauthSecurityAuth = func(token string, scopes []string) (*models.Principal, error) {
