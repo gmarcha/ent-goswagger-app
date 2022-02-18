@@ -1,4 +1,5 @@
-name: treeci
+name: Project Tree
+
 on:
   push:
     branches:
@@ -7,13 +8,10 @@ on:
     tags:
       - v*
   pull_request:
-# permissions:
-#   contents: read
-  # Optional: allow read access to pull request. Use with `only-new-issues` option.
-  # pull-requests: read
+
 jobs:
   tree:
-    name: Print project tree in docs
+    name: Print project tree in docs/
     runs-on: ubuntu-latest
     steps:
       - name: Checks-out repository under workspace

@@ -1,4 +1,5 @@
-name: swaggerci-validate
+name: Swagger Validation
+
 on:
   push:
     branches:
@@ -11,10 +12,7 @@ on:
   pull_request:
     paths:
       - 'docs/swagger.yaml'
-# permissions:
-#   contents: read
-  # Optional: allow read access to pull request. Use with `only-new-issues` option.
-  # pull-requests: read
+
 jobs:
   validate:
     name: Validate Swagger specification
