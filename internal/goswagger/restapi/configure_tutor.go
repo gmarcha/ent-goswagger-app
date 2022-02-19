@@ -9,16 +9,11 @@ import (
 
 	"github.com/go-openapi/errors"
 	"github.com/go-openapi/runtime"
-	"github.com/go-openapi/runtime/middleware"
 	"github.com/joho/godotenv"
 
-	"github.com/gamarcha/ent-goswagger-app/internal/clients/database"
-	"github.com/gamarcha/ent-goswagger-app/internal/goswagger/models"
-	"github.com/gamarcha/ent-goswagger-app/internal/goswagger/restapi/operations"
-	"github.com/gamarcha/ent-goswagger-app/internal/goswagger/restapi/operations/authentication"
-	"github.com/gamarcha/ent-goswagger-app/internal/goswagger/restapi/operations/event"
-	"github.com/gamarcha/ent-goswagger-app/internal/goswagger/restapi/operations/user"
-	"github.com/gamarcha/ent-goswagger-app/internal/modules/auth"
+	"github.com/gmarcha/ent-goswagger-app/internal/clients/database"
+	"github.com/gmarcha/ent-goswagger-app/internal/goswagger/restapi/operations"
+	"github.com/gmarcha/ent-goswagger-app/internal/modules/auth"
 )
 
 //go:generate swagger generate server --target ../../goswagger --name Tutor --spec ../../../docs/swagger.yaml --principal models.Principal --exclude-main
@@ -37,9 +32,13 @@ func configureAPI(api *operations.TutorAPI) http.Handler {
 	// Example:
 	// api.Logger = log.Printf
 
+	// Set your custom authorizer if needed. Default one is security.Authorized()
+	// Expected interface runtime.Authorizer
+	//
+	// Example:
+	// api.APIAuthorizer = security.Authorized()
+
 	api.UseSwaggerUI()
-	// To continue using redoc as your UI, uncomment the following line
-	// api.UseRedoc()
 
 	api.JSONConsumer = runtime.JSONConsumer()
 
@@ -52,102 +51,7 @@ func configureAPI(api *operations.TutorAPI) http.Handler {
 
 	db := database.Init()
 
-	auth.Init(api)
-
-	if api.OauthSecurityAuth == nil {
-		api.OauthSecurityAuth = func(token string, scopes []string) (*models.Principal, error) {
-			return nil, errors.NotImplemented("oauth2 bearer auth (OauthSecurity) has not yet been implemented")
-		}
-	}
-
-	// Set your custom authorizer if needed. Default one is security.Authorized()
-	// Expected interface runtime.Authorizer
-	//
-	// Example:
-	// api.APIAuthorizer = security.Authorized()
-
-	if api.AuthenticationCallbackHandler == nil {
-		api.AuthenticationCallbackHandler = authentication.CallbackHandlerFunc(func(params authentication.CallbackParams) middleware.Responder {
-			return middleware.NotImplemented("operation authentication.GetAuthCallback has not yet been implemented")
-		})
-	}
-	if api.AuthenticationLoginHandler == nil {
-		api.AuthenticationLoginHandler = authentication.LoginHandlerFunc(func(params authentication.LoginParams) middleware.Responder {
-			return middleware.NotImplemented("operation authentication.GetLogin has not yet been implemented")
-		})
-	}
-	if api.EventCreateEventHandler == nil {
-		api.EventCreateEventHandler = event.CreateEventHandlerFunc(func(params event.CreateEventParams, principal *models.Principal) middleware.Responder {
-			return middleware.NotImplemented("operation event.CreateEvent has not yet been implemented")
-		})
-	}
-	if api.UserCreateUserHandler == nil {
-		api.UserCreateUserHandler = user.CreateUserHandlerFunc(func(params user.CreateUserParams, principal *models.Principal) middleware.Responder {
-			return middleware.NotImplemented("operation user.CreateUser has not yet been implemented")
-		})
-	}
-	if api.EventDeleteEventHandler == nil {
-		api.EventDeleteEventHandler = event.DeleteEventHandlerFunc(func(params event.DeleteEventParams, principal *models.Principal) middleware.Responder {
-			return middleware.NotImplemented("operation event.DeleteEvent has not yet been implemented")
-		})
-	}
-	if api.UserDeleteUserHandler == nil {
-		api.UserDeleteUserHandler = user.DeleteUserHandlerFunc(func(params user.DeleteUserParams, principal *models.Principal) middleware.Responder {
-			return middleware.NotImplemented("operation user.DeleteUser has not yet been implemented")
-		})
-	}
-	if api.EventListEventHandler == nil {
-		api.EventListEventHandler = event.ListEventHandlerFunc(func(params event.ListEventParams, principal *models.Principal) middleware.Responder {
-			return middleware.NotImplemented("operation event.ListEvent has not yet been implemented")
-		})
-	}
-	if api.EventListEventUsersHandler == nil {
-		api.EventListEventUsersHandler = event.ListEventUsersHandlerFunc(func(params event.ListEventUsersParams, principal *models.Principal) middleware.Responder {
-			return middleware.NotImplemented("operation event.ListEventUsers has not yet been implemented")
-		})
-	}
-	if api.UserListUserHandler == nil {
-		api.UserListUserHandler = user.ListUserHandlerFunc(func(params user.ListUserParams, principal *models.Principal) middleware.Responder {
-			return middleware.NotImplemented("operation user.ListUser has not yet been implemented")
-		})
-	}
-	if api.UserListUserEventsHandler == nil {
-		api.UserListUserEventsHandler = user.ListUserEventsHandlerFunc(func(params user.ListUserEventsParams, principal *models.Principal) middleware.Responder {
-			return middleware.NotImplemented("operation user.ListUserEvents has not yet been implemented")
-		})
-	}
-	if api.EventReadEventHandler == nil {
-		api.EventReadEventHandler = event.ReadEventHandlerFunc(func(params event.ReadEventParams, principal *models.Principal) middleware.Responder {
-			return middleware.NotImplemented("operation event.ReadEvent has not yet been implemented")
-		})
-	}
-	if api.UserReadUserHandler == nil {
-		api.UserReadUserHandler = user.ReadUserHandlerFunc(func(params user.ReadUserParams, principal *models.Principal) middleware.Responder {
-			return middleware.NotImplemented("operation user.ReadUser has not yet been implemented")
-		})
-	}
-	if api.UserSubscribeUserHandler == nil {
-		api.UserSubscribeUserHandler = user.SubscribeUserHandlerFunc(func(params user.SubscribeUserParams, principal *models.Principal) middleware.Responder {
-			return middleware.NotImplemented("operation user.SubscribeUser has not yet been implemented")
-		})
-	}
-	if api.UserUnsubscribeUserHandler == nil {
-		api.UserUnsubscribeUserHandler = user.UnsubscribeUserHandlerFunc(func(params user.UnsubscribeUserParams, principal *models.Principal) middleware.Responder {
-			return middleware.NotImplemented("operation user.UnsubscribeUser has not yet been implemented")
-		})
-	}
-	if api.EventUpdateEventHandler == nil {
-		api.EventUpdateEventHandler = event.UpdateEventHandlerFunc(func(params event.UpdateEventParams, principal *models.Principal) middleware.Responder {
-			return middleware.NotImplemented("operation event.UpdateEvent has not yet been implemented")
-		})
-	}
-	if api.UserUpdateUserHandler == nil {
-		api.UserUpdateUserHandler = user.UpdateUserHandlerFunc(func(params user.UpdateUserParams, principal *models.Principal) middleware.Responder {
-			return middleware.NotImplemented("operation user.UpdateUser has not yet been implemented")
-		})
-	}
-
-	api.PreServerShutdown = func() {}
+	auth.Init(api, db)
 
 	api.ServerShutdown = func() {
 		db.Close()
