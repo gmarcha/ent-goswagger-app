@@ -6,7 +6,7 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/gamarcha/ent-goswagger-app/ent"
+	"github.com/gmarcha/ent-goswagger-app/internal/ent"
 )
 
 // The EventFunc type is an adapter to allow the use of ordinary

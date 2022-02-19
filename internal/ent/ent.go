@@ -8,8 +8,8 @@ import (
 
 	"entgo.io/ent"
 	"entgo.io/ent/dialect/sql"
-	"github.com/gamarcha/ent-goswagger-app/ent/event"
-	"github.com/gamarcha/ent-goswagger-app/ent/user"
+	"github.com/gmarcha/ent-goswagger-app/internal/ent/event"
+	"github.com/gmarcha/ent-goswagger-app/internal/ent/user"
 )
 
 // ent aliases to avoid import conflicts in user's code.

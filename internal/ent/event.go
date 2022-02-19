@@ -8,7 +8,7 @@ import (
 	"time"
 
 	"entgo.io/ent/dialect/sql"
-	"github.com/gamarcha/ent-goswagger-app/ent/event"
+	"github.com/gmarcha/ent-goswagger-app/internal/ent/event"
 	"github.com/google/uuid"
 )
 

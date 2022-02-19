@@ -5,9 +5,9 @@ package enttest
 import (
 	"context"
 
-	"github.com/gamarcha/ent-goswagger-app/ent"
+	"github.com/gmarcha/ent-goswagger-app/internal/ent"
 	// required by schema hooks.
-	_ "github.com/gamarcha/ent-goswagger-app/ent/runtime"
+	_ "github.com/gmarcha/ent-goswagger-app/internal/ent/runtime"
 
 	"entgo.io/ent/dialect/sql/schema"
 )
