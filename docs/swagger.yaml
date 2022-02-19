@@ -18,11 +18,11 @@ securityDefinitions:
     authorizationUrl: 'https://api.intra.42.fr/oauth/authorize'
     tokenUrl: 'https://api.intra.42.fr/oauth/token'
     scopes:
-      user: User scope
+      tutor: Tutor scope
 
 security:
   - OauthSecurity:
-    - user
+    - tutor
 
 paths:
 
@@ -247,6 +247,21 @@ paths:
         "500":
           $ref: '#/responses/500'
 
+  /users/me:
+    get:
+      summary: Read authenticated user
+      description: Read an authenticated user.
+      tags:
+        - User
+      operationId: readMe
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/User'
+        "500":
+          $ref: '#/responses/500'
+
   /users/{id}:
     parameters:
       - in: path
@@ -352,7 +367,7 @@ paths:
         type: string
     post:
       summary: Subscribe user
-      description: Subscribe user to an event.
+      description: Subscribe a user to an event.
       tags:
         - User
       operationId: subscribeUser
@@ -370,10 +385,51 @@ paths:
           $ref: '#/responses/500'
     delete:
       summary: Unsubscribe user
-      description: Unsubscribe user to an event.
+      description: Unsubscribe a user to an event.
       tags:
         - User
       operationId: unsubscribeUser
+      responses:
+        "204":
+          description: No Content
+        "400":
+          $ref: '#/responses/400'
+        "404":
+          $ref: '#/responses/404'
+        "500":
+          $ref: '#/responses/500'
+
+  /users/me/events/{id}:
+    parameters:
+      - in: path
+        name: id
+        required: true
+        description: Event ID.
+        type: string
+    post:
+      summary: Subscribe authenticated user
+      description: Subscribe an authenticated user to an event.
+      tags:
+        - User
+      operationId: subscribeMe
+      responses:
+        "201":
+          description: OK
+          schema:
+            type: string
+            example: Done
+        "400":
+          $ref: '#/responses/400'
+        "404":
+          $ref: '#/responses/404'
+        "500":
+          $ref: '#/responses/500'
+    delete:
+      summary: Unsubscribe user
+      description: Unsubscribe an authenticated user to an event.
+      tags:
+        - User
+      operationId: unsubscribeMe
       responses:
         "204":
           description: No Content
@@ -422,6 +478,11 @@ definitions:
         format: string
         minLength: 1
         example: Exam Stud
+      type:
+        type: string
+        format: string
+        minLength: 1
+        example: Exam
       description:
         type: string
         format: string
@@ -430,11 +491,6 @@ definitions:
         type: integer
         format: int64
         example: 3
-      # Is it really necessary ? (If yes, so we need to update this field on each subscription ? Or if no, can we retrieve number of subscription by counting items in eventUsers ?)
-      tutorsSubscribed:
-        type: integer
-        format: int64
-        example: 0
       walletsReward:
         type: integer
         format: int64
@@ -478,13 +534,11 @@ definitions:
         type: string
         format: string
         example: Marchal
-      # Is it really necessary ? (If yes, update on event subscription or when event is done ? And if no, how to implement it ?)
-      hoursDone:
-        type: integer
-        format: int64
-        example: 6
-      # Are these booleans necessary ? Why do we need them, whereas securityDefinitions normally rule authentication issues ?
-      tutorScope:
+      imageUrl:
+        type: string
+        format: uri
+        example: Coming soon.
+      calendarScope:
         type: boolean
         example: true
       adminScope:
