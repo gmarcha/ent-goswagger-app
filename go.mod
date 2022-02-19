@@ -1,4 +1,4 @@
-module github.com/gamarcha/ent-goswagger-app
+module github.com/gmarcha/ent-goswagger-app
 
 go 1.17
 
@@ -17,6 +17,7 @@ require (
 	github.com/joho/godotenv v1.3.0
 	github.com/lib/pq v1.10.4
 	golang.org/x/net v0.0.0-20220127200216-cd36cc0744dd
+	golang.org/x/oauth2 v0.0.0-20211104180415-d3ed0bb246c8
 )
 
 require (
@@ -45,7 +46,6 @@ require (
 	go.mongodb.org/mongo-driver v1.8.3 // indirect
 	golang.org/x/crypto v0.0.0-20201216223049-8b5274cf687f // indirect
 	golang.org/x/mod v0.5.1 // indirect
-	golang.org/x/oauth2 v0.0.0-20211104180415-d3ed0bb246c8 // indirect
 	golang.org/x/sys v0.0.0-20220209214540-3681064d5158 // indirect
 	golang.org/x/text v0.3.7 // indirect
 	google.golang.org/appengine v1.6.6 // indirect
