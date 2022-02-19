@@ -10,7 +10,8 @@ import (
 
 	"github.com/go-openapi/runtime"
 
-	"github.com/gamarcha/ent-goswagger-app/internal/goswagger/models"
+	"github.com/gmarcha/ent-goswagger-app/internal/ent"
+	"github.com/gmarcha/ent-goswagger-app/internal/goswagger/models"
 )
 
 // CreateUserCreatedCode is the HTTP code returned for type CreateUserCreated
@@ -25,7 +26,7 @@ type CreateUserCreated struct {
 	/*
 	  In: Body
 	*/
-	Payload *models.User `json:"body,omitempty"`
+	Payload *ent.User `json:"body,omitempty"`
 }
 
 // NewCreateUserCreated creates CreateUserCreated with default headers values
@@ -35,13 +36,13 @@ func NewCreateUserCreated() *CreateUserCreated {
 }
 
 // WithPayload adds the payload to the create user created response
-func (o *CreateUserCreated) WithPayload(payload *models.User) *CreateUserCreated {
+func (o *CreateUserCreated) WithPayload(payload *ent.User) *CreateUserCreated {
 	o.Payload = payload
 	return o
 }
 
 // SetPayload sets the payload to the create user created response
-func (o *CreateUserCreated) SetPayload(payload *models.User) {
+func (o *CreateUserCreated) SetPayload(payload *ent.User) {
 	o.Payload = payload
 }
 

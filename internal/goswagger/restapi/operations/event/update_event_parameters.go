@@ -16,7 +16,7 @@ import (
 	"github.com/go-openapi/strfmt"
 	"github.com/go-openapi/validate"
 
-	"github.com/gamarcha/ent-goswagger-app/internal/goswagger/models"
+	"github.com/gmarcha/ent-goswagger-app/internal/ent"
 )
 
 // NewUpdateEventParams creates a new UpdateEventParams object
@@ -40,7 +40,7 @@ type UpdateEventParams struct {
 	  Required: true
 	  In: body
 	*/
-	Event *models.Event
+	Event *ent.Event
 	/*Event ID.
 	  Required: true
 	  In: path
@@ -59,7 +59,7 @@ func (o *UpdateEventParams) BindRequest(r *http.Request, route *middleware.Match
 
 	if runtime.HasBody(r) {
 		defer r.Body.Close()
-		var body models.Event
+		var body ent.Event
 		if err := route.Consumer.Consume(r.Body, &body); err != nil {
 			if err == io.EOF {
 				res = append(res, errors.Required("event", "body", ""))

@@ -10,7 +10,8 @@ import (
 
 	"github.com/go-openapi/runtime"
 
-	"github.com/gamarcha/ent-goswagger-app/internal/goswagger/models"
+	"github.com/gmarcha/ent-goswagger-app/internal/ent"
+	"github.com/gmarcha/ent-goswagger-app/internal/goswagger/models"
 )
 
 // ReadMeOKCode is the HTTP code returned for type ReadMeOK
@@ -25,7 +26,7 @@ type ReadMeOK struct {
 	/*
 	  In: Body
 	*/
-	Payload *models.User `json:"body,omitempty"`
+	Payload *ent.User `json:"body,omitempty"`
 }
 
 // NewReadMeOK creates ReadMeOK with default headers values
@@ -35,13 +36,13 @@ func NewReadMeOK() *ReadMeOK {
 }
 
 // WithPayload adds the payload to the read me o k response
-func (o *ReadMeOK) WithPayload(payload *models.User) *ReadMeOK {
+func (o *ReadMeOK) WithPayload(payload *ent.User) *ReadMeOK {
 	o.Payload = payload
 	return o
 }
 
 // SetPayload sets the payload to the read me o k response
-func (o *ReadMeOK) SetPayload(payload *models.User) {
+func (o *ReadMeOK) SetPayload(payload *ent.User) {
 	o.Payload = payload
 }
 

@@ -10,7 +10,8 @@ import (
 
 	"github.com/go-openapi/runtime"
 
-	"github.com/gamarcha/ent-goswagger-app/internal/goswagger/models"
+	"github.com/gmarcha/ent-goswagger-app/internal/ent"
+	"github.com/gmarcha/ent-goswagger-app/internal/goswagger/models"
 )
 
 // CreateEventCreatedCode is the HTTP code returned for type CreateEventCreated
@@ -25,7 +26,7 @@ type CreateEventCreated struct {
 	/*
 	  In: Body
 	*/
-	Payload *models.Event `json:"body,omitempty"`
+	Payload *ent.Event `json:"body,omitempty"`
 }
 
 // NewCreateEventCreated creates CreateEventCreated with default headers values
@@ -35,13 +36,13 @@ func NewCreateEventCreated() *CreateEventCreated {
 }
 
 // WithPayload adds the payload to the create event created response
-func (o *CreateEventCreated) WithPayload(payload *models.Event) *CreateEventCreated {
+func (o *CreateEventCreated) WithPayload(payload *ent.Event) *CreateEventCreated {
 	o.Payload = payload
 	return o
 }
 
 // SetPayload sets the payload to the create event created response
-func (o *CreateEventCreated) SetPayload(payload *models.Event) {
+func (o *CreateEventCreated) SetPayload(payload *ent.Event) {
 	o.Payload = payload
 }
 

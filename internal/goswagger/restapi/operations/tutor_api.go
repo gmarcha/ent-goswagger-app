@@ -19,10 +19,10 @@ import (
 	"github.com/go-openapi/strfmt"
 	"github.com/go-openapi/swag"
 
-	"github.com/gamarcha/ent-goswagger-app/internal/goswagger/models"
-	"github.com/gamarcha/ent-goswagger-app/internal/goswagger/restapi/operations/authentication"
-	"github.com/gamarcha/ent-goswagger-app/internal/goswagger/restapi/operations/event"
-	"github.com/gamarcha/ent-goswagger-app/internal/goswagger/restapi/operations/user"
+	"github.com/gmarcha/ent-goswagger-app/internal/goswagger/models"
+	"github.com/gmarcha/ent-goswagger-app/internal/goswagger/restapi/operations/authentication"
+	"github.com/gmarcha/ent-goswagger-app/internal/goswagger/restapi/operations/event"
+	"github.com/gmarcha/ent-goswagger-app/internal/goswagger/restapi/operations/user"
 )
 
 // NewTutorAPI creates a new Tutor instance

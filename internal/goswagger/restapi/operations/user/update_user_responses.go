@@ -10,7 +10,8 @@ import (
 
 	"github.com/go-openapi/runtime"
 
-	"github.com/gamarcha/ent-goswagger-app/internal/goswagger/models"
+	"github.com/gmarcha/ent-goswagger-app/internal/ent"
+	"github.com/gmarcha/ent-goswagger-app/internal/goswagger/models"
 )
 
 // UpdateUserOKCode is the HTTP code returned for type UpdateUserOK
@@ -25,7 +26,7 @@ type UpdateUserOK struct {
 	/*
 	  In: Body
 	*/
-	Payload *models.User `json:"body,omitempty"`
+	Payload *ent.User `json:"body,omitempty"`
 }
 
 // NewUpdateUserOK creates UpdateUserOK with default headers values
@@ -35,13 +36,13 @@ func NewUpdateUserOK() *UpdateUserOK {
 }
 
 // WithPayload adds the payload to the update user o k response
-func (o *UpdateUserOK) WithPayload(payload *models.User) *UpdateUserOK {
+func (o *UpdateUserOK) WithPayload(payload *ent.User) *UpdateUserOK {
 	o.Payload = payload
 	return o
 }
 
 // SetPayload sets the payload to the update user o k response
-func (o *UpdateUserOK) SetPayload(payload *models.User) {
+func (o *UpdateUserOK) SetPayload(payload *ent.User) {
 	o.Payload = payload
 }
 

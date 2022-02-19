@@ -10,7 +10,7 @@ import (
 
 	"github.com/go-openapi/runtime/middleware"
 
-	"github.com/gamarcha/ent-goswagger-app/internal/goswagger/models"
+	"github.com/gmarcha/ent-goswagger-app/internal/goswagger/models"
 )
 
 // ListUserEventsHandlerFunc turns a function with the right signature into a list user events handler

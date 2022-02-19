@@ -10,7 +10,8 @@ import (
 
 	"github.com/go-openapi/runtime"
 
-	"github.com/gamarcha/ent-goswagger-app/internal/goswagger/models"
+	"github.com/gmarcha/ent-goswagger-app/internal/ent"
+	"github.com/gmarcha/ent-goswagger-app/internal/goswagger/models"
 )
 
 // ReadUserOKCode is the HTTP code returned for type ReadUserOK
@@ -25,7 +26,7 @@ type ReadUserOK struct {
 	/*
 	  In: Body
 	*/
-	Payload *models.User `json:"body,omitempty"`
+	Payload *ent.User `json:"body,omitempty"`
 }
 
 // NewReadUserOK creates ReadUserOK with default headers values
@@ -35,13 +36,13 @@ func NewReadUserOK() *ReadUserOK {
 }
 
 // WithPayload adds the payload to the read user o k response
-func (o *ReadUserOK) WithPayload(payload *models.User) *ReadUserOK {
+func (o *ReadUserOK) WithPayload(payload *ent.User) *ReadUserOK {
 	o.Payload = payload
 	return o
 }
 
 // SetPayload sets the payload to the read user o k response
-func (o *ReadUserOK) SetPayload(payload *models.User) {
+func (o *ReadUserOK) SetPayload(payload *ent.User) {
 	o.Payload = payload
 }
 

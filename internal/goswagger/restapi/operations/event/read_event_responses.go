@@ -10,7 +10,8 @@ import (
 
 	"github.com/go-openapi/runtime"
 
-	"github.com/gamarcha/ent-goswagger-app/internal/goswagger/models"
+	"github.com/gmarcha/ent-goswagger-app/internal/ent"
+	"github.com/gmarcha/ent-goswagger-app/internal/goswagger/models"
 )
 
 // ReadEventOKCode is the HTTP code returned for type ReadEventOK
@@ -25,7 +26,7 @@ type ReadEventOK struct {
 	/*
 	  In: Body
 	*/
-	Payload *models.Event `json:"body,omitempty"`
+	Payload *ent.Event `json:"body,omitempty"`
 }
 
 // NewReadEventOK creates ReadEventOK with default headers values
@@ -35,13 +36,13 @@ func NewReadEventOK() *ReadEventOK {
 }
 
 // WithPayload adds the payload to the read event o k response
-func (o *ReadEventOK) WithPayload(payload *models.Event) *ReadEventOK {
+func (o *ReadEventOK) WithPayload(payload *ent.Event) *ReadEventOK {
 	o.Payload = payload
 	return o
 }
 
 // SetPayload sets the payload to the read event o k response
-func (o *ReadEventOK) SetPayload(payload *models.Event) {
+func (o *ReadEventOK) SetPayload(payload *ent.Event) {
 	o.Payload = payload
 }
 

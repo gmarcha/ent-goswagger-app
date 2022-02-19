@@ -710,6 +710,16 @@ func init() {
           "format": "int64",
           "example": 200
         }
+      },
+      "x-go-type": {
+        "hints": {
+          "kind": "object",
+          "noValidation": true
+        },
+        "import": {
+          "package": "github.com/gmarcha/ent-goswagger-app/internal/ent"
+        },
+        "type": "Event"
       }
     },
     "User": {
@@ -756,6 +766,16 @@ func init() {
           "minLength": 2,
           "example": "gamarcha"
         }
+      },
+      "x-go-type": {
+        "hints": {
+          "kind": "object",
+          "noValidation": true
+        },
+        "import": {
+          "package": "github.com/gmarcha/ent-goswagger-app/internal/ent"
+        },
+        "type": "User"
       }
     },
     "principal": {
@@ -1647,6 +1667,16 @@ func init() {
           "format": "int64",
           "example": 200
         }
+      },
+      "x-go-type": {
+        "hints": {
+          "kind": "object",
+          "noValidation": true
+        },
+        "import": {
+          "package": "github.com/gmarcha/ent-goswagger-app/internal/ent"
+        },
+        "type": "Event"
       }
     },
     "User": {
@@ -1693,6 +1723,16 @@ func init() {
           "minLength": 2,
           "example": "gamarcha"
         }
+      },
+      "x-go-type": {
+        "hints": {
+          "kind": "object",
+          "noValidation": true
+        },
+        "import": {
+          "package": "github.com/gmarcha/ent-goswagger-app/internal/ent"
+        },
+        "type": "User"
       }
     },
     "principal": {

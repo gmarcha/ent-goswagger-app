@@ -15,7 +15,7 @@ import (
 	"github.com/go-openapi/runtime/middleware"
 	"github.com/go-openapi/validate"
 
-	"github.com/gamarcha/ent-goswagger-app/internal/goswagger/models"
+	"github.com/gmarcha/ent-goswagger-app/internal/ent"
 )
 
 // NewCreateEventParams creates a new CreateEventParams object
@@ -39,7 +39,7 @@ type CreateEventParams struct {
 	  Required: true
 	  In: body
 	*/
-	Event *models.Event
+	Event *ent.Event
 }
 
 // BindRequest both binds and validates a request, it assumes that complex things implement a Validatable(strfmt.Registry) error interface
@@ -53,7 +53,7 @@ func (o *CreateEventParams) BindRequest(r *http.Request, route *middleware.Match
 
 	if runtime.HasBody(r) {
 		defer r.Body.Close()
-		var body models.Event
+		var body ent.Event
 		if err := route.Consumer.Consume(r.Body, &body); err != nil {
 			if err == io.EOF {
 				res = append(res, errors.Required("event", "body", ""))

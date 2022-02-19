@@ -10,7 +10,8 @@ import (
 
 	"github.com/go-openapi/runtime"
 
-	"github.com/gamarcha/ent-goswagger-app/internal/goswagger/models"
+	"github.com/gmarcha/ent-goswagger-app/internal/ent"
+	"github.com/gmarcha/ent-goswagger-app/internal/goswagger/models"
 )
 
 // ListEventUsersOKCode is the HTTP code returned for type ListEventUsersOK
@@ -25,7 +26,7 @@ type ListEventUsersOK struct {
 	/*
 	  In: Body
 	*/
-	Payload []*models.User `json:"body,omitempty"`
+	Payload []*ent.User `json:"body,omitempty"`
 }
 
 // NewListEventUsersOK creates ListEventUsersOK with default headers values
@@ -35,13 +36,13 @@ func NewListEventUsersOK() *ListEventUsersOK {
 }
 
 // WithPayload adds the payload to the list event users o k response
-func (o *ListEventUsersOK) WithPayload(payload []*models.User) *ListEventUsersOK {
+func (o *ListEventUsersOK) WithPayload(payload []*ent.User) *ListEventUsersOK {
 	o.Payload = payload
 	return o
 }
 
 // SetPayload sets the payload to the list event users o k response
-func (o *ListEventUsersOK) SetPayload(payload []*models.User) {
+func (o *ListEventUsersOK) SetPayload(payload []*ent.User) {
 	o.Payload = payload
 }
 
@@ -52,7 +53,7 @@ func (o *ListEventUsersOK) WriteResponse(rw http.ResponseWriter, producer runtim
 	payload := o.Payload
 	if payload == nil {
 		// return empty array
-		payload = make([]*models.User, 0, 50)
+		payload = make([]*ent.User, 0, 50)
 	}
 
 	if err := producer.Produce(rw, payload); err != nil {

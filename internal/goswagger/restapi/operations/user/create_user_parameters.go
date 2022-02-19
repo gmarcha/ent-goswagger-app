@@ -15,7 +15,7 @@ import (
 	"github.com/go-openapi/runtime/middleware"
 	"github.com/go-openapi/validate"
 
-	"github.com/gamarcha/ent-goswagger-app/internal/goswagger/models"
+	"github.com/gmarcha/ent-goswagger-app/internal/ent"
 )
 
 // NewCreateUserParams creates a new CreateUserParams object
@@ -39,7 +39,7 @@ type CreateUserParams struct {
 	  Required: true
 	  In: body
 	*/
-	User *models.User
+	User *ent.User
 }
 
 // BindRequest both binds and validates a request, it assumes that complex things implement a Validatable(strfmt.Registry) error interface
@@ -53,7 +53,7 @@ func (o *CreateUserParams) BindRequest(r *http.Request, route *middleware.Matche
 
 	if runtime.HasBody(r) {
 		defer r.Body.Close()
-		var body models.User
+		var body ent.User
 		if err := route.Consumer.Consume(r.Body, &body); err != nil {
 			if err == io.EOF {
 				res = append(res, errors.Required("user", "body", ""))
