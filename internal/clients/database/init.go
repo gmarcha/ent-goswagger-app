@@ -6,7 +6,7 @@ import (
 	"os"
 	"strings"
 
-	"github.com/gamarcha/ent-goswagger-app/internal/ent"
+	"github.com/gmarcha/ent-goswagger-app/internal/ent"
 	_ "github.com/lib/pq"
 )
 
