@@ -1,6 +1,6 @@
 NAME := tutor
 
-include config/.env
+-include config/.env
 
 DOCKER-COMPOSE := COMPOSE_PROJECT_NAME=$(NAME) PORT=$(PORT) docker-compose
 DOCKER-COMPOSE-PATH := ./config/docker-compose.yaml
