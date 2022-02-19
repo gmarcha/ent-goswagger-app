@@ -44,7 +44,8 @@ Application development follows a design-first approach. It uses two code genera
    It can use external data models with swagger extension to avoid multiple data models in the application.\
    Specification serves as an API documentation for other developers.
    
-3. API routes are interfaces with `Handle` method which need to be implemented by the developer as authentication mechanisms.
+3. API routes are interfaces with `Handle` method which need to be implemented by the developer.\
+   Authentication mechanisms as OAuth need to be implemented too.
 
 ## Stack
 
