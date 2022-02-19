@@ -145,11 +145,11 @@
 │       │   ├── auth.go
 │       │   ├── handle.go
 │       │   └── init.go
-│       ├── events
+│       ├── event
 │       │   ├── handle.go
 │       │   ├── init.go
 │       │   └── service.go
-│       └── users
+│       └── user
 │           ├── handle.go
 │           ├── init.go
 │           └── service.go
