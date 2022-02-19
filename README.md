@@ -16,11 +16,12 @@ A web API written in Go programming language with entgo and goswagger.
 
 Use Makefile rules to build and run application (see comments in `Makefile`).
 
-- `make` uses `make build` and `make up` internally;
+- `make` triggers `make all`;
+- `make all` uses `make build` and `make up` internally;
 - `make build` builds docker-compose images;
 - `make up` starts docker-compose containers;
 - `make down` stops docker-compose containers;
-- `make re` uses `make down` and `make` internally;
+- `make re` uses `make down` and `make all` internally;
 - `make delete` stops docker-compose containers and erases docker-compose volumes.
 
 Use them to perform code generation with entgo and goswagger.
