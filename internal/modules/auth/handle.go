@@ -6,7 +6,7 @@ import (
 	"net/http"
 
 	oidc "github.com/coreos/go-oidc"
-	"github.com/gamarcha/ent-goswagger-app/internal/goswagger/restapi/operations/authentication"
+	"github.com/gmarcha/ent-goswagger-app/internal/goswagger/restapi/operations/authentication"
 	"github.com/go-openapi/runtime"
 	"github.com/go-openapi/runtime/middleware"
 	"golang.org/x/oauth2"
@@ -27,6 +27,7 @@ func (this *login) Handle(params authentication.LoginParams) middleware.Responde
 type callback struct {
 	state  string
 	config *oauth2.Config
+	// user   *user.Service
 }
 
 func (this *callback) Handle(params authentication.CallbackParams) middleware.Responder {
@@ -44,11 +45,11 @@ func (this *callback) Handle(params authentication.CallbackParams) middleware.Re
 	if err != nil {
 		return middleware.Error(500, fmt.Sprintln("failed to fetch token"))
 	}
-	
+
 	// With that token, make a /me on 42 API.
 	// --> handle back id and login;
 	// --> it exists in our user, cool, create a JWT;
 	// --> it doesn't exist throw CallBackNotOK.
-	
+
 	return authentication.NewCallbackOK().WithPayload(token.AccessToken)
 }

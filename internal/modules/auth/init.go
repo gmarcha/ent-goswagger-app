@@ -3,11 +3,12 @@ package auth
 import (
 	"os"
 
-	"github.com/gamarcha/ent-goswagger-app/internal/goswagger/restapi/operations"
+	"github.com/gmarcha/ent-goswagger-app/internal/ent"
+	"github.com/gmarcha/ent-goswagger-app/internal/goswagger/restapi/operations"
 	"golang.org/x/oauth2"
 )
 
-func Init(api *operations.TutorAPI) {
+func Init(api *operations.TutorAPI, db *ent.Client) {
 
 	state := randStringBytes(64)
 	clientID := os.Getenv("API_CLIENT_ID")
@@ -26,7 +27,13 @@ func Init(api *operations.TutorAPI) {
 		RedirectURL: callbackUrl,
 	}
 
+	// userService := &user.Service{client: db.User}
+
 	api.OauthSecurityAuth = authenticate
 	api.AuthenticationLoginHandler = &login{state: state, config: config}
-	api.AuthenticationCallbackHandler = &callback{state: state, config: config}
+	api.AuthenticationCallbackHandler = &callback{
+		state:  state,
+		config: config,
+		// user:   userService,
+	}
 }
