@@ -123,14 +123,26 @@
 │   │       │       ├── list_user_parameters.go
 │   │       │       ├── list_user_responses.go
 │   │       │       ├── list_user_urlbuilder.go
+│   │       │       ├── read_me.go
+│   │       │       ├── read_me_parameters.go
+│   │       │       ├── read_me_responses.go
+│   │       │       ├── read_me_urlbuilder.go
 │   │       │       ├── read_user.go
 │   │       │       ├── read_user_parameters.go
 │   │       │       ├── read_user_responses.go
 │   │       │       ├── read_user_urlbuilder.go
+│   │       │       ├── subscribe_me.go
+│   │       │       ├── subscribe_me_parameters.go
+│   │       │       ├── subscribe_me_responses.go
+│   │       │       ├── subscribe_me_urlbuilder.go
 │   │       │       ├── subscribe_user.go
 │   │       │       ├── subscribe_user_parameters.go
 │   │       │       ├── subscribe_user_responses.go
 │   │       │       ├── subscribe_user_urlbuilder.go
+│   │       │       ├── unsubscribe_me.go
+│   │       │       ├── unsubscribe_me_parameters.go
+│   │       │       ├── unsubscribe_me_responses.go
+│   │       │       ├── unsubscribe_me_urlbuilder.go
 │   │       │       ├── unsubscribe_user.go
 │   │       │       ├── unsubscribe_user_parameters.go
 │   │       │       ├── unsubscribe_user_responses.go
@@ -162,4 +174,4 @@
         ├── json.json
         └── yaml.json
 
-29 directories, 133 files
+29 directories, 145 files
