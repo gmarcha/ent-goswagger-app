@@ -61,11 +61,7 @@
 │   ├── goswagger
 │   │   ├── models
 │   │   │   ├── error.go
-│   │   │   ├── event.go
-│   │   │   ├── event_edges.go
-│   │   │   ├── principal.go
-│   │   │   ├── user.go
-│   │   │   └── user_edges.go
+│   │   │   └── principal.go
 │   │   └── restapi
 │   │       ├── configure_tutor.go
 │   │       ├── doc.go
@@ -174,4 +170,4 @@
         ├── json.json
         └── yaml.json
 
-29 directories, 145 files
+29 directories, 141 files
