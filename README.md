@@ -102,7 +102,7 @@ Application development follows a design-first approach. It uses two code genera
   *Links to [documentation](https://www.gnu.org/software/make/manual/make.html) and [wikipedia](https://en.wikipedia.org/wiki/Make_(software)).*
 
 - **Useful links**\
-  How to [makeareadme](https://www.makeareadme.com/)? How to [record](https://asciinema.org/) a terminal session ?
+  How to [makeareadme](https://www.makeareadme.com/)? How to draw an application [workflow](https://asciiflow.com/#/)? How to [record](https://asciinema.org/) a terminal session?
 
 ## Author
 
