@@ -33,22 +33,22 @@ Other rules are used by application Dockerfile (in `./config/`) and Github Actio
 
 ## Development
 
-Application development follows a design-first approach. It uses two code generation tools, and it can be separated in three steps.
+Application development follows a design-first approach. It uses two code generation tools and it can be separated in three steps.
 
 1. Entgo generates Go types and methods to perform database access from data schemas directly written in Go code.\
-   It enforces validation based on schema rules, which are applied to database-level (as foreign keys or SQL constraints).
+   It enforces validation based on schema rules which are applied to database-level (as foreign keys or SQL constraints).
 
 2. Go Swagger generates server code from a swagger specification using version 2.0.\
    All security definitions, route paths and model definitions are written in the specification.\
    It can use external data models with swagger extension to avoid multiple data models in the application.\
    Specification serves as an API documentation for other developers.
    
-3. API routes are interfaces with `Handle` method which need to be implemented by developer, as authentication mechanism.
+3. API routes are interfaces with `Handle` method which need to be implemented by the developer as authentication mechanisms.
 
 ## Stack
 
 - **Go**\
-  Golang is a modern compiled programming language, with strong typing, low-level capabilities and code generation tools.\
+  Golang is a modern compiled programming language with strong typing, low-level capabilities and code generation tools.\
   *Links to [documentation](https://go.dev/doc/), [specification](https://go.dev/ref/spec) and [project layout](https://github.com/golang-standards/project-layout) examples.*
 
 - **OAuth 2.0**\
@@ -58,12 +58,12 @@ Application development follows a design-first approach. It uses two code genera
 ---
 
 - **GoSwagger**\
-  A very powerful code generation tool, to generate server code from a Swagger specification (OAPIv2).\
+  A very powerful code generation tool. Generates server code from a Swagger specification (OAPIv2).\
   *Links to [documentation](https://goswagger.io/) and how to use [external models](https://goswagger.io/use/models/schemas.html#external-types) for code generation.*
   
 - **Swagger**\
-  A Swagger Specification is a json/yaml file which documents routes, data schemas and possibly authentication model about an API.\
-  A specification can be written to serve as a model to generate server code (as with goswagger), or it can be generated from comments in source code (as with gin-swagger). It is also possible to generate it from Go data schemas (as with elk or entoas, from entgo).\
+  A Swagger Specification is a json/yaml file documenting routes, data schemas and (sometimes) authentication model about an API.\
+  A specification can serve as a model to generate server code (as with goswagger), or it can be generated from comments in source code (as with gin-swagger). It is also possible to generate it from Go data schemas (as with elk or entoas, from entgo).\
   *Links to [documentation](https://swagger.io/docs/specification/2-0/basic-structure/) and [specification](https://swagger.io/specification/v2/).*
   
 - **SwaggerEditor**\
@@ -78,11 +78,11 @@ Application development follows a design-first approach. It uses two code genera
   *Link to [documentation](https://entgo.io/docs/getting-started/).*
 
 - **PostGreSQL _(or any SQL database)_**\
-  A SQL relationnal database, running in a container in development phase or with a cloud provider in production.\
+  A SQL relational database, running in a container in development phase or with a cloud provider in production.\
   *Links to [documentation](https://www.postgresql.org/docs/14/index.html) and [DockerHub](https://hub.docker.com/_/postgres).*
   
  - **Docker** and **Compose**\
-  Docker is an os-level virtualisation technology based on container.\
+  Docker is an os-level virtualization technology based on container.\
   They allow us to run our application in an isolated, platform independent environment.\
   Compose is a container orchestrator, used to manage a group of containers.\
   *Links to [Docker documentation](https://docs.docker.com/get-started/overview/) and to [Compose manual](https://docs.docker.com/compose/).*
@@ -96,16 +96,16 @@ Application development follows a design-first approach. It uses two code genera
   *Links to [documentation](https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions) and a Go workflow [example](https://medium.com/swlh/setting-up-github-actions-for-go-project-ea84f4ed3a40).*
 
 - **Make**\
-  Make is a build automation tool used to build executables files. Furthermore, it can be used to manage a project.\
-  We use a file called Makefile, which contains rules. These rules function as scripts.\
+  Make is a build automation tool used to build executables files. It can also be used to manage a project.\
+  We use a file called Makefile which contains rules. These rules function as scripts.\
   *Links to [documentation](https://www.gnu.org/software/make/manual/make.html) and [wikipedia](https://en.wikipedia.org/wiki/Make_(software)).*
 
 - **Useful links**\
-  How to [makeareadme](https://www.makeareadme.com/) ? Or how to [record](https://asciinema.org/) a terminal session.
+  How to [makeareadme](https://www.makeareadme.com/)? How to [record](https://asciinema.org/) a terminal session ?
 
 ## Author
 
-- [@gmarcha](https://github.com/gmarcha)
+[@gmarcha](https://github.com/gmarcha)
 
 ## License
 
