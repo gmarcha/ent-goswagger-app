@@ -467,6 +467,13 @@ definitions:
 
   Event:
     type: object
+    x-go-type:
+      type: Event
+      import:
+        package: github.com/gmarcha/ent-goswagger-app/internal/ent
+      hints:
+        kind: object
+        noValidation: true
     properties:
       id:
         type: string
@@ -515,6 +522,13 @@ definitions:
 
   User:
     type: object
+    x-go-type:
+      type: User
+      import:
+        package: github.com/gmarcha/ent-goswagger-app/internal/ent
+      hints:
+        kind: object
+        noValidation: true
     properties:
       id:
         type: string
@@ -564,5 +578,3 @@ definitions:
 
   principal:
     type: string
-
-# What kind of new fields are needed in the specification ? Need to ask.
