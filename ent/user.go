@@ -7,7 +7,7 @@ import (
 	"strings"
 
 	"entgo.io/ent/dialect/sql"
-	"github.com/gamarcha/ent-goswagger-app/internal/ent/user"
+	"github.com/gamarcha/ent-goswagger-app/ent/user"
 	"github.com/google/uuid"
 )
 

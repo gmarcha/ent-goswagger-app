@@ -10,9 +10,9 @@ import (
 	"entgo.io/ent/dialect/sql"
 	"entgo.io/ent/dialect/sql/sqlgraph"
 	"entgo.io/ent/schema/field"
-	"github.com/gamarcha/ent-goswagger-app/internal/ent/event"
-	"github.com/gamarcha/ent-goswagger-app/internal/ent/predicate"
-	"github.com/gamarcha/ent-goswagger-app/internal/ent/user"
+	"github.com/gamarcha/ent-goswagger-app/ent/event"
+	"github.com/gamarcha/ent-goswagger-app/ent/predicate"
+	"github.com/gamarcha/ent-goswagger-app/ent/user"
 	"github.com/google/uuid"
 )
 

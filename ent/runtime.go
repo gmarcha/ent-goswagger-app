@@ -5,9 +5,9 @@ package ent
 import (
 	"time"
 
-	"github.com/gamarcha/ent-goswagger-app/internal/ent/event"
-	"github.com/gamarcha/ent-goswagger-app/internal/ent/schema"
-	"github.com/gamarcha/ent-goswagger-app/internal/ent/user"
+	"github.com/gamarcha/ent-goswagger-app/ent/event"
+	"github.com/gamarcha/ent-goswagger-app/ent/schema"
+	"github.com/gamarcha/ent-goswagger-app/ent/user"
 	"github.com/google/uuid"
 )
 

@@ -2,7 +2,7 @@
 
 package runtime
 
-// The schema-stitching logic is generated in github.com/gamarcha/ent-goswagger-app/internal/ent/runtime.go
+// The schema-stitching logic is generated in github.com/gamarcha/ent-goswagger-app/ent/runtime.go
 
 const (
 	Version = "v0.10.0"                                         // Version of ent codegen.

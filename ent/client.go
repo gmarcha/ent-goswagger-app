@@ -7,11 +7,11 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/gamarcha/ent-goswagger-app/internal/ent/migrate"
+	"github.com/gamarcha/ent-goswagger-app/ent/migrate"
 	"github.com/google/uuid"
 
-	"github.com/gamarcha/ent-goswagger-app/internal/ent/event"
-	"github.com/gamarcha/ent-goswagger-app/internal/ent/user"
+	"github.com/gamarcha/ent-goswagger-app/ent/event"
+	"github.com/gamarcha/ent-goswagger-app/ent/user"
 
 	"entgo.io/ent/dialect"
 	"entgo.io/ent/dialect/sql"
