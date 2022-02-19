@@ -13,42 +13,42 @@ import (
 	"github.com/gamarcha/ent-goswagger-app/internal/goswagger/models"
 )
 
-// UnsubscribeUserHandlerFunc turns a function with the right signature into a unsubscribe user handler
-type UnsubscribeUserHandlerFunc func(UnsubscribeUserParams, *models.Principal) middleware.Responder
+// UnsubscribeMeHandlerFunc turns a function with the right signature into a unsubscribe me handler
+type UnsubscribeMeHandlerFunc func(UnsubscribeMeParams, *models.Principal) middleware.Responder
 
 // Handle executing the request and returning a response
-func (fn UnsubscribeUserHandlerFunc) Handle(params UnsubscribeUserParams, principal *models.Principal) middleware.Responder {
+func (fn UnsubscribeMeHandlerFunc) Handle(params UnsubscribeMeParams, principal *models.Principal) middleware.Responder {
 	return fn(params, principal)
 }
 
-// UnsubscribeUserHandler interface for that can handle valid unsubscribe user params
-type UnsubscribeUserHandler interface {
-	Handle(UnsubscribeUserParams, *models.Principal) middleware.Responder
+// UnsubscribeMeHandler interface for that can handle valid unsubscribe me params
+type UnsubscribeMeHandler interface {
+	Handle(UnsubscribeMeParams, *models.Principal) middleware.Responder
 }
 
-// NewUnsubscribeUser creates a new http.Handler for the unsubscribe user operation
-func NewUnsubscribeUser(ctx *middleware.Context, handler UnsubscribeUserHandler) *UnsubscribeUser {
-	return &UnsubscribeUser{Context: ctx, Handler: handler}
+// NewUnsubscribeMe creates a new http.Handler for the unsubscribe me operation
+func NewUnsubscribeMe(ctx *middleware.Context, handler UnsubscribeMeHandler) *UnsubscribeMe {
+	return &UnsubscribeMe{Context: ctx, Handler: handler}
 }
 
-/* UnsubscribeUser swagger:route DELETE /users/{userId}/events/{eventId} User unsubscribeUser
+/* UnsubscribeMe swagger:route DELETE /users/me/events/{id} User unsubscribeMe
 
 Unsubscribe user
 
-Unsubscribe a user to an event.
+Unsubscribe an authenticated user to an event.
 
 */
-type UnsubscribeUser struct {
+type UnsubscribeMe struct {
 	Context *middleware.Context
-	Handler UnsubscribeUserHandler
+	Handler UnsubscribeMeHandler
 }
 
-func (o *UnsubscribeUser) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
+func (o *UnsubscribeMe) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
 	route, rCtx, _ := o.Context.RouteInfo(r)
 	if rCtx != nil {
 		*r = *rCtx
 	}
-	var Params = NewUnsubscribeUserParams()
+	var Params = NewUnsubscribeMeParams()
 	uprinc, aCtx, err := o.Context.Authorize(r, route)
 	if err != nil {
 		o.Context.Respond(rw, r, route.Produces, route, err)

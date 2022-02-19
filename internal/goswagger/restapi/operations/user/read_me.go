@@ -13,42 +13,42 @@ import (
 	"github.com/gamarcha/ent-goswagger-app/internal/goswagger/models"
 )
 
-// UnsubscribeUserHandlerFunc turns a function with the right signature into a unsubscribe user handler
-type UnsubscribeUserHandlerFunc func(UnsubscribeUserParams, *models.Principal) middleware.Responder
+// ReadMeHandlerFunc turns a function with the right signature into a read me handler
+type ReadMeHandlerFunc func(ReadMeParams, *models.Principal) middleware.Responder
 
 // Handle executing the request and returning a response
-func (fn UnsubscribeUserHandlerFunc) Handle(params UnsubscribeUserParams, principal *models.Principal) middleware.Responder {
+func (fn ReadMeHandlerFunc) Handle(params ReadMeParams, principal *models.Principal) middleware.Responder {
 	return fn(params, principal)
 }
 
-// UnsubscribeUserHandler interface for that can handle valid unsubscribe user params
-type UnsubscribeUserHandler interface {
-	Handle(UnsubscribeUserParams, *models.Principal) middleware.Responder
+// ReadMeHandler interface for that can handle valid read me params
+type ReadMeHandler interface {
+	Handle(ReadMeParams, *models.Principal) middleware.Responder
 }
 
-// NewUnsubscribeUser creates a new http.Handler for the unsubscribe user operation
-func NewUnsubscribeUser(ctx *middleware.Context, handler UnsubscribeUserHandler) *UnsubscribeUser {
-	return &UnsubscribeUser{Context: ctx, Handler: handler}
+// NewReadMe creates a new http.Handler for the read me operation
+func NewReadMe(ctx *middleware.Context, handler ReadMeHandler) *ReadMe {
+	return &ReadMe{Context: ctx, Handler: handler}
 }
 
-/* UnsubscribeUser swagger:route DELETE /users/{userId}/events/{eventId} User unsubscribeUser
+/* ReadMe swagger:route GET /users/me User readMe
 
-Unsubscribe user
+Read authenticated user
 
-Unsubscribe a user to an event.
+Read an authenticated user.
 
 */
-type UnsubscribeUser struct {
+type ReadMe struct {
 	Context *middleware.Context
-	Handler UnsubscribeUserHandler
+	Handler ReadMeHandler
 }
 
-func (o *UnsubscribeUser) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
+func (o *ReadMe) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
 	route, rCtx, _ := o.Context.RouteInfo(r)
 	if rCtx != nil {
 		*r = *rCtx
 	}
-	var Params = NewUnsubscribeUserParams()
+	var Params = NewReadMeParams()
 	uprinc, aCtx, err := o.Context.Authorize(r, route)
 	if err != nil {
 		o.Context.Respond(rw, r, route.Produces, route, err)

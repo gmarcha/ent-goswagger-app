@@ -55,9 +55,10 @@ type Event struct {
 	// Example: 3
 	TutorsRequired int64 `json:"tutorsRequired,omitempty"`
 
-	// tutors subscribed
-	// Example: 0
-	TutorsSubscribed int64 `json:"tutorsSubscribed,omitempty"`
+	// type
+	// Example: Exam
+	// Min Length: 1
+	Type string `json:"type,omitempty"`
 
 	// users
 	Users []*User `json:"users"`
@@ -88,6 +89,10 @@ func (m *Event) Validate(formats strfmt.Registry) error {
 	}
 
 	if err := m.validateStartAt(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateType(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -155,6 +160,18 @@ func (m *Event) validateStartAt(formats strfmt.Registry) error {
 	}
 
 	if err := validate.FormatOf("startAt", "body", "date-time", m.StartAt.String(), formats); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (m *Event) validateType(formats strfmt.Registry) error {
+	if swag.IsZero(m.Type) { // not required
+		return nil
+	}
+
+	if err := validate.MinLength("type", "body", m.Type, 1); err != nil {
 		return err
 	}
 

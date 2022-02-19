@@ -24,6 +24,10 @@ type User struct {
 	// Example: false
 	AdminScope bool `json:"adminScope,omitempty"`
 
+	// calendar scope
+	// Example: true
+	CalendarScope bool `json:"calendarScope,omitempty"`
+
 	// events
 	Events []*Event `json:"events"`
 
@@ -31,15 +35,16 @@ type User struct {
 	// Example: Gaëtan
 	FirstName string `json:"firstName,omitempty"`
 
-	// hours done
-	// Example: 6
-	HoursDone int64 `json:"hoursDone,omitempty"`
-
 	// id
 	// Example: 123e4567-e89b-12d3-a456-426614174000
 	// Read Only: true
 	// Format: uuid
 	ID strfmt.UUID `json:"id,omitempty"`
+
+	// image Url
+	// Example: Coming soon.
+	// Format: uri
+	ImageURL strfmt.URI `json:"imageUrl,omitempty"`
 
 	// last name
 	// Example: Marchal
@@ -49,10 +54,6 @@ type User struct {
 	// Example: gamarcha
 	// Min Length: 2
 	Login string `json:"login,omitempty"`
-
-	// tutor scope
-	// Example: true
-	TutorScope bool `json:"tutorScope,omitempty"`
 }
 
 // Validate validates this user
@@ -64,6 +65,10 @@ func (m *User) Validate(formats strfmt.Registry) error {
 	}
 
 	if err := m.validateID(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateImageURL(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -109,6 +114,18 @@ func (m *User) validateID(formats strfmt.Registry) error {
 	}
 
 	if err := validate.FormatOf("id", "body", "uuid", m.ID.String(), formats); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (m *User) validateImageURL(formats strfmt.Registry) error {
+	if swag.IsZero(m.ImageURL) { // not required
+		return nil
+	}
+
+	if err := validate.FormatOf("imageUrl", "body", "uri", m.ImageURL.String(), formats); err != nil {
 		return err
 	}
 

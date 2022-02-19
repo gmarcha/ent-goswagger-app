@@ -80,11 +80,20 @@ func NewTutorAPI(spec *loads.Document) *TutorAPI {
 		EventReadEventHandler: event.ReadEventHandlerFunc(func(params event.ReadEventParams, principal *models.Principal) middleware.Responder {
 			return middleware.NotImplemented("operation event.ReadEvent has not yet been implemented")
 		}),
+		UserReadMeHandler: user.ReadMeHandlerFunc(func(params user.ReadMeParams, principal *models.Principal) middleware.Responder {
+			return middleware.NotImplemented("operation user.ReadMe has not yet been implemented")
+		}),
 		UserReadUserHandler: user.ReadUserHandlerFunc(func(params user.ReadUserParams, principal *models.Principal) middleware.Responder {
 			return middleware.NotImplemented("operation user.ReadUser has not yet been implemented")
 		}),
+		UserSubscribeMeHandler: user.SubscribeMeHandlerFunc(func(params user.SubscribeMeParams, principal *models.Principal) middleware.Responder {
+			return middleware.NotImplemented("operation user.SubscribeMe has not yet been implemented")
+		}),
 		UserSubscribeUserHandler: user.SubscribeUserHandlerFunc(func(params user.SubscribeUserParams, principal *models.Principal) middleware.Responder {
 			return middleware.NotImplemented("operation user.SubscribeUser has not yet been implemented")
+		}),
+		UserUnsubscribeMeHandler: user.UnsubscribeMeHandlerFunc(func(params user.UnsubscribeMeParams, principal *models.Principal) middleware.Responder {
+			return middleware.NotImplemented("operation user.UnsubscribeMe has not yet been implemented")
 		}),
 		UserUnsubscribeUserHandler: user.UnsubscribeUserHandlerFunc(func(params user.UnsubscribeUserParams, principal *models.Principal) middleware.Responder {
 			return middleware.NotImplemented("operation user.UnsubscribeUser has not yet been implemented")
@@ -166,10 +175,16 @@ type TutorAPI struct {
 	AuthenticationLoginHandler authentication.LoginHandler
 	// EventReadEventHandler sets the operation handler for the read event operation
 	EventReadEventHandler event.ReadEventHandler
+	// UserReadMeHandler sets the operation handler for the read me operation
+	UserReadMeHandler user.ReadMeHandler
 	// UserReadUserHandler sets the operation handler for the read user operation
 	UserReadUserHandler user.ReadUserHandler
+	// UserSubscribeMeHandler sets the operation handler for the subscribe me operation
+	UserSubscribeMeHandler user.SubscribeMeHandler
 	// UserSubscribeUserHandler sets the operation handler for the subscribe user operation
 	UserSubscribeUserHandler user.SubscribeUserHandler
+	// UserUnsubscribeMeHandler sets the operation handler for the unsubscribe me operation
+	UserUnsubscribeMeHandler user.UnsubscribeMeHandler
 	// UserUnsubscribeUserHandler sets the operation handler for the unsubscribe user operation
 	UserUnsubscribeUserHandler user.UnsubscribeUserHandler
 	// EventUpdateEventHandler sets the operation handler for the update event operation
@@ -290,11 +305,20 @@ func (o *TutorAPI) Validate() error {
 	if o.EventReadEventHandler == nil {
 		unregistered = append(unregistered, "event.ReadEventHandler")
 	}
+	if o.UserReadMeHandler == nil {
+		unregistered = append(unregistered, "user.ReadMeHandler")
+	}
 	if o.UserReadUserHandler == nil {
 		unregistered = append(unregistered, "user.ReadUserHandler")
 	}
+	if o.UserSubscribeMeHandler == nil {
+		unregistered = append(unregistered, "user.SubscribeMeHandler")
+	}
 	if o.UserSubscribeUserHandler == nil {
 		unregistered = append(unregistered, "user.SubscribeUserHandler")
+	}
+	if o.UserUnsubscribeMeHandler == nil {
+		unregistered = append(unregistered, "user.UnsubscribeMeHandler")
 	}
 	if o.UserUnsubscribeUserHandler == nil {
 		unregistered = append(unregistered, "user.UnsubscribeUserHandler")
@@ -450,11 +474,23 @@ func (o *TutorAPI) initHandlerCache() {
 	if o.handlers["GET"] == nil {
 		o.handlers["GET"] = make(map[string]http.Handler)
 	}
+	o.handlers["GET"]["/users/me"] = user.NewReadMe(o.context, o.UserReadMeHandler)
+	if o.handlers["GET"] == nil {
+		o.handlers["GET"] = make(map[string]http.Handler)
+	}
 	o.handlers["GET"]["/users/{id}"] = user.NewReadUser(o.context, o.UserReadUserHandler)
 	if o.handlers["POST"] == nil {
 		o.handlers["POST"] = make(map[string]http.Handler)
 	}
+	o.handlers["POST"]["/users/me/events/{id}"] = user.NewSubscribeMe(o.context, o.UserSubscribeMeHandler)
+	if o.handlers["POST"] == nil {
+		o.handlers["POST"] = make(map[string]http.Handler)
+	}
 	o.handlers["POST"]["/users/{userId}/events/{eventId}"] = user.NewSubscribeUser(o.context, o.UserSubscribeUserHandler)
+	if o.handlers["DELETE"] == nil {
+		o.handlers["DELETE"] = make(map[string]http.Handler)
+	}
+	o.handlers["DELETE"]["/users/me/events/{id}"] = user.NewUnsubscribeMe(o.context, o.UserUnsubscribeMeHandler)
 	if o.handlers["DELETE"] == nil {
 		o.handlers["DELETE"] = make(map[string]http.Handler)
 	}

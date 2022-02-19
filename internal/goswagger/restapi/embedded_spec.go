@@ -354,6 +354,86 @@ func init() {
         }
       }
     },
+    "/users/me": {
+      "get": {
+        "description": "Read an authenticated user.",
+        "tags": [
+          "User"
+        ],
+        "summary": "Read authenticated user",
+        "operationId": "readMe",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/User"
+            }
+          },
+          "500": {
+            "$ref": "#/responses/500"
+          }
+        }
+      }
+    },
+    "/users/me/events/{id}": {
+      "post": {
+        "description": "Subscribe an authenticated user to an event.",
+        "tags": [
+          "User"
+        ],
+        "summary": "Subscribe authenticated user",
+        "operationId": "subscribeMe",
+        "responses": {
+          "201": {
+            "description": "OK",
+            "schema": {
+              "type": "string",
+              "example": "Done"
+            }
+          },
+          "400": {
+            "$ref": "#/responses/400"
+          },
+          "404": {
+            "$ref": "#/responses/404"
+          },
+          "500": {
+            "$ref": "#/responses/500"
+          }
+        }
+      },
+      "delete": {
+        "description": "Unsubscribe an authenticated user to an event.",
+        "tags": [
+          "User"
+        ],
+        "summary": "Unsubscribe user",
+        "operationId": "unsubscribeMe",
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "400": {
+            "$ref": "#/responses/400"
+          },
+          "404": {
+            "$ref": "#/responses/404"
+          },
+          "500": {
+            "$ref": "#/responses/500"
+          }
+        }
+      },
+      "parameters": [
+        {
+          "type": "string",
+          "description": "Event ID.",
+          "name": "id",
+          "in": "path",
+          "required": true
+        }
+      ]
+    },
     "/users/{id}": {
       "get": {
         "description": "Read an user by ID.",
@@ -489,7 +569,7 @@ func init() {
     },
     "/users/{userId}/events/{eventId}": {
       "post": {
-        "description": "Subscribe user to an event.",
+        "description": "Subscribe a user to an event.",
         "tags": [
           "User"
         ],
@@ -515,7 +595,7 @@ func init() {
         }
       },
       "delete": {
-        "description": "Unsubscribe user to an event.",
+        "description": "Unsubscribe a user to an event.",
         "tags": [
           "User"
         ],
@@ -613,10 +693,11 @@ func init() {
           "format": "int64",
           "example": 3
         },
-        "tutorsSubscribed": {
-          "type": "integer",
-          "format": "int64",
-          "example": 0
+        "type": {
+          "type": "string",
+          "format": "string",
+          "minLength": 1,
+          "example": "Exam"
         },
         "users": {
           "type": "array",
@@ -638,6 +719,10 @@ func init() {
           "type": "boolean",
           "example": false
         },
+        "calendarScope": {
+          "type": "boolean",
+          "example": true
+        },
         "events": {
           "type": "array",
           "items": {
@@ -649,16 +734,16 @@ func init() {
           "format": "string",
           "example": "Gaëtan"
         },
-        "hoursDone": {
-          "type": "integer",
-          "format": "int64",
-          "example": 6
-        },
         "id": {
           "type": "string",
           "format": "uuid",
           "readOnly": true,
           "example": "123e4567-e89b-12d3-a456-426614174000"
+        },
+        "imageUrl": {
+          "type": "string",
+          "format": "uri",
+          "example": "Coming soon."
         },
         "lastName": {
           "type": "string",
@@ -670,10 +755,6 @@ func init() {
           "format": "string",
           "minLength": 2,
           "example": "gamarcha"
-        },
-        "tutorScope": {
-          "type": "boolean",
-          "example": true
         }
       }
     },
@@ -720,14 +801,14 @@ func init() {
       "authorizationUrl": "https://api.intra.42.fr/oauth/authorize",
       "tokenUrl": "https://api.intra.42.fr/oauth/token",
       "scopes": {
-        "user": "User scope"
+        "tutor": "Tutor scope"
       }
     }
   },
   "security": [
     {
       "OauthSecurity": [
-        "user"
+        "tutor"
       ]
     }
   ]
@@ -1135,6 +1216,107 @@ func init() {
         }
       }
     },
+    "/users/me": {
+      "get": {
+        "description": "Read an authenticated user.",
+        "tags": [
+          "User"
+        ],
+        "summary": "Read authenticated user",
+        "operationId": "readMe",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/User"
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      }
+    },
+    "/users/me/events/{id}": {
+      "post": {
+        "description": "Subscribe an authenticated user to an event.",
+        "tags": [
+          "User"
+        ],
+        "summary": "Subscribe authenticated user",
+        "operationId": "subscribeMe",
+        "responses": {
+          "201": {
+            "description": "OK",
+            "schema": {
+              "type": "string",
+              "example": "Done"
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      },
+      "delete": {
+        "description": "Unsubscribe an authenticated user to an event.",
+        "tags": [
+          "User"
+        ],
+        "summary": "Unsubscribe user",
+        "operationId": "unsubscribeMe",
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "400": {
+            "description": "Bad request",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      },
+      "parameters": [
+        {
+          "type": "string",
+          "description": "Event ID.",
+          "name": "id",
+          "in": "path",
+          "required": true
+        }
+      ]
+    },
     "/users/{id}": {
       "get": {
         "description": "Read an user by ID.",
@@ -1306,7 +1488,7 @@ func init() {
     },
     "/users/{userId}/events/{eventId}": {
       "post": {
-        "description": "Subscribe user to an event.",
+        "description": "Subscribe a user to an event.",
         "tags": [
           "User"
         ],
@@ -1341,7 +1523,7 @@ func init() {
         }
       },
       "delete": {
-        "description": "Unsubscribe user to an event.",
+        "description": "Unsubscribe a user to an event.",
         "tags": [
           "User"
         ],
@@ -1448,10 +1630,11 @@ func init() {
           "format": "int64",
           "example": 3
         },
-        "tutorsSubscribed": {
-          "type": "integer",
-          "format": "int64",
-          "example": 0
+        "type": {
+          "type": "string",
+          "format": "string",
+          "minLength": 1,
+          "example": "Exam"
         },
         "users": {
           "type": "array",
@@ -1473,6 +1656,10 @@ func init() {
           "type": "boolean",
           "example": false
         },
+        "calendarScope": {
+          "type": "boolean",
+          "example": true
+        },
         "events": {
           "type": "array",
           "items": {
@@ -1484,16 +1671,16 @@ func init() {
           "format": "string",
           "example": "Gaëtan"
         },
-        "hoursDone": {
-          "type": "integer",
-          "format": "int64",
-          "example": 6
-        },
         "id": {
           "type": "string",
           "format": "uuid",
           "readOnly": true,
           "example": "123e4567-e89b-12d3-a456-426614174000"
+        },
+        "imageUrl": {
+          "type": "string",
+          "format": "uri",
+          "example": "Coming soon."
         },
         "lastName": {
           "type": "string",
@@ -1505,10 +1692,6 @@ func init() {
           "format": "string",
           "minLength": 2,
           "example": "gamarcha"
-        },
-        "tutorScope": {
-          "type": "boolean",
-          "example": true
         }
       }
     },
@@ -1555,14 +1738,14 @@ func init() {
       "authorizationUrl": "https://api.intra.42.fr/oauth/authorize",
       "tokenUrl": "https://api.intra.42.fr/oauth/token",
       "scopes": {
-        "user": "User scope"
+        "tutor": "Tutor scope"
       }
     }
   },
   "security": [
     {
       "OauthSecurity": [
-        "user"
+        "tutor"
       ]
     }
   ]

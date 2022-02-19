@@ -35,7 +35,7 @@ func NewSubscribeUser(ctx *middleware.Context, handler SubscribeUserHandler) *Su
 
 Subscribe user
 
-Subscribe user to an event.
+Subscribe a user to an event.
 
 */
 type SubscribeUser struct {
