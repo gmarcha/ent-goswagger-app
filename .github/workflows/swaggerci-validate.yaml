@@ -7,11 +7,11 @@ on:
       - main
     tags:
       - v*
-    paths:
-      - 'config/specification.yaml'
+    # paths:
+    #   - 'config/specification.yaml'
   pull_request:
-    paths:
-      - 'config/specification.yaml'
+    # paths:
+    #   - 'config/specification.yaml'
 
 jobs:
   validate:
@@ -34,6 +34,7 @@ jobs:
       - name: Commit files
         id: commit
         run: |
+          git pull
           git add docs/swagger.md
           if [[ -z "$(git status --porcelain)" ]]; then
             echo "::set-output name=push::false"
