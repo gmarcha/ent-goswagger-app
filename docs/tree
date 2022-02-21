@@ -24,6 +24,7 @@
 │   │   ├── config.go
 │   │   ├── context.go
 │   │   ├── ent.go
+│   │   ├── entc.go
 │   │   ├── enttest
 │   │   │   └── enttest.go
 │   │   ├── event
@@ -49,6 +50,8 @@
 │   │   ├── schema
 │   │   │   ├── event.go
 │   │   │   └── user.go
+│   │   ├── template
+│   │   │   └── validate.tmpl
 │   │   ├── tx.go
 │   │   ├── user
 │   │   │   ├── user.go
@@ -170,4 +173,4 @@
         ├── json.json
         └── yaml.json
 
-29 directories, 141 files
+30 directories, 143 files
