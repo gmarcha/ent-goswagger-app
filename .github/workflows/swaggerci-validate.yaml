@@ -7,11 +7,11 @@ on:
       - main
     tags:
       - v*
-    # paths:
-    #   - 'config/specification.yaml'
+    paths:
+      - 'config/specification.yaml'
   pull_request:
-    # paths:
-    #   - 'config/specification.yaml'
+    paths:
+      - 'config/specification.yaml'
 
 jobs:
   validate:

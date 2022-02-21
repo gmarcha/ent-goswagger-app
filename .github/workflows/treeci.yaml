@@ -23,6 +23,7 @@ jobs:
       - name: Commit files
         id: commit
         run: |
+          git pull
           git add docs/tree
           if [[ -z "$(git status --porcelain)" ]]; then
             echo "::set-output name=push::false"
