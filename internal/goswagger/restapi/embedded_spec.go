@@ -713,8 +713,7 @@ func init() {
       },
       "x-go-type": {
         "hints": {
-          "kind": "object",
-          "noValidation": true
+          "kind": "object"
         },
         "import": {
           "package": "github.com/gmarcha/ent-goswagger-app/internal/ent"
@@ -769,8 +768,7 @@ func init() {
       },
       "x-go-type": {
         "hints": {
-          "kind": "object",
-          "noValidation": true
+          "kind": "object"
         },
         "import": {
           "package": "github.com/gmarcha/ent-goswagger-app/internal/ent"
@@ -1670,8 +1668,7 @@ func init() {
       },
       "x-go-type": {
         "hints": {
-          "kind": "object",
-          "noValidation": true
+          "kind": "object"
         },
         "import": {
           "package": "github.com/gmarcha/ent-goswagger-app/internal/ent"
@@ -1726,8 +1723,7 @@ func init() {
       },
       "x-go-type": {
         "hints": {
-          "kind": "object",
-          "noValidation": true
+          "kind": "object"
         },
         "import": {
           "package": "github.com/gmarcha/ent-goswagger-app/internal/ent"
