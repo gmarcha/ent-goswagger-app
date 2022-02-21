@@ -24,7 +24,8 @@
 │   │   ├── config.go
 │   │   ├── context.go
 │   │   ├── ent.go
-│   │   ├── entc.go
+│   │   ├── entc
+│   │   │   └── entc.go
 │   │   ├── enttest
 │   │   │   └── enttest.go
 │   │   ├── event
@@ -185,4 +186,4 @@
         ├── json.json
         └── yaml.json
 
-30 directories, 155 files
+31 directories, 155 files
