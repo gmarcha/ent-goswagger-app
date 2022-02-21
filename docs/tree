@@ -7,10 +7,10 @@
 │       └── main.go
 ├── config
 │   ├── Dockerfile
-│   └── docker-compose.yaml
+│   ├── docker-compose.yaml
+│   └── specification.yaml
 ├── docs
 │   ├── swagger.md
-│   ├── swagger.yaml
 │   ├── tree
 │   └── workflow
 ├── go.mod
@@ -110,10 +110,18 @@
 │   │       │       ├── create_user_parameters.go
 │   │       │       ├── create_user_responses.go
 │   │       │       ├── create_user_urlbuilder.go
+│   │       │       ├── delete_me.go
+│   │       │       ├── delete_me_parameters.go
+│   │       │       ├── delete_me_responses.go
+│   │       │       ├── delete_me_urlbuilder.go
 │   │       │       ├── delete_user.go
 │   │       │       ├── delete_user_parameters.go
 │   │       │       ├── delete_user_responses.go
 │   │       │       ├── delete_user_urlbuilder.go
+│   │       │       ├── list_me_events.go
+│   │       │       ├── list_me_events_parameters.go
+│   │       │       ├── list_me_events_responses.go
+│   │       │       ├── list_me_events_urlbuilder.go
 │   │       │       ├── list_user.go
 │   │       │       ├── list_user_events.go
 │   │       │       ├── list_user_events_parameters.go
@@ -146,6 +154,10 @@
 │   │       │       ├── unsubscribe_user_parameters.go
 │   │       │       ├── unsubscribe_user_responses.go
 │   │       │       ├── unsubscribe_user_urlbuilder.go
+│   │       │       ├── update_me.go
+│   │       │       ├── update_me_parameters.go
+│   │       │       ├── update_me_responses.go
+│   │       │       ├── update_me_urlbuilder.go
 │   │       │       ├── update_user.go
 │   │       │       ├── update_user_parameters.go
 │   │       │       ├── update_user_responses.go
@@ -173,4 +185,4 @@
         ├── json.json
         └── yaml.json
 
-30 directories, 143 files
+30 directories, 155 files
