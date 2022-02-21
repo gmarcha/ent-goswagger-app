@@ -3,11 +3,13 @@
 package ent
 
 import (
+	"context"
 	"fmt"
 	"strings"
 
 	"entgo.io/ent/dialect/sql"
 	"github.com/gmarcha/ent-goswagger-app/internal/ent/user"
+	"github.com/go-openapi/strfmt"
 	"github.com/google/uuid"
 )
 
@@ -168,6 +170,16 @@ func (u *User) String() string {
 	builder.WriteString(fmt.Sprintf("%v", u.AdminScope))
 	builder.WriteByte(')')
 	return builder.String()
+}
+
+// Validate method is mandatory for Go Swagger generated server code to compile.
+func (u *User) Validate(formats strfmt.Registry) error {
+	return nil
+}
+
+// ContextValidate method is implemented to discard code editor errors.
+func (u *User) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
+	return nil
 }
 
 // Users is a parsable slice of User.

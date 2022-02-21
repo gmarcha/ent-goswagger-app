@@ -3,12 +3,14 @@
 package ent
 
 import (
+	"context"
 	"fmt"
 	"strings"
 	"time"
 
 	"entgo.io/ent/dialect/sql"
 	"github.com/gmarcha/ent-goswagger-app/internal/ent/event"
+	"github.com/go-openapi/strfmt"
 	"github.com/google/uuid"
 )
 
@@ -189,6 +191,16 @@ func (e *Event) String() string {
 	builder.WriteString(e.EndAt.Format(time.ANSIC))
 	builder.WriteByte(')')
 	return builder.String()
+}
+
+// Validate method is mandatory for Go Swagger generated server code to compile.
+func (e *Event) Validate(formats strfmt.Registry) error {
+	return nil
+}
+
+// ContextValidate method is implemented to discard code editor errors.
+func (e *Event) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
+	return nil
 }
 
 // Events is a parsable slice of Event.
