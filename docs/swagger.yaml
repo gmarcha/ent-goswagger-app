@@ -473,7 +473,6 @@ definitions:
         package: github.com/gmarcha/ent-goswagger-app/internal/ent
       hints:
         kind: object
-        noValidation: true
     properties:
       id:
         type: string
@@ -528,7 +527,6 @@ definitions:
         package: github.com/gmarcha/ent-goswagger-app/internal/ent
       hints:
         kind: object
-        noValidation: true
     properties:
       id:
         type: string
