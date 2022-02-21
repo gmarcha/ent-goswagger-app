@@ -65,7 +65,7 @@ Application development follows a design-first approach. It uses two code genera
   
 - **Swagger**\
   A Swagger Specification is a json/yaml file documenting routes, data schemas and (sometimes) authentication model about an API.\
-  A specification can serve as a model to generate server code (as with goswagger), or it can be generated from comments in source code (as with gin-swagger). It is also possible to generate it from Go data schemas (as with elk or entoas, from entgo).\
+  A specification can serve as a model to generate server code (as with goswagger), or it can be generated from comments in source code (as with gin-swagger). It is also possible to generate it from Go data schemas (as with entoas or ogent, from entgo).\
   *Links to [documentation](https://swagger.io/docs/specification/2-0/basic-structure/) and [specification](https://swagger.io/specification/v2/).*
   
 - **SwaggerEditor**\
