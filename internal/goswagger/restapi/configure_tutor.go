@@ -16,7 +16,7 @@ import (
 	"github.com/gmarcha/ent-goswagger-app/internal/modules/auth"
 )
 
-//go:generate swagger generate server --target ../../goswagger --name Tutor --spec ../../../docs/swagger.yaml --principal models.Principal --exclude-main
+//go:generate swagger generate server --target ../../goswagger --name Tutor --spec ../../../config/specification.yaml --principal models.Principal --exclude-main
 
 func configureFlags(api *operations.TutorAPI) {
 	// api.CommandLineOptionsGroups = []swag.CommandLineOptionsGroup{ ... }
