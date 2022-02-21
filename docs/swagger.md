@@ -47,10 +47,10 @@ An API for 42 tutors.
 
 Name | Description
 -----|-------------
-user | User scope
+tutor | Tutor scope
 
 ### Security Requirements
-  * OauthSecurity: user
+  * OauthSecurity: tutor
 
 ## All endpoints
 
@@ -84,8 +84,11 @@ user | User scope
 | DELETE | /users/{id} | [delete user](#delete-user) | Delete user |
 | GET | /users | [list user](#list-user) | List users |
 | GET | /users/{id}/events | [list user events](#list-user-events) | List user events |
+| GET | /users/me | [read me](#read-me) | Read authenticated user |
 | GET | /users/{id} | [read user](#read-user) | Read user |
+| POST | /users/me/events/{id} | [subscribe me](#subscribe-me) | Subscribe authenticated user |
 | POST | /users/{userId}/events/{eventId} | [subscribe user](#subscribe-user) | Subscribe user |
+| DELETE | /users/me/events/{id} | [unsubscribe me](#unsubscribe-me) | Unsubscribe user |
 | DELETE | /users/{userId}/events/{eventId} | [unsubscribe user](#unsubscribe-user) | Unsubscribe user |
 | PUT | /users/{id} | [update user](#update-user) | Update user |
   
@@ -140,7 +143,7 @@ Create a new event.
 
 | Name | Source | Type | Go type | Separator | Required | Default | Description |
 |------|--------|------|---------|-----------| :------: |---------|-------------|
-| event | `body` | [Event](#event) | `models.Event` | | ✓ | | Event to create. |
+| event | `body` | [Event](#event) | `ent.Event` | | ✓ | | Event to create. |
 
 #### All responses
 | Code | Status | Description | Has headers | Schema |
@@ -191,7 +194,7 @@ Create a new user.
 
 | Name | Source | Type | Go type | Separator | Required | Default | Description |
 |------|--------|------|---------|-----------| :------: |---------|-------------|
-| user | `body` | [User](#user) | `models.User` | | ✓ | | User to create. |
+| user | `body` | [User](#user) | `ent.User` | | ✓ | | User to create. |
 
 #### All responses
 | Code | Status | Description | Has headers | Schema |
@@ -662,6 +665,41 @@ Status: Internal Server Error
 
 [Error](#error)
 
+### <span id="read-me"></span> Read authenticated user (*readMe*)
+
+```
+GET /users/me
+```
+
+Read an authenticated user.
+
+#### All responses
+| Code | Status | Description | Has headers | Schema |
+|------|--------|-------------|:-----------:|--------|
+| [200](#read-me-200) | OK | OK |  | [schema](#read-me-200-schema) |
+| [500](#read-me-500) | Internal Server Error | Internal Server Error |  | [schema](#read-me-500-schema) |
+
+#### Responses
+
+
+##### <span id="read-me-200"></span> 200 - OK
+Status: OK
+
+###### <span id="read-me-200-schema"></span> Schema
+   
+  
+
+[User](#user)
+
+##### <span id="read-me-500"></span> 500 - Internal Server Error
+Status: Internal Server Error
+
+###### <span id="read-me-500-schema"></span> Schema
+   
+  
+
+[Error](#error)
+
 ### <span id="read-user"></span> Read user (*readUser*)
 
 ```
@@ -723,13 +761,74 @@ Status: Internal Server Error
 
 [Error](#error)
 
+### <span id="subscribe-me"></span> Subscribe authenticated user (*subscribeMe*)
+
+```
+POST /users/me/events/{id}
+```
+
+Subscribe an authenticated user to an event.
+
+#### Parameters
+
+| Name | Source | Type | Go type | Separator | Required | Default | Description |
+|------|--------|------|---------|-----------| :------: |---------|-------------|
+| id | `path` | string | `string` |  | ✓ |  | Event ID. |
+
+#### All responses
+| Code | Status | Description | Has headers | Schema |
+|------|--------|-------------|:-----------:|--------|
+| [201](#subscribe-me-201) | Created | OK |  | [schema](#subscribe-me-201-schema) |
+| [400](#subscribe-me-400) | Bad Request | Bad request |  | [schema](#subscribe-me-400-schema) |
+| [404](#subscribe-me-404) | Not Found | Not Found |  | [schema](#subscribe-me-404-schema) |
+| [500](#subscribe-me-500) | Internal Server Error | Internal Server Error |  | [schema](#subscribe-me-500-schema) |
+
+#### Responses
+
+
+##### <span id="subscribe-me-201"></span> 201 - OK
+Status: Created
+
+###### <span id="subscribe-me-201-schema"></span> Schema
+   
+  
+
+
+
+##### <span id="subscribe-me-400"></span> 400 - Bad request
+Status: Bad Request
+
+###### <span id="subscribe-me-400-schema"></span> Schema
+   
+  
+
+[Error](#error)
+
+##### <span id="subscribe-me-404"></span> 404 - Not Found
+Status: Not Found
+
+###### <span id="subscribe-me-404-schema"></span> Schema
+   
+  
+
+[Error](#error)
+
+##### <span id="subscribe-me-500"></span> 500 - Internal Server Error
+Status: Internal Server Error
+
+###### <span id="subscribe-me-500-schema"></span> Schema
+   
+  
+
+[Error](#error)
+
 ### <span id="subscribe-user"></span> Subscribe user (*subscribeUser*)
 
 ```
 POST /users/{userId}/events/{eventId}
 ```
 
-Subscribe user to an event.
+Subscribe a user to an event.
 
 #### Parameters
 
@@ -785,13 +884,70 @@ Status: Internal Server Error
 
 [Error](#error)
 
+### <span id="unsubscribe-me"></span> Unsubscribe user (*unsubscribeMe*)
+
+```
+DELETE /users/me/events/{id}
+```
+
+Unsubscribe an authenticated user to an event.
+
+#### Parameters
+
+| Name | Source | Type | Go type | Separator | Required | Default | Description |
+|------|--------|------|---------|-----------| :------: |---------|-------------|
+| id | `path` | string | `string` |  | ✓ |  | Event ID. |
+
+#### All responses
+| Code | Status | Description | Has headers | Schema |
+|------|--------|-------------|:-----------:|--------|
+| [204](#unsubscribe-me-204) | No Content | No Content |  | [schema](#unsubscribe-me-204-schema) |
+| [400](#unsubscribe-me-400) | Bad Request | Bad request |  | [schema](#unsubscribe-me-400-schema) |
+| [404](#unsubscribe-me-404) | Not Found | Not Found |  | [schema](#unsubscribe-me-404-schema) |
+| [500](#unsubscribe-me-500) | Internal Server Error | Internal Server Error |  | [schema](#unsubscribe-me-500-schema) |
+
+#### Responses
+
+
+##### <span id="unsubscribe-me-204"></span> 204 - No Content
+Status: No Content
+
+###### <span id="unsubscribe-me-204-schema"></span> Schema
+
+##### <span id="unsubscribe-me-400"></span> 400 - Bad request
+Status: Bad Request
+
+###### <span id="unsubscribe-me-400-schema"></span> Schema
+   
+  
+
+[Error](#error)
+
+##### <span id="unsubscribe-me-404"></span> 404 - Not Found
+Status: Not Found
+
+###### <span id="unsubscribe-me-404-schema"></span> Schema
+   
+  
+
+[Error](#error)
+
+##### <span id="unsubscribe-me-500"></span> 500 - Internal Server Error
+Status: Internal Server Error
+
+###### <span id="unsubscribe-me-500-schema"></span> Schema
+   
+  
+
+[Error](#error)
+
 ### <span id="unsubscribe-user"></span> Unsubscribe user (*unsubscribeUser*)
 
 ```
 DELETE /users/{userId}/events/{eventId}
 ```
 
-Unsubscribe user to an event.
+Unsubscribe a user to an event.
 
 #### Parameters
 
@@ -856,7 +1012,7 @@ Update an event by ID.
 | Name | Source | Type | Go type | Separator | Required | Default | Description |
 |------|--------|------|---------|-----------| :------: |---------|-------------|
 | id | `path` | string | `string` |  | ✓ |  | Event ID. |
-| event | `body` | [Event](#event) | `models.Event` | | ✓ | | Event to update. |
+| event | `body` | [Event](#event) | `ent.Event` | | ✓ | | Event to update. |
 
 #### All responses
 | Code | Status | Description | Has headers | Schema |
@@ -918,7 +1074,7 @@ Update an user by ID.
 | Name | Source | Type | Go type | Separator | Required | Default | Description |
 |------|--------|------|---------|-----------| :------: |---------|-------------|
 | id | `path` | string | `string` |  | ✓ |  | User ID. |
-| user | `body` | [User](#user) | `models.User` | | ✓ | | User to update. |
+| user | `body` | [User](#user) | `ent.User` | | ✓ | | User to update. |
 
 #### All responses
 | Code | Status | Description | Has headers | Schema |
@@ -982,52 +1138,6 @@ Status: Internal Server Error
 |------|------|---------|:--------:| ------- |-------------|---------|
 | code | integer| `int64` | ✓ | |  | `500` |
 | message | string| `string` | ✓ | |  | `Internal Server Error` |
-
-
-
-### <span id="event"></span> Event
-
-
-  
-
-
-
-**Properties**
-
-| Name | Type | Go type | Required | Default | Description | Example |
-|------|------|---------|:--------:| ------- |-------------|---------|
-| createdAt | date-time (formatted string)| `strfmt.DateTime` |  | |  | `2022-02-15T09:00:00Z` |
-| description | string (formatted string)| `string` |  | |  | `Exam Alone in the Dark - Exam Rank 2/3/4/5/6` |
-| endAt | date-time (formatted string)| `strfmt.DateTime` |  | |  | `2022-02-15T13:00:00+01:00` |
-| id | uuid (formatted string)| `strfmt.UUID` |  | |  | `123e4567-e89b-12d3-a456-426614174000` |
-| name | string (formatted string)| `string` |  | |  | `Exam Stud` |
-| startAt | date-time (formatted string)| `strfmt.DateTime` |  | |  | `2022-02-15T10:00:00+01:00` |
-| tutorsRequired | int64 (formatted integer)| `int64` |  | |  | `3` |
-| tutorsSubscribed | int64 (formatted integer)| `int64` |  | |  | `0` |
-| users | [][User](#user)| `[]*User` |  | |  |  |
-| walletsReward | int64 (formatted integer)| `int64` |  | |  | `200` |
-
-
-
-### <span id="user"></span> User
-
-
-  
-
-
-
-**Properties**
-
-| Name | Type | Go type | Required | Default | Description | Example |
-|------|------|---------|:--------:| ------- |-------------|---------|
-| adminScope | boolean| `bool` |  | |  | `false` |
-| events | [][Event](#event)| `[]*Event` |  | |  |  |
-| firstName | string (formatted string)| `string` |  | |  | `Gaëtan` |
-| hoursDone | int64 (formatted integer)| `int64` |  | |  | `6` |
-| id | uuid (formatted string)| `strfmt.UUID` |  | |  | `123e4567-e89b-12d3-a456-426614174000` |
-| lastName | string (formatted string)| `string` |  | |  | `Marchal` |
-| login | string (formatted string)| `string` |  | |  | `gamarcha` |
-| tutorScope | boolean| `bool` |  | |  | `true` |
 
 
 
