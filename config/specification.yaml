@@ -247,21 +247,6 @@ paths:
         "500":
           $ref: '#/responses/500'
 
-  /users/me:
-    get:
-      summary: Read authenticated user
-      description: Read an authenticated user.
-      tags:
-        - User
-      operationId: readMe
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/User'
-        "500":
-          $ref: '#/responses/500'
-
   /users/{id}:
     parameters:
       - in: path
@@ -326,6 +311,52 @@ paths:
         "500":
           $ref: '#/responses/500'
 
+  /users/me:
+    get:
+      summary: Read authenticated user
+      description: Read the authenticated user.
+      tags:
+        - User
+      operationId: readMe
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/User'
+        "500":
+          $ref: '#/responses/500'
+    put:
+      summary: Update authenticated user
+      description: Update the authenticated user.
+      tags:
+        - User
+      operationId: updateMe
+      parameters:
+      - in: body
+        name: user
+        required: true
+        description: User to update.
+        schema:
+          $ref: '#/definitions/User'
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/User'
+        "500":
+          $ref: '#/responses/500'
+    delete:
+      summary: Delete authenticated user
+      description: Delete the authenticated user.
+      tags:
+        - User
+      operationId: deleteMe
+      responses:
+        "204":
+          description: No Content
+        "500":
+          $ref: '#/responses/500'
+
   /users/{id}/events:
     parameters:
       - in: path
@@ -350,6 +381,23 @@ paths:
           $ref: '#/responses/400'
         "404":
           $ref: '#/responses/404'
+        "500":
+          $ref: '#/responses/500'
+
+  /users/me/events:
+    get:
+      summary: List authenticated user events
+      description: List the authenticated user's subscribed events.
+      tags:
+        - User
+      operationId: listMeEvents
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Event'
         "500":
           $ref: '#/responses/500'
 
@@ -425,7 +473,7 @@ paths:
         "500":
           $ref: '#/responses/500'
     delete:
-      summary: Unsubscribe user
+      summary: Unsubscribe authenticated user
       description: Unsubscribe an authenticated user to an event.
       tags:
         - User
@@ -541,15 +589,15 @@ definitions:
       firstName:
         type: string
         format: string
-        example: Gaëtan
+        example: Go
       lastName:
         type: string
         format: string
-        example: Marchal
+        example: Swagger
       imageUrl:
         type: string
         format: uri
-        example: Coming soon.
+        example: https://api.intra.42.fr/gamarcha/img
       calendarScope:
         type: boolean
         example: true
