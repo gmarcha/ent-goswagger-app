@@ -81,15 +81,18 @@ tutor | Tutor scope
 | Method  | URI     | Name   | Summary |
 |---------|---------|--------|---------|
 | POST | /users | [create user](#create-user) | Create user |
+| DELETE | /users/me | [delete me](#delete-me) | Delete authenticated user |
 | DELETE | /users/{id} | [delete user](#delete-user) | Delete user |
+| GET | /users/me/events | [list me events](#list-me-events) | List authenticated user events |
 | GET | /users | [list user](#list-user) | List users |
 | GET | /users/{id}/events | [list user events](#list-user-events) | List user events |
 | GET | /users/me | [read me](#read-me) | Read authenticated user |
 | GET | /users/{id} | [read user](#read-user) | Read user |
 | POST | /users/me/events/{id} | [subscribe me](#subscribe-me) | Subscribe authenticated user |
 | POST | /users/{userId}/events/{eventId} | [subscribe user](#subscribe-user) | Subscribe user |
-| DELETE | /users/me/events/{id} | [unsubscribe me](#unsubscribe-me) | Unsubscribe user |
+| DELETE | /users/me/events/{id} | [unsubscribe me](#unsubscribe-me) | Unsubscribe authenticated user |
 | DELETE | /users/{userId}/events/{eventId} | [unsubscribe user](#unsubscribe-user) | Unsubscribe user |
+| PUT | /users/me | [update me](#update-me) | Update authenticated user |
 | PUT | /users/{id} | [update user](#update-user) | Update user |
   
 
@@ -290,6 +293,37 @@ Status: Internal Server Error
 
 [Error](#error)
 
+### <span id="delete-me"></span> Delete authenticated user (*deleteMe*)
+
+```
+DELETE /users/me
+```
+
+Delete the authenticated user.
+
+#### All responses
+| Code | Status | Description | Has headers | Schema |
+|------|--------|-------------|:-----------:|--------|
+| [204](#delete-me-204) | No Content | No Content |  | [schema](#delete-me-204-schema) |
+| [500](#delete-me-500) | Internal Server Error | Internal Server Error |  | [schema](#delete-me-500-schema) |
+
+#### Responses
+
+
+##### <span id="delete-me-204"></span> 204 - No Content
+Status: No Content
+
+###### <span id="delete-me-204-schema"></span> Schema
+
+##### <span id="delete-me-500"></span> 500 - Internal Server Error
+Status: Internal Server Error
+
+###### <span id="delete-me-500-schema"></span> Schema
+   
+  
+
+[Error](#error)
+
 ### <span id="delete-user"></span> Delete user (*deleteUser*)
 
 ```
@@ -456,6 +490,41 @@ Status: Not Found
 Status: Internal Server Error
 
 ###### <span id="list-event-users-500-schema"></span> Schema
+   
+  
+
+[Error](#error)
+
+### <span id="list-me-events"></span> List authenticated user events (*listMeEvents*)
+
+```
+GET /users/me/events
+```
+
+List the authenticated user's subscribed events.
+
+#### All responses
+| Code | Status | Description | Has headers | Schema |
+|------|--------|-------------|:-----------:|--------|
+| [200](#list-me-events-200) | OK | OK |  | [schema](#list-me-events-200-schema) |
+| [500](#list-me-events-500) | Internal Server Error | Internal Server Error |  | [schema](#list-me-events-500-schema) |
+
+#### Responses
+
+
+##### <span id="list-me-events-200"></span> 200 - OK
+Status: OK
+
+###### <span id="list-me-events-200-schema"></span> Schema
+   
+  
+
+[][Event](#event)
+
+##### <span id="list-me-events-500"></span> 500 - Internal Server Error
+Status: Internal Server Error
+
+###### <span id="list-me-events-500-schema"></span> Schema
    
   
 
@@ -671,7 +740,7 @@ Status: Internal Server Error
 GET /users/me
 ```
 
-Read an authenticated user.
+Read the authenticated user.
 
 #### All responses
 | Code | Status | Description | Has headers | Schema |
@@ -884,7 +953,7 @@ Status: Internal Server Error
 
 [Error](#error)
 
-### <span id="unsubscribe-me"></span> Unsubscribe user (*unsubscribeMe*)
+### <span id="unsubscribe-me"></span> Unsubscribe authenticated user (*unsubscribeMe*)
 
 ```
 DELETE /users/me/events/{id}
@@ -1056,6 +1125,47 @@ Status: Not Found
 Status: Internal Server Error
 
 ###### <span id="update-event-500-schema"></span> Schema
+   
+  
+
+[Error](#error)
+
+### <span id="update-me"></span> Update authenticated user (*updateMe*)
+
+```
+PUT /users/me
+```
+
+Update the authenticated user.
+
+#### Parameters
+
+| Name | Source | Type | Go type | Separator | Required | Default | Description |
+|------|--------|------|---------|-----------| :------: |---------|-------------|
+| user | `body` | [User](#user) | `ent.User` | | ✓ | | User to update. |
+
+#### All responses
+| Code | Status | Description | Has headers | Schema |
+|------|--------|-------------|:-----------:|--------|
+| [200](#update-me-200) | OK | OK |  | [schema](#update-me-200-schema) |
+| [500](#update-me-500) | Internal Server Error | Internal Server Error |  | [schema](#update-me-500-schema) |
+
+#### Responses
+
+
+##### <span id="update-me-200"></span> 200 - OK
+Status: OK
+
+###### <span id="update-me-200-schema"></span> Schema
+   
+  
+
+[User](#user)
+
+##### <span id="update-me-500"></span> 500 - Internal Server Error
+Status: Internal Server Error
+
+###### <span id="update-me-500-schema"></span> Schema
    
   
 
