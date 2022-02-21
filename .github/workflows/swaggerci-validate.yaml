@@ -8,10 +8,10 @@ on:
     tags:
       - v*
     paths:
-      - 'docs/swagger.yaml'
+      - 'config/specification.yaml'
   pull_request:
     paths:
-      - 'docs/swagger.yaml'
+      - 'config/specification.yaml'
 
 jobs:
   validate:
