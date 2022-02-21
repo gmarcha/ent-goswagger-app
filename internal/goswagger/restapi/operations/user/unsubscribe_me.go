@@ -33,7 +33,7 @@ func NewUnsubscribeMe(ctx *middleware.Context, handler UnsubscribeMeHandler) *Un
 
 /* UnsubscribeMe swagger:route DELETE /users/me/events/{id} User unsubscribeMe
 
-Unsubscribe user
+Unsubscribe authenticated user
 
 Unsubscribe an authenticated user to an event.
 

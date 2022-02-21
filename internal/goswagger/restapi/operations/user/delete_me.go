@@ -13,42 +13,42 @@ import (
 	"github.com/gmarcha/ent-goswagger-app/internal/goswagger/models"
 )
 
-// ReadMeHandlerFunc turns a function with the right signature into a read me handler
-type ReadMeHandlerFunc func(ReadMeParams, *models.Principal) middleware.Responder
+// DeleteMeHandlerFunc turns a function with the right signature into a delete me handler
+type DeleteMeHandlerFunc func(DeleteMeParams, *models.Principal) middleware.Responder
 
 // Handle executing the request and returning a response
-func (fn ReadMeHandlerFunc) Handle(params ReadMeParams, principal *models.Principal) middleware.Responder {
+func (fn DeleteMeHandlerFunc) Handle(params DeleteMeParams, principal *models.Principal) middleware.Responder {
 	return fn(params, principal)
 }
 
-// ReadMeHandler interface for that can handle valid read me params
-type ReadMeHandler interface {
-	Handle(ReadMeParams, *models.Principal) middleware.Responder
+// DeleteMeHandler interface for that can handle valid delete me params
+type DeleteMeHandler interface {
+	Handle(DeleteMeParams, *models.Principal) middleware.Responder
 }
 
-// NewReadMe creates a new http.Handler for the read me operation
-func NewReadMe(ctx *middleware.Context, handler ReadMeHandler) *ReadMe {
-	return &ReadMe{Context: ctx, Handler: handler}
+// NewDeleteMe creates a new http.Handler for the delete me operation
+func NewDeleteMe(ctx *middleware.Context, handler DeleteMeHandler) *DeleteMe {
+	return &DeleteMe{Context: ctx, Handler: handler}
 }
 
-/* ReadMe swagger:route GET /users/me User readMe
+/* DeleteMe swagger:route DELETE /users/me User deleteMe
 
-Read authenticated user
+Delete authenticated user
 
-Read the authenticated user.
+Delete the authenticated user.
 
 */
-type ReadMe struct {
+type DeleteMe struct {
 	Context *middleware.Context
-	Handler ReadMeHandler
+	Handler DeleteMeHandler
 }
 
-func (o *ReadMe) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
+func (o *DeleteMe) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
 	route, rCtx, _ := o.Context.RouteInfo(r)
 	if rCtx != nil {
 		*r = *rCtx
 	}
-	var Params = NewReadMeParams()
+	var Params = NewDeleteMeParams()
 	uprinc, aCtx, err := o.Context.Authorize(r, route)
 	if err != nil {
 		o.Context.Respond(rw, r, route.Produces, route, err)

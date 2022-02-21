@@ -59,6 +59,9 @@ func NewTutorAPI(spec *loads.Document) *TutorAPI {
 		EventDeleteEventHandler: event.DeleteEventHandlerFunc(func(params event.DeleteEventParams, principal *models.Principal) middleware.Responder {
 			return middleware.NotImplemented("operation event.DeleteEvent has not yet been implemented")
 		}),
+		UserDeleteMeHandler: user.DeleteMeHandlerFunc(func(params user.DeleteMeParams, principal *models.Principal) middleware.Responder {
+			return middleware.NotImplemented("operation user.DeleteMe has not yet been implemented")
+		}),
 		UserDeleteUserHandler: user.DeleteUserHandlerFunc(func(params user.DeleteUserParams, principal *models.Principal) middleware.Responder {
 			return middleware.NotImplemented("operation user.DeleteUser has not yet been implemented")
 		}),
@@ -67,6 +70,9 @@ func NewTutorAPI(spec *loads.Document) *TutorAPI {
 		}),
 		EventListEventUsersHandler: event.ListEventUsersHandlerFunc(func(params event.ListEventUsersParams, principal *models.Principal) middleware.Responder {
 			return middleware.NotImplemented("operation event.ListEventUsers has not yet been implemented")
+		}),
+		UserListMeEventsHandler: user.ListMeEventsHandlerFunc(func(params user.ListMeEventsParams, principal *models.Principal) middleware.Responder {
+			return middleware.NotImplemented("operation user.ListMeEvents has not yet been implemented")
 		}),
 		UserListUserHandler: user.ListUserHandlerFunc(func(params user.ListUserParams, principal *models.Principal) middleware.Responder {
 			return middleware.NotImplemented("operation user.ListUser has not yet been implemented")
@@ -100,6 +106,9 @@ func NewTutorAPI(spec *loads.Document) *TutorAPI {
 		}),
 		EventUpdateEventHandler: event.UpdateEventHandlerFunc(func(params event.UpdateEventParams, principal *models.Principal) middleware.Responder {
 			return middleware.NotImplemented("operation event.UpdateEvent has not yet been implemented")
+		}),
+		UserUpdateMeHandler: user.UpdateMeHandlerFunc(func(params user.UpdateMeParams, principal *models.Principal) middleware.Responder {
+			return middleware.NotImplemented("operation user.UpdateMe has not yet been implemented")
 		}),
 		UserUpdateUserHandler: user.UpdateUserHandlerFunc(func(params user.UpdateUserParams, principal *models.Principal) middleware.Responder {
 			return middleware.NotImplemented("operation user.UpdateUser has not yet been implemented")
@@ -161,12 +170,16 @@ type TutorAPI struct {
 	UserCreateUserHandler user.CreateUserHandler
 	// EventDeleteEventHandler sets the operation handler for the delete event operation
 	EventDeleteEventHandler event.DeleteEventHandler
+	// UserDeleteMeHandler sets the operation handler for the delete me operation
+	UserDeleteMeHandler user.DeleteMeHandler
 	// UserDeleteUserHandler sets the operation handler for the delete user operation
 	UserDeleteUserHandler user.DeleteUserHandler
 	// EventListEventHandler sets the operation handler for the list event operation
 	EventListEventHandler event.ListEventHandler
 	// EventListEventUsersHandler sets the operation handler for the list event users operation
 	EventListEventUsersHandler event.ListEventUsersHandler
+	// UserListMeEventsHandler sets the operation handler for the list me events operation
+	UserListMeEventsHandler user.ListMeEventsHandler
 	// UserListUserHandler sets the operation handler for the list user operation
 	UserListUserHandler user.ListUserHandler
 	// UserListUserEventsHandler sets the operation handler for the list user events operation
@@ -189,6 +202,8 @@ type TutorAPI struct {
 	UserUnsubscribeUserHandler user.UnsubscribeUserHandler
 	// EventUpdateEventHandler sets the operation handler for the update event operation
 	EventUpdateEventHandler event.UpdateEventHandler
+	// UserUpdateMeHandler sets the operation handler for the update me operation
+	UserUpdateMeHandler user.UpdateMeHandler
 	// UserUpdateUserHandler sets the operation handler for the update user operation
 	UserUpdateUserHandler user.UpdateUserHandler
 
@@ -284,6 +299,9 @@ func (o *TutorAPI) Validate() error {
 	if o.EventDeleteEventHandler == nil {
 		unregistered = append(unregistered, "event.DeleteEventHandler")
 	}
+	if o.UserDeleteMeHandler == nil {
+		unregistered = append(unregistered, "user.DeleteMeHandler")
+	}
 	if o.UserDeleteUserHandler == nil {
 		unregistered = append(unregistered, "user.DeleteUserHandler")
 	}
@@ -292,6 +310,9 @@ func (o *TutorAPI) Validate() error {
 	}
 	if o.EventListEventUsersHandler == nil {
 		unregistered = append(unregistered, "event.ListEventUsersHandler")
+	}
+	if o.UserListMeEventsHandler == nil {
+		unregistered = append(unregistered, "user.ListMeEventsHandler")
 	}
 	if o.UserListUserHandler == nil {
 		unregistered = append(unregistered, "user.ListUserHandler")
@@ -325,6 +346,9 @@ func (o *TutorAPI) Validate() error {
 	}
 	if o.EventUpdateEventHandler == nil {
 		unregistered = append(unregistered, "event.UpdateEventHandler")
+	}
+	if o.UserUpdateMeHandler == nil {
+		unregistered = append(unregistered, "user.UpdateMeHandler")
 	}
 	if o.UserUpdateUserHandler == nil {
 		unregistered = append(unregistered, "user.UpdateUserHandler")
@@ -446,6 +470,10 @@ func (o *TutorAPI) initHandlerCache() {
 	if o.handlers["DELETE"] == nil {
 		o.handlers["DELETE"] = make(map[string]http.Handler)
 	}
+	o.handlers["DELETE"]["/users/me"] = user.NewDeleteMe(o.context, o.UserDeleteMeHandler)
+	if o.handlers["DELETE"] == nil {
+		o.handlers["DELETE"] = make(map[string]http.Handler)
+	}
 	o.handlers["DELETE"]["/users/{id}"] = user.NewDeleteUser(o.context, o.UserDeleteUserHandler)
 	if o.handlers["GET"] == nil {
 		o.handlers["GET"] = make(map[string]http.Handler)
@@ -455,6 +483,10 @@ func (o *TutorAPI) initHandlerCache() {
 		o.handlers["GET"] = make(map[string]http.Handler)
 	}
 	o.handlers["GET"]["/events/{id}/users"] = event.NewListEventUsers(o.context, o.EventListEventUsersHandler)
+	if o.handlers["GET"] == nil {
+		o.handlers["GET"] = make(map[string]http.Handler)
+	}
+	o.handlers["GET"]["/users/me/events"] = user.NewListMeEvents(o.context, o.UserListMeEventsHandler)
 	if o.handlers["GET"] == nil {
 		o.handlers["GET"] = make(map[string]http.Handler)
 	}
@@ -499,6 +531,10 @@ func (o *TutorAPI) initHandlerCache() {
 		o.handlers["PUT"] = make(map[string]http.Handler)
 	}
 	o.handlers["PUT"]["/events/{id}"] = event.NewUpdateEvent(o.context, o.EventUpdateEventHandler)
+	if o.handlers["PUT"] == nil {
+		o.handlers["PUT"] = make(map[string]http.Handler)
+	}
+	o.handlers["PUT"]["/users/me"] = user.NewUpdateMe(o.context, o.UserUpdateMeHandler)
 	if o.handlers["PUT"] == nil {
 		o.handlers["PUT"] = make(map[string]http.Handler)
 	}

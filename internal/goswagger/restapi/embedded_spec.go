@@ -356,7 +356,7 @@ func init() {
     },
     "/users/me": {
       "get": {
-        "description": "Read an authenticated user.",
+        "description": "Read the authenticated user.",
         "tags": [
           "User"
         ],
@@ -367,6 +367,76 @@ func init() {
             "description": "OK",
             "schema": {
               "$ref": "#/definitions/User"
+            }
+          },
+          "500": {
+            "$ref": "#/responses/500"
+          }
+        }
+      },
+      "put": {
+        "description": "Update the authenticated user.",
+        "tags": [
+          "User"
+        ],
+        "summary": "Update authenticated user",
+        "operationId": "updateMe",
+        "parameters": [
+          {
+            "description": "User to update.",
+            "name": "user",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/User"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/User"
+            }
+          },
+          "500": {
+            "$ref": "#/responses/500"
+          }
+        }
+      },
+      "delete": {
+        "description": "Delete the authenticated user.",
+        "tags": [
+          "User"
+        ],
+        "summary": "Delete authenticated user",
+        "operationId": "deleteMe",
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "500": {
+            "$ref": "#/responses/500"
+          }
+        }
+      }
+    },
+    "/users/me/events": {
+      "get": {
+        "description": "List the authenticated user's subscribed events.",
+        "tags": [
+          "User"
+        ],
+        "summary": "List authenticated user events",
+        "operationId": "listMeEvents",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Event"
+              }
             }
           },
           "500": {
@@ -407,7 +477,7 @@ func init() {
         "tags": [
           "User"
         ],
-        "summary": "Unsubscribe user",
+        "summary": "Unsubscribe authenticated user",
         "operationId": "unsubscribeMe",
         "responses": {
           "204": {
@@ -741,7 +811,7 @@ func init() {
         "firstName": {
           "type": "string",
           "format": "string",
-          "example": "Gaëtan"
+          "example": "Go"
         },
         "id": {
           "type": "string",
@@ -752,12 +822,12 @@ func init() {
         "imageUrl": {
           "type": "string",
           "format": "uri",
-          "example": "Coming soon."
+          "example": "https://api.intra.42.fr/gamarcha/img"
         },
         "lastName": {
           "type": "string",
           "format": "string",
-          "example": "Marchal"
+          "example": "Swagger"
         },
         "login": {
           "type": "string",
@@ -1236,7 +1306,7 @@ func init() {
     },
     "/users/me": {
       "get": {
-        "description": "Read an authenticated user.",
+        "description": "Read the authenticated user.",
         "tags": [
           "User"
         ],
@@ -1247,6 +1317,85 @@ func init() {
             "description": "OK",
             "schema": {
               "$ref": "#/definitions/User"
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      },
+      "put": {
+        "description": "Update the authenticated user.",
+        "tags": [
+          "User"
+        ],
+        "summary": "Update authenticated user",
+        "operationId": "updateMe",
+        "parameters": [
+          {
+            "description": "User to update.",
+            "name": "user",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/User"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/User"
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      },
+      "delete": {
+        "description": "Delete the authenticated user.",
+        "tags": [
+          "User"
+        ],
+        "summary": "Delete authenticated user",
+        "operationId": "deleteMe",
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      }
+    },
+    "/users/me/events": {
+      "get": {
+        "description": "List the authenticated user's subscribed events.",
+        "tags": [
+          "User"
+        ],
+        "summary": "List authenticated user events",
+        "operationId": "listMeEvents",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Event"
+              }
             }
           },
           "500": {
@@ -1299,7 +1448,7 @@ func init() {
         "tags": [
           "User"
         ],
-        "summary": "Unsubscribe user",
+        "summary": "Unsubscribe authenticated user",
         "operationId": "unsubscribeMe",
         "responses": {
           "204": {
@@ -1696,7 +1845,7 @@ func init() {
         "firstName": {
           "type": "string",
           "format": "string",
-          "example": "Gaëtan"
+          "example": "Go"
         },
         "id": {
           "type": "string",
@@ -1707,12 +1856,12 @@ func init() {
         "imageUrl": {
           "type": "string",
           "format": "uri",
-          "example": "Coming soon."
+          "example": "https://api.intra.42.fr/gamarcha/img"
         },
         "lastName": {
           "type": "string",
           "format": "string",
-          "example": "Marchal"
+          "example": "Swagger"
         },
         "login": {
           "type": "string",

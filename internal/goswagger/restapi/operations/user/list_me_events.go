@@ -13,42 +13,42 @@ import (
 	"github.com/gmarcha/ent-goswagger-app/internal/goswagger/models"
 )
 
-// ReadMeHandlerFunc turns a function with the right signature into a read me handler
-type ReadMeHandlerFunc func(ReadMeParams, *models.Principal) middleware.Responder
+// ListMeEventsHandlerFunc turns a function with the right signature into a list me events handler
+type ListMeEventsHandlerFunc func(ListMeEventsParams, *models.Principal) middleware.Responder
 
 // Handle executing the request and returning a response
-func (fn ReadMeHandlerFunc) Handle(params ReadMeParams, principal *models.Principal) middleware.Responder {
+func (fn ListMeEventsHandlerFunc) Handle(params ListMeEventsParams, principal *models.Principal) middleware.Responder {
 	return fn(params, principal)
 }
 
-// ReadMeHandler interface for that can handle valid read me params
-type ReadMeHandler interface {
-	Handle(ReadMeParams, *models.Principal) middleware.Responder
+// ListMeEventsHandler interface for that can handle valid list me events params
+type ListMeEventsHandler interface {
+	Handle(ListMeEventsParams, *models.Principal) middleware.Responder
 }
 
-// NewReadMe creates a new http.Handler for the read me operation
-func NewReadMe(ctx *middleware.Context, handler ReadMeHandler) *ReadMe {
-	return &ReadMe{Context: ctx, Handler: handler}
+// NewListMeEvents creates a new http.Handler for the list me events operation
+func NewListMeEvents(ctx *middleware.Context, handler ListMeEventsHandler) *ListMeEvents {
+	return &ListMeEvents{Context: ctx, Handler: handler}
 }
 
-/* ReadMe swagger:route GET /users/me User readMe
+/* ListMeEvents swagger:route GET /users/me/events User listMeEvents
 
-Read authenticated user
+List authenticated user events
 
-Read the authenticated user.
+List the authenticated user's subscribed events.
 
 */
-type ReadMe struct {
+type ListMeEvents struct {
 	Context *middleware.Context
-	Handler ReadMeHandler
+	Handler ListMeEventsHandler
 }
 
-func (o *ReadMe) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
+func (o *ListMeEvents) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
 	route, rCtx, _ := o.Context.RouteInfo(r)
 	if rCtx != nil {
 		*r = *rCtx
 	}
-	var Params = NewReadMeParams()
+	var Params = NewListMeEventsParams()
 	uprinc, aCtx, err := o.Context.Authorize(r, route)
 	if err != nil {
 		o.Context.Respond(rw, r, route.Produces, route, err)

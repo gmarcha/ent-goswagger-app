@@ -13,42 +13,42 @@ import (
 	"github.com/gmarcha/ent-goswagger-app/internal/goswagger/models"
 )
 
-// ReadMeHandlerFunc turns a function with the right signature into a read me handler
-type ReadMeHandlerFunc func(ReadMeParams, *models.Principal) middleware.Responder
+// UpdateMeHandlerFunc turns a function with the right signature into a update me handler
+type UpdateMeHandlerFunc func(UpdateMeParams, *models.Principal) middleware.Responder
 
 // Handle executing the request and returning a response
-func (fn ReadMeHandlerFunc) Handle(params ReadMeParams, principal *models.Principal) middleware.Responder {
+func (fn UpdateMeHandlerFunc) Handle(params UpdateMeParams, principal *models.Principal) middleware.Responder {
 	return fn(params, principal)
 }
 
-// ReadMeHandler interface for that can handle valid read me params
-type ReadMeHandler interface {
-	Handle(ReadMeParams, *models.Principal) middleware.Responder
+// UpdateMeHandler interface for that can handle valid update me params
+type UpdateMeHandler interface {
+	Handle(UpdateMeParams, *models.Principal) middleware.Responder
 }
 
-// NewReadMe creates a new http.Handler for the read me operation
-func NewReadMe(ctx *middleware.Context, handler ReadMeHandler) *ReadMe {
-	return &ReadMe{Context: ctx, Handler: handler}
+// NewUpdateMe creates a new http.Handler for the update me operation
+func NewUpdateMe(ctx *middleware.Context, handler UpdateMeHandler) *UpdateMe {
+	return &UpdateMe{Context: ctx, Handler: handler}
 }
 
-/* ReadMe swagger:route GET /users/me User readMe
+/* UpdateMe swagger:route PUT /users/me User updateMe
 
-Read authenticated user
+Update authenticated user
 
-Read the authenticated user.
+Update the authenticated user.
 
 */
-type ReadMe struct {
+type UpdateMe struct {
 	Context *middleware.Context
-	Handler ReadMeHandler
+	Handler UpdateMeHandler
 }
 
-func (o *ReadMe) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
+func (o *UpdateMe) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
 	route, rCtx, _ := o.Context.RouteInfo(r)
 	if rCtx != nil {
 		*r = *rCtx
 	}
-	var Params = NewReadMeParams()
+	var Params = NewUpdateMeParams()
 	uprinc, aCtx, err := o.Context.Authorize(r, route)
 	if err != nil {
 		o.Context.Respond(rw, r, route.Produces, route, err)
