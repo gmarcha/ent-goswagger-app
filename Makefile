@@ -2,10 +2,10 @@ NAME := tutor
 
 -include config/.env
 
-DOCKER-COMPOSE := COMPOSE_PROJECT_NAME=$(NAME) PORT=$(PORT) docker-compose
+DOCKER-COMPOSE := COMPOSE_PROJECT_NAME=$(NAME) docker-compose
 DOCKER-COMPOSE-PATH := ./config/docker-compose.yaml
 
-SWAGGER-SPEC-PATH := ./docs/swagger.yaml
+SWAGGER-SPEC-PATH := ./config/specification.yaml
 SWAGGER-MD-PATH := ./docs/swagger.md
 
 ######################################################################################################
@@ -13,7 +13,7 @@ SWAGGER-MD-PATH := ./docs/swagger.md
 #	Docker compose rules:
 #
 #	- `build` builds docker-compose images, so postgres:alpine and goswagger (based on golang:alpine);
-#	- `up` runs $(NAME)_postgres_1 and $(NAME)_goswagger_1 containers (default name);
+#	- `up` runs $(NAME)_postgres_1 and $(NAME)_goswagger_1 containers (default names);
 #	- `down` stops both containers and their default associated network ($(NAME)_default);
 #	- `delete` stops containers and removes docker-compose volumes,
 #		i.e. data persistent storiage as postgres database;
