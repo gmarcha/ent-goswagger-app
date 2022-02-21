@@ -1,0 +1,18 @@
+{{/* The line below tells Intellij/GoLand to enable the autocompletion based *gen.Type type. */}}
+{{/* gotype: entgo.io/ent/entc/gen.Type */}}
+
+{{ define "model/additional/validate" }}
+
+{{/* A template that adds the "Validate" method to all generated models on the same file they are defined. */}}
+
+// Validate method is mandatory for Go Swagger generated server code to compile.
+func ({{ $.Receiver  }} *{{ $.Name }}) Validate(formats strfmt.Registry) error {
+	return nil
+}
+
+// ContextValidate method is implemented to discard code editor errors.
+func ({{ $.Receiver }} *{{ $.Name }}) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
+	return nil
+}
+
+{{ end }}
