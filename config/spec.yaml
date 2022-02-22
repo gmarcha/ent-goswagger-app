@@ -514,100 +514,22 @@ responses:
 definitions:
 
   Event:
-    type: object
     x-go-type:
       type: Event
       import:
         package: github.com/gmarcha/ent-goswagger-app/internal/ent
-      hints:
-        kind: object
+    type: object
     properties:
-      id:
-        type: string
-        format: uuid
-        readOnly: true
-        example: 123e4567-e89b-12d3-a456-426614174000
-      name:
-        type: string
-        format: string
-        minLength: 1
-        example: Exam Stud
-      type:
-        type: string
-        format: string
-        minLength: 1
-        example: Exam
-      description:
-        type: string
-        format: string
-        example: Exam Alone in the Dark - Exam Rank 2/3/4/5/6
-      tutorsRequired:
-        type: integer
-        format: int64
-        example: 3
-      walletsReward:
-        type: integer
-        format: int64
-        example: 200
-      createdAt:
-        type: string
-        format: date-time
-        readOnly: true
-        example: "2022-02-15T09:00:00Z"
-      startAt:
-        type: string
-        format: date-time
-        example: "2022-02-15T10:00:00+01:00"
-      endAt:
-        type: string
-        format: date-time
-        example: "2022-02-15T13:00:00+01:00"
-      users:
-        type: array
-        items:
-          $ref: '#/definitions/User'
+      id: {}
 
   User:
-    type: object
     x-go-type:
       type: User
       import:
         package: github.com/gmarcha/ent-goswagger-app/internal/ent
-      hints:
-        kind: object
+    type: object
     properties:
-      id:
-        type: string
-        format: uuid
-        readOnly: true
-        example: 123e4567-e89b-12d3-a456-426614174000
-      login:
-        type: string
-        format: string
-        minLength: 2
-        example: gamarcha
-      firstName:
-        type: string
-        format: string
-        example: Go
-      lastName:
-        type: string
-        format: string
-        example: Swagger
-      imageUrl:
-        type: string
-        format: uri
-        example: https://api.intra.42.fr/gamarcha/img
-      calendarScope:
-        type: boolean
-        example: true
-      adminScope:
-        type: boolean
-        example: false
-      events:
-        type: array
-        items:
-          $ref: '#/definitions/Event'
+      id: {}
 
   Error:
     type: object

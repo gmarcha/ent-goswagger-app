@@ -725,66 +725,9 @@ func init() {
     "Event": {
       "type": "object",
       "properties": {
-        "createdAt": {
-          "type": "string",
-          "format": "date-time",
-          "readOnly": true,
-          "example": "2022-02-15T09:00:00Z"
-        },
-        "description": {
-          "type": "string",
-          "format": "string",
-          "example": "Exam Alone in the Dark - Exam Rank 2/3/4/5/6"
-        },
-        "endAt": {
-          "type": "string",
-          "format": "date-time",
-          "example": "2022-02-15T13:00:00+01:00"
-        },
-        "id": {
-          "type": "string",
-          "format": "uuid",
-          "readOnly": true,
-          "example": "123e4567-e89b-12d3-a456-426614174000"
-        },
-        "name": {
-          "type": "string",
-          "format": "string",
-          "minLength": 1,
-          "example": "Exam Stud"
-        },
-        "startAt": {
-          "type": "string",
-          "format": "date-time",
-          "example": "2022-02-15T10:00:00+01:00"
-        },
-        "tutorsRequired": {
-          "type": "integer",
-          "format": "int64",
-          "example": 3
-        },
-        "type": {
-          "type": "string",
-          "format": "string",
-          "minLength": 1,
-          "example": "Exam"
-        },
-        "users": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/User"
-          }
-        },
-        "walletsReward": {
-          "type": "integer",
-          "format": "int64",
-          "example": 200
-        }
+        "id": {}
       },
       "x-go-type": {
-        "hints": {
-          "kind": "object"
-        },
         "import": {
           "package": "github.com/gmarcha/ent-goswagger-app/internal/ent"
         },
@@ -794,52 +737,9 @@ func init() {
     "User": {
       "type": "object",
       "properties": {
-        "adminScope": {
-          "type": "boolean",
-          "example": false
-        },
-        "calendarScope": {
-          "type": "boolean",
-          "example": true
-        },
-        "events": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/Event"
-          }
-        },
-        "firstName": {
-          "type": "string",
-          "format": "string",
-          "example": "Go"
-        },
-        "id": {
-          "type": "string",
-          "format": "uuid",
-          "readOnly": true,
-          "example": "123e4567-e89b-12d3-a456-426614174000"
-        },
-        "imageUrl": {
-          "type": "string",
-          "format": "uri",
-          "example": "https://api.intra.42.fr/gamarcha/img"
-        },
-        "lastName": {
-          "type": "string",
-          "format": "string",
-          "example": "Swagger"
-        },
-        "login": {
-          "type": "string",
-          "format": "string",
-          "minLength": 2,
-          "example": "gamarcha"
-        }
+        "id": {}
       },
       "x-go-type": {
-        "hints": {
-          "kind": "object"
-        },
         "import": {
           "package": "github.com/gmarcha/ent-goswagger-app/internal/ent"
         },
@@ -1759,66 +1659,9 @@ func init() {
     "Event": {
       "type": "object",
       "properties": {
-        "createdAt": {
-          "type": "string",
-          "format": "date-time",
-          "readOnly": true,
-          "example": "2022-02-15T09:00:00Z"
-        },
-        "description": {
-          "type": "string",
-          "format": "string",
-          "example": "Exam Alone in the Dark - Exam Rank 2/3/4/5/6"
-        },
-        "endAt": {
-          "type": "string",
-          "format": "date-time",
-          "example": "2022-02-15T13:00:00+01:00"
-        },
-        "id": {
-          "type": "string",
-          "format": "uuid",
-          "readOnly": true,
-          "example": "123e4567-e89b-12d3-a456-426614174000"
-        },
-        "name": {
-          "type": "string",
-          "format": "string",
-          "minLength": 1,
-          "example": "Exam Stud"
-        },
-        "startAt": {
-          "type": "string",
-          "format": "date-time",
-          "example": "2022-02-15T10:00:00+01:00"
-        },
-        "tutorsRequired": {
-          "type": "integer",
-          "format": "int64",
-          "example": 3
-        },
-        "type": {
-          "type": "string",
-          "format": "string",
-          "minLength": 1,
-          "example": "Exam"
-        },
-        "users": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/User"
-          }
-        },
-        "walletsReward": {
-          "type": "integer",
-          "format": "int64",
-          "example": 200
-        }
+        "id": {}
       },
       "x-go-type": {
-        "hints": {
-          "kind": "object"
-        },
         "import": {
           "package": "github.com/gmarcha/ent-goswagger-app/internal/ent"
         },
@@ -1828,52 +1671,9 @@ func init() {
     "User": {
       "type": "object",
       "properties": {
-        "adminScope": {
-          "type": "boolean",
-          "example": false
-        },
-        "calendarScope": {
-          "type": "boolean",
-          "example": true
-        },
-        "events": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/Event"
-          }
-        },
-        "firstName": {
-          "type": "string",
-          "format": "string",
-          "example": "Go"
-        },
-        "id": {
-          "type": "string",
-          "format": "uuid",
-          "readOnly": true,
-          "example": "123e4567-e89b-12d3-a456-426614174000"
-        },
-        "imageUrl": {
-          "type": "string",
-          "format": "uri",
-          "example": "https://api.intra.42.fr/gamarcha/img"
-        },
-        "lastName": {
-          "type": "string",
-          "format": "string",
-          "example": "Swagger"
-        },
-        "login": {
-          "type": "string",
-          "format": "string",
-          "minLength": 2,
-          "example": "gamarcha"
-        }
+        "id": {}
       },
       "x-go-type": {
-        "hints": {
-          "kind": "object"
-        },
         "import": {
           "package": "github.com/gmarcha/ent-goswagger-app/internal/ent"
         },
