@@ -1,0 +1,576 @@
+swagger: "2.0"
+info:
+  title: 42 Tutors API
+  description: An API for 42 tutors.
+  contact: {}
+  version: 0.0.1
+consumes:
+  - application/json
+produces:
+  - application/json
+securityDefinitions:
+  OauthSecurity:
+    type: oauth2
+    flow: accessCode
+    authorizationUrl: https://api.intra.42.fr/oauth/authorize
+    tokenUrl: https://api.intra.42.fr/oauth/token
+    scopes:
+      tutor: Tutor scope
+security:
+  - OauthSecurity:
+      - tutor
+paths:
+  /login:
+    get:
+      summary: Login user
+      description: Login to 42 API with OAuth 2.0.
+      tags:
+        - Authentication
+      operationId: login
+      security: []
+      responses:
+        "302":
+          description: Found
+        "500":
+          $ref: '#/responses/500'
+  /auth/callback:
+    get:
+      summary: Return user token
+      description: Retrieve token from 42 API.
+      tags:
+        - Authentication
+      operationId: callback
+      security: []
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+        "500":
+          $ref: '#/responses/500'
+  /events:
+    get:
+      summary: List events
+      description: List all events.
+      tags:
+        - Event
+      operationId: listEvent
+      parameters:
+        - in: query
+          name: day
+          description: Day filter.
+          type: string
+        - in: query
+          name: week
+          description: Week filter.
+          type: string
+        - in: query
+          name: month
+          description: Month filter.
+          type: string
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Event'
+        "400":
+          $ref: '#/responses/400'
+        "500":
+          $ref: '#/responses/500'
+    post:
+      summary: Create event
+      description: Create a new event.
+      tags:
+        - Event
+      operationId: createEvent
+      parameters:
+        - in: body
+          name: event
+          required: true
+          description: Event to create.
+          schema:
+            $ref: '#/definitions/Event'
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/Event'
+        "400":
+          $ref: '#/responses/400'
+        "500":
+          $ref: '#/responses/500'
+  /events/{id}:
+    parameters:
+      - in: path
+        name: id
+        required: true
+        description: Event ID.
+        type: string
+    get:
+      summary: Read event
+      description: Read an event by ID.
+      tags:
+        - Event
+      operationId: readEvent
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/Event'
+        "400":
+          $ref: '#/responses/400'
+        "404":
+          $ref: '#/responses/404'
+        "500":
+          $ref: '#/responses/500'
+    put:
+      summary: Update event
+      description: Update an event by ID.
+      tags:
+        - Event
+      operationId: updateEvent
+      parameters:
+        - in: body
+          name: event
+          required: true
+          description: Event to update.
+          schema:
+            $ref: '#/definitions/Event'
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/Event'
+        "400":
+          $ref: '#/responses/400'
+        "404":
+          $ref: '#/responses/404'
+        "500":
+          $ref: '#/responses/500'
+    delete:
+      summary: Delete event
+      description: Delete an event by ID.
+      tags:
+        - Event
+      operationId: deleteEvent
+      responses:
+        "204":
+          description: No Content
+        "400":
+          $ref: '#/responses/400'
+        "404":
+          $ref: '#/responses/404'
+        "500":
+          $ref: '#/responses/500'
+  /events/{id}/users:
+    parameters:
+      - in: path
+        name: id
+        required: true
+        description: Event ID.
+        type: string
+    get:
+      summary: List event users
+      description: List users subscribed to an event.
+      tags:
+        - Event
+      operationId: listEventUsers
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/User'
+        "400":
+          $ref: '#/responses/400'
+        "404":
+          $ref: '#/responses/404'
+        "500":
+          $ref: '#/responses/500'
+  /users:
+    get:
+      summary: List users
+      description: List all users.
+      tags:
+        - User
+      operationId: listUser
+      parameters:
+        - in: query
+          name: tutor
+          description: List all tutors.
+          type: boolean
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/User'
+        "400":
+          $ref: '#/responses/400'
+        "500":
+          $ref: '#/responses/500'
+    post:
+      summary: Create user
+      description: Create a new user.
+      tags:
+        - User
+      operationId: createUser
+      parameters:
+        - in: body
+          name: user
+          required: true
+          description: User to create.
+          schema:
+            $ref: '#/definitions/User'
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/User'
+        "400":
+          $ref: '#/responses/400'
+        "500":
+          $ref: '#/responses/500'
+  /users/{id}:
+    parameters:
+      - in: path
+        name: id
+        required: true
+        description: User ID.
+        type: string
+    get:
+      summary: Read user
+      description: Read an user by ID.
+      tags:
+        - User
+      operationId: readUser
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/User'
+        "400":
+          $ref: '#/responses/400'
+        "404":
+          $ref: '#/responses/404'
+        "500":
+          $ref: '#/responses/500'
+    put:
+      summary: Update user
+      description: Update an user by ID.
+      tags:
+        - User
+      operationId: updateUser
+      parameters:
+        - in: body
+          name: user
+          required: true
+          description: User to update.
+          schema:
+            $ref: '#/definitions/User'
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/User'
+        "400":
+          $ref: '#/responses/400'
+        "404":
+          $ref: '#/responses/404'
+        "500":
+          $ref: '#/responses/500'
+    delete:
+      summary: Delete user
+      description: Delete an user by ID.
+      tags:
+        - User
+      operationId: deleteUser
+      responses:
+        "204":
+          description: No Content
+        "400":
+          $ref: '#/responses/400'
+        "404":
+          $ref: '#/responses/404'
+        "500":
+          $ref: '#/responses/500'
+  /users/me:
+    get:
+      summary: Read authenticated user
+      description: Read the authenticated user.
+      tags:
+        - User
+      operationId: readMe
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/User'
+        "500":
+          $ref: '#/responses/500'
+    put:
+      summary: Update authenticated user
+      description: Update the authenticated user.
+      tags:
+        - User
+      operationId: updateMe
+      parameters:
+        - in: body
+          name: user
+          required: true
+          description: User to update.
+          schema:
+            $ref: '#/definitions/User'
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/User'
+        "500":
+          $ref: '#/responses/500'
+    delete:
+      summary: Delete authenticated user
+      description: Delete the authenticated user.
+      tags:
+        - User
+      operationId: deleteMe
+      responses:
+        "204":
+          description: No Content
+        "500":
+          $ref: '#/responses/500'
+  /users/{id}/events:
+    parameters:
+      - in: path
+        name: id
+        required: true
+        description: User ID.
+        type: string
+    get:
+      summary: List user events
+      description: List user's subscribed events.
+      tags:
+        - User
+      operationId: listUserEvents
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Event'
+        "400":
+          $ref: '#/responses/400'
+        "404":
+          $ref: '#/responses/404'
+        "500":
+          $ref: '#/responses/500'
+  /users/me/events:
+    get:
+      summary: List authenticated user events
+      description: List the authenticated user's subscribed events.
+      tags:
+        - User
+      operationId: listMeEvents
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Event'
+        "500":
+          $ref: '#/responses/500'
+  /users/{userId}/events/{eventId}:
+    parameters:
+      - in: path
+        name: userId
+        required: true
+        description: User ID.
+        type: string
+      - in: path
+        name: eventId
+        required: true
+        description: Event ID.
+        type: string
+    post:
+      summary: Subscribe user
+      description: Subscribe a user to an event.
+      tags:
+        - User
+      operationId: subscribeUser
+      responses:
+        "201":
+          description: OK
+          schema:
+            type: string
+            example: Done
+        "400":
+          $ref: '#/responses/400'
+        "404":
+          $ref: '#/responses/404'
+        "500":
+          $ref: '#/responses/500'
+    delete:
+      summary: Unsubscribe user
+      description: Unsubscribe a user to an event.
+      tags:
+        - User
+      operationId: unsubscribeUser
+      responses:
+        "204":
+          description: No Content
+        "400":
+          $ref: '#/responses/400'
+        "404":
+          $ref: '#/responses/404'
+        "500":
+          $ref: '#/responses/500'
+  /users/me/events/{id}:
+    parameters:
+      - in: path
+        name: id
+        required: true
+        description: Event ID.
+        type: string
+    post:
+      summary: Subscribe authenticated user
+      description: Subscribe an authenticated user to an event.
+      tags:
+        - User
+      operationId: subscribeMe
+      responses:
+        "201":
+          description: OK
+          schema:
+            type: string
+            example: Done
+        "400":
+          $ref: '#/responses/400'
+        "404":
+          $ref: '#/responses/404'
+        "500":
+          $ref: '#/responses/500'
+    delete:
+      summary: Unsubscribe authenticated user
+      description: Unsubscribe an authenticated user to an event.
+      tags:
+        - User
+      operationId: unsubscribeMe
+      responses:
+        "204":
+          description: No Content
+        "400":
+          $ref: '#/responses/400'
+        "404":
+          $ref: '#/responses/404'
+        "500":
+          $ref: '#/responses/500'
+responses:
+  400:
+    description: Bad request
+    schema:
+      $ref: '#/definitions/Error'
+  401:
+    description: Unauthorized
+    schema:
+      $ref: '#/definitions/Error'
+  403:
+    description: Forbidden
+    schema:
+      $ref: '#/definitions/Error'
+  404:
+    description: Not Found
+    schema:
+      $ref: '#/definitions/Error'
+  500:
+    description: Internal Server Error
+    schema:
+      $ref: '#/definitions/Error'
+definitions:
+  Event:
+    type: object
+    required:
+      - createdAt
+      - endAt
+      - id
+      - name
+      - startAt
+      - tutorsRequired
+      - tutorsSubscribed
+      - walletsRewards
+    properties:
+      createdAt:
+        type: string
+        format: date-time
+      description:
+        type: string
+      endAt:
+        type: string
+        format: date-time
+      id:
+        type: string
+      name:
+        type: string
+      startAt:
+        type: string
+        format: date-time
+      tutorsRequired:
+        type: integer
+        format: int64
+      tutorsSubscribed:
+        type: integer
+        format: int64
+      users:
+        type: array
+        items:
+          $ref: '#/definitions/User'
+      walletsRewards:
+        type: integer
+        format: int64
+  User:
+    type: object
+    required:
+      - adminScope
+      - hoursDone
+      - id
+      - login
+      - tutorScope
+    properties:
+      adminScope:
+        type: boolean
+      events:
+        type: array
+        items:
+          $ref: '#/definitions/Event'
+      firstName:
+        type: string
+      hoursDone:
+        type: integer
+        format: int64
+      id:
+        type: string
+      lastName:
+        type: string
+      login:
+        type: string
+      tutorScope:
+        type: boolean
+  Error:
+    type: object
+    properties:
+      code:
+        type: integer
+        example: 500
+      message:
+        type: string
+        example: Internal Server Error
+    required:
+      - code
+      - message
+  principal:
+    type: string
