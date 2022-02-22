@@ -65,7 +65,10 @@ run:		install
 #
 #	- `gen.ent` generates entgo source code from ent data schemas;
 #	- `gen.swag` generates server code from swagger specification;
-#	- `gen` performs `gen.ent` and `gen.swag` rules.
+#	- `gen.doc` generates a swagger specification which serves as a documentation,
+#		from an other swagger specification (used to generate server code),
+#		allowing us to retrieve data model definitions from our ORM (entgo).
+#	- `gen` performs `gen.ent`, `gen.swag` and `gen.doc` rules.
 #
 ###################################################################################
 
