@@ -16,4 +16,4 @@
 
 # Specific to project
 .env
-test.cpp
+test.c*
