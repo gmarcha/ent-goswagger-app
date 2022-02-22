@@ -8,9 +8,10 @@
 ├── config
 │   ├── Dockerfile
 │   ├── docker-compose.yaml
-│   └── specification.yaml
+│   └── spec.yaml
 ├── docs
 │   ├── swagger.md
+│   ├── swagger.yaml
 │   ├── tree
 │   └── workflow
 ├── go.mod
@@ -43,6 +44,7 @@
 │   │   │   ├── migrate.go
 │   │   │   └── schema.go
 │   │   ├── mutation.go
+│   │   ├── openapi.json
 │   │   ├── predicate
 │   │   │   └── predicate.go
 │   │   ├── runtime
@@ -178,12 +180,14 @@
 │           ├── init.go
 │           └── service.go
 └── scripts
-    ├── README.md
-    ├── entgo.sh
-    ├── goswagger.sh
+    ├── docgen.sh
+    ├── setup
+    │   ├── README.md
+    │   ├── entgo.sh
+    │   └── goswagger.sh
     └── vscode-snippets
         ├── README.md
         ├── json.json
         └── yaml.json
 
-31 directories, 155 files
+32 directories, 158 files
