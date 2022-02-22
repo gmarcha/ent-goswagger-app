@@ -17,10 +17,10 @@ type login struct {
 	config *oauth2.Config
 }
 
-func (this *login) Handle(params authentication.LoginParams) middleware.Responder {
+func (l *login) Handle(params authentication.LoginParams) middleware.Responder {
 	return middleware.ResponderFunc(
 		func(w http.ResponseWriter, pr runtime.Producer) {
-			http.Redirect(w, params.HTTPRequest, this.config.AuthCodeURL(this.state), http.StatusFound)
+			http.Redirect(w, params.HTTPRequest, l.config.AuthCodeURL(l.state), http.StatusFound)
 		})
 }
 
@@ -30,18 +30,20 @@ type callback struct {
 	// user   *user.Service
 }
 
-func (this *callback) Handle(params authentication.CallbackParams) middleware.Responder {
+func (c *callback) Handle(params authentication.CallbackParams) middleware.Responder {
 
 	r := params.HTTPRequest
 
-	if r.URL.Query().Get("state") != this.state {
+	// Read parameters in query.
+	if r.URL.Query().Get("state") != c.state {
 		return middleware.Error(401, fmt.Sprintln("invalid state"))
 	}
-	code := r.URL.Query().Get("code")
+	authCode := r.URL.Query().Get("code")
 
+	// Proceed to OAuth 2.0 handshake (sending authorisation code and receiving token).
 	client := &http.Client{}
 	ctx := oidc.ClientContext(context.Background(), client)
-	token, err := this.config.Exchange(ctx, code)
+	token, err := c.config.Exchange(ctx, authCode)
 	if err != nil {
 		return middleware.Error(500, fmt.Sprintln("failed to fetch token"))
 	}
