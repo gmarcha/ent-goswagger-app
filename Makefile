@@ -5,7 +5,8 @@ NAME := tutor
 DOCKER-COMPOSE := COMPOSE_PROJECT_NAME=$(NAME) docker-compose
 DOCKER-COMPOSE-PATH := ./config/docker-compose.yaml
 
-SWAGGER-SPEC-PATH := ./config/specification.yaml
+SWAGGER-SPEC-PATH := ./config/spec.yaml
+SWAGGER-DOC-PATH := ./docs/swagger.yaml
 SWAGGER-MD-PATH := ./docs/swagger.md
 
 ######################################################################################################
@@ -68,13 +69,16 @@ run:		install
 #
 ###################################################################################
 
-gen:		gen.ent gen.swag
+gen:		gen.ent gen.swag gen.doc
 
 gen.ent:
 			go generate ./internal/ent
 
 gen.swag:
 			go generate ./internal/goswagger/restapi
+
+gen.doc:
+			bash scripts/docgen.sh $(SWAGGER-SPEC-PATH) $(SWAGGER-DOC-PATH)
 
 ###################################################################################
 #
@@ -86,7 +90,7 @@ gen.swag:
 ###################################################################################
 
 validate:
-			swagger validate $(SWAGGER-SPEC-PATH)
+			swagger validate $(SWAGGER-DOC-PATH)
 
 markdown:
-			swagger generate markdown -f $(SWAGGER-SPEC-PATH) --output $(SWAGGER-MD-PATH)
+			swagger generate markdown -f $(SWAGGER-DOC-PATH) --output $(SWAGGER-MD-PATH)
