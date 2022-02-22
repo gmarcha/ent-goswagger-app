@@ -8,10 +8,10 @@ on:
     tags:
       - v*
     paths:
-      - 'config/specification.yaml'
+      - 'config/spec.yaml'
   pull_request:
     paths:
-      - 'config/specification.yaml'
+      - 'config/spec.yaml'
 
 jobs:
   validate:
