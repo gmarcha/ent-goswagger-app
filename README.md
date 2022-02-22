@@ -6,6 +6,8 @@ A web API written in Go programming language with entgo and goswagger.
 [![Swagger Validation](https://github.com/gmarcha/ent-goswagger-app/actions/workflows/swaggerci-validate.yaml/badge.svg)](https://github.com/gmarcha/ent-goswagger-app/actions/workflows/swaggerci-validate.yaml)
 [![Project Tree](https://github.com/gmarcha/ent-goswagger-app/actions/workflows/treeci.yaml/badge.svg)](https://github.com/gmarcha/ent-goswagger-app/actions/workflows/treeci.yaml)
 
+[![asciicast](https://asciinema.org/a/anyuVuGXzdLJFUiLIXmdsxstG.svg)](https://asciinema.org/a/anyuVuGXzdLJFUiLIXmdsxstG)
+
 ## Prerequesites
 
 - A Go [workspace](https://go.dev/doc/gopath_code), with Make[^1] and [Go Swagger](https://goswagger.io/install.html) already setup.
