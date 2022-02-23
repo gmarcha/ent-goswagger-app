@@ -4,4 +4,4 @@
 # go get -d entgo.io/ent/cmd/ent
 
 # - Generate data models:
-# ent init User Event
+ent init --target internal/ent/schema User Event
