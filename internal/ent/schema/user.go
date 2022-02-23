@@ -17,14 +17,14 @@ func (User) Fields() []ent.Field {
 	return []ent.Field{
 		field.UUID("id", uuid.UUID{}).
 			Immutable().Default(uuid.New),
-		field.String("login"),
+		field.String("login").
+			Unique(),
 		field.String("firstName").
 			Optional(),
 		field.String("lastName").
 			Optional(),
-		field.Int64("hoursDone").
-			NonNegative(),
-		field.Bool("tutorScope").
+		field.String("imagePath"),
+		field.Bool("calendarScope").
 			Default(false),
 		field.Bool("adminScope").
 			Default(false),

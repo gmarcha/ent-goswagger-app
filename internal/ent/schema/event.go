@@ -20,14 +20,14 @@ func (Event) Fields() []ent.Field {
 		field.UUID("id", uuid.UUID{}).
 			Immutable().Default(uuid.New),
 		field.String("name"),
+		field.Enum("category").
+			Values("exam", "rush", "meeting", "events"),
 		field.String("description").
 			Optional(),
 		field.Int64("tutorsRequired").
 			NonNegative(),
-		field.Int64("tutorsSubscribed").
-			NonNegative(),
-		field.Int64("walletsRewards").
-			NonNegative(),
+		field.Int64("walletsReward").
+			NonNegative().Optional(),
 		field.Time("createdAt").
 			Immutable().Default(time.Now),
 		field.Time("startAt"),

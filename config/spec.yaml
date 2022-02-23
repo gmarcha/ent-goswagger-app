@@ -514,22 +514,7 @@ responses:
 definitions:
 
   Event:
-    x-go-type:
-      type: Event
-      import:
-        package: github.com/gmarcha/ent-goswagger-app/internal/ent
-    type: object
-    properties:
-      id: {}
-
   User:
-    x-go-type:
-      type: User
-      import:
-        package: github.com/gmarcha/ent-goswagger-app/internal/ent
-    type: object
-    properties:
-      id: {}
 
   Error:
     type: object

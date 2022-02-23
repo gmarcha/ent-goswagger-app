@@ -724,8 +724,56 @@ func init() {
     },
     "Event": {
       "type": "object",
+      "required": [
+        "createdAt",
+        "endAt",
+        "id",
+        "name",
+        "startAt",
+        "tutorsRequired",
+        "tutorsSubscribed",
+        "walletsRewards"
+      ],
       "properties": {
-        "id": {}
+        "createdAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "description": {
+          "type": "string"
+        },
+        "endAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "id": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "startAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "tutorsRequired": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "tutorsSubscribed": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "users": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/User"
+          }
+        },
+        "walletsRewards": {
+          "type": "integer",
+          "format": "int64"
+        }
       },
       "x-go-type": {
         "import": {
@@ -736,8 +784,42 @@ func init() {
     },
     "User": {
       "type": "object",
+      "required": [
+        "adminScope",
+        "hoursDone",
+        "id",
+        "login",
+        "tutorScope"
+      ],
       "properties": {
-        "id": {}
+        "adminScope": {
+          "type": "boolean"
+        },
+        "events": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Event"
+          }
+        },
+        "firstName": {
+          "type": "string"
+        },
+        "hoursDone": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "id": {
+          "type": "string"
+        },
+        "lastName": {
+          "type": "string"
+        },
+        "login": {
+          "type": "string"
+        },
+        "tutorScope": {
+          "type": "boolean"
+        }
       },
       "x-go-type": {
         "import": {
@@ -1658,8 +1740,56 @@ func init() {
     },
     "Event": {
       "type": "object",
+      "required": [
+        "createdAt",
+        "endAt",
+        "id",
+        "name",
+        "startAt",
+        "tutorsRequired",
+        "tutorsSubscribed",
+        "walletsRewards"
+      ],
       "properties": {
-        "id": {}
+        "createdAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "description": {
+          "type": "string"
+        },
+        "endAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "id": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "startAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "tutorsRequired": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "tutorsSubscribed": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "users": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/User"
+          }
+        },
+        "walletsRewards": {
+          "type": "integer",
+          "format": "int64"
+        }
       },
       "x-go-type": {
         "import": {
@@ -1670,8 +1800,42 @@ func init() {
     },
     "User": {
       "type": "object",
+      "required": [
+        "adminScope",
+        "hoursDone",
+        "id",
+        "login",
+        "tutorScope"
+      ],
       "properties": {
-        "id": {}
+        "adminScope": {
+          "type": "boolean"
+        },
+        "events": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Event"
+          }
+        },
+        "firstName": {
+          "type": "string"
+        },
+        "hoursDone": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "id": {
+          "type": "string"
+        },
+        "lastName": {
+          "type": "string"
+        },
+        "login": {
+          "type": "string"
+        },
+        "tutorScope": {
+          "type": "boolean"
+        }
       },
       "x-go-type": {
         "import": {

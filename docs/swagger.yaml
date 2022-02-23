@@ -533,6 +533,10 @@ definitions:
       walletsRewards:
         type: integer
         format: int64
+    x-go-type:
+      type: Event
+      import:
+        package: github.com/gmarcha/ent-goswagger-app/internal/ent
   User:
     type: object
     required:
@@ -561,6 +565,10 @@ definitions:
         type: string
       tutorScope:
         type: boolean
+    x-go-type:
+      type: User
+      import:
+        package: github.com/gmarcha/ent-goswagger-app/internal/ent
   Error:
     type: object
     properties:
