@@ -106,8 +106,14 @@ Application development follows a design-first approach. It uses two code genera
   We use a file called Makefile which contains rules. These rules function as scripts.\
   *Links to [documentation](https://www.gnu.org/software/make/manual/make.html) and [wikipedia](https://en.wikipedia.org/wiki/Make_(software)).*
 
+- **yq**\
+  yq is a powerful yaml processor used to manipulate json or yaml files.\
+  It allows to add, update, remove blobs on files or to merge, convert files.\
+  It uses its own expression format as argument to perform modifications.\
+  *Link to [documentation](https://mikefarah.gitbook.io/yq/)*
+
 - **Useful links**\
-  How to [makeareadme](https://www.makeareadme.com/)? How to draw an application [workflow](https://asciiflow.com/#/)? How to [record](https://asciinema.org/) a terminal session?
+  How to [makeareadme](https://www.makeareadme.com/)? to draw an application [workflow](https://asciiflow.com/#/)? to [record](https://asciinema.org/) a terminal session?
 
 ## Author
 
