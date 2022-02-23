@@ -146,7 +146,7 @@ Create a new event.
 
 | Name | Source | Type | Go type | Separator | Required | Default | Description |
 |------|--------|------|---------|-----------| :------: |---------|-------------|
-| event | `body` | [Event](#event) | `models.Event` | | ✓ | | Event to create. |
+| event | `body` | [Event](#event) | `ent.Event` | | ✓ | | Event to create. |
 
 #### All responses
 | Code | Status | Description | Has headers | Schema |
@@ -197,7 +197,7 @@ Create a new user.
 
 | Name | Source | Type | Go type | Separator | Required | Default | Description |
 |------|--------|------|---------|-----------| :------: |---------|-------------|
-| user | `body` | [User](#user) | `models.User` | | ✓ | | User to create. |
+| user | `body` | [User](#user) | `ent.User` | | ✓ | | User to create. |
 
 #### All responses
 | Code | Status | Description | Has headers | Schema |
@@ -1081,7 +1081,7 @@ Update an event by ID.
 | Name | Source | Type | Go type | Separator | Required | Default | Description |
 |------|--------|------|---------|-----------| :------: |---------|-------------|
 | id | `path` | string | `string` |  | ✓ |  | Event ID. |
-| event | `body` | [Event](#event) | `models.Event` | | ✓ | | Event to update. |
+| event | `body` | [Event](#event) | `ent.Event` | | ✓ | | Event to update. |
 
 #### All responses
 | Code | Status | Description | Has headers | Schema |
@@ -1142,7 +1142,7 @@ Update the authenticated user.
 
 | Name | Source | Type | Go type | Separator | Required | Default | Description |
 |------|--------|------|---------|-----------| :------: |---------|-------------|
-| user | `body` | [User](#user) | `models.User` | | ✓ | | User to update. |
+| user | `body` | [User](#user) | `ent.User` | | ✓ | | User to update. |
 
 #### All responses
 | Code | Status | Description | Has headers | Schema |
@@ -1184,7 +1184,7 @@ Update an user by ID.
 | Name | Source | Type | Go type | Separator | Required | Default | Description |
 |------|--------|------|---------|-----------| :------: |---------|-------------|
 | id | `path` | string | `string` |  | ✓ |  | User ID. |
-| user | `body` | [User](#user) | `models.User` | | ✓ | | User to update. |
+| user | `body` | [User](#user) | `ent.User` | | ✓ | | User to update. |
 
 #### All responses
 | Code | Status | Description | Has headers | Schema |
@@ -1248,52 +1248,6 @@ Status: Internal Server Error
 |------|------|---------|:--------:| ------- |-------------|---------|
 | code | integer| `int64` | ✓ | |  | `500` |
 | message | string| `string` | ✓ | |  | `Internal Server Error` |
-
-
-
-### <span id="event"></span> Event
-
-
-  
-
-
-
-**Properties**
-
-| Name | Type | Go type | Required | Default | Description | Example |
-|------|------|---------|:--------:| ------- |-------------|---------|
-| createdAt | date-time (formatted string)| `strfmt.DateTime` | ✓ | |  |  |
-| description | string| `string` |  | |  |  |
-| endAt | date-time (formatted string)| `strfmt.DateTime` | ✓ | |  |  |
-| id | string| `string` | ✓ | |  |  |
-| name | string| `string` | ✓ | |  |  |
-| startAt | date-time (formatted string)| `strfmt.DateTime` | ✓ | |  |  |
-| tutorsRequired | int64 (formatted integer)| `int64` | ✓ | |  |  |
-| tutorsSubscribed | int64 (formatted integer)| `int64` | ✓ | |  |  |
-| users | [][User](#user)| `[]*User` |  | |  |  |
-| walletsRewards | int64 (formatted integer)| `int64` | ✓ | |  |  |
-
-
-
-### <span id="user"></span> User
-
-
-  
-
-
-
-**Properties**
-
-| Name | Type | Go type | Required | Default | Description | Example |
-|------|------|---------|:--------:| ------- |-------------|---------|
-| adminScope | boolean| `bool` | ✓ | |  |  |
-| events | [][Event](#event)| `[]*Event` |  | |  |  |
-| firstName | string| `string` |  | |  |  |
-| hoursDone | int64 (formatted integer)| `int64` | ✓ | |  |  |
-| id | string| `string` | ✓ | |  |  |
-| lastName | string| `string` |  | |  |  |
-| login | string| `string` | ✓ | |  |  |
-| tutorScope | boolean| `bool` | ✓ | |  |  |
 
 
 
