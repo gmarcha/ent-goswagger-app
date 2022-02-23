@@ -1,4 +1,10 @@
+###################################################################################
+
 NAME := tutor
+
+# Use rules defined in this file to interact with the application.
+
+###################################################################################
 
 -include config/.env
 
@@ -64,30 +70,30 @@ run:		install
 #	Code generation rules:
 #
 #	- `gen.ent` generates entgo source code from ent data schemas;
+#	- `gen.doc` generates a swagger specification which serves as a model
+#		to code generation and as documentation, from an other
+#		swagger specification used to configure routes and authentication;
 #	- `gen.swag` generates server code from swagger specification;
-#	- `gen.doc` generates a swagger specification which serves as a documentation,
-#		from an other swagger specification (used to generate server code),
-#		allowing us to retrieve data model definitions from our ORM (entgo).
 #	- `gen` performs `gen.ent`, `gen.swag` and `gen.doc` rules.
 #
 ###################################################################################
 
-gen:		gen.ent gen.swag gen.doc
+gen:		gen.ent gen.doc gen.swag
 
 gen.ent:
 			go generate ./internal/ent
 
-gen.swag:
-			go generate ./internal/goswagger/restapi
-
 gen.doc:
 			bash scripts/docgen.sh $(SWAGGER-SPEC-PATH) $(SWAGGER-DOC-PATH)
 
+gen.swag:
+			go generate ./internal/goswagger/restapi
+
 ###################################################################################
 #
-#	Swagger rules:
+#	Continuous Integration (CI) rules:
 #
-#	- `validate` validates a swagger specification agaisnt 2.0 version;
+#	- `validate` validates a swagger specification against 2.0 version;
 #	- `markdown` generates a markdown description of a swagger specification.
 #
 ###################################################################################
@@ -97,3 +103,34 @@ validate:
 
 markdown:
 			swagger generate markdown -f $(SWAGGER-DOC-PATH) --output $(SWAGGER-MD-PATH)
+
+tree:
+			tree > docs/tree
+
+###################################################################################
+#
+#	Project setup rules:
+#
+#	- `setup.gomod` creates a go mod file in current directory
+#		(allowing module dependency tracking);
+#	- `setup.ent` runs project initialisation for ent,
+#		creating a schema directory and a generate.go file in ./internal/ent;
+#	- `setup.swag` generates a goswagger sample project with a main,
+#		then moves it to ./cmd/tutor-server/ and adds --exclude-main
+#		to go generate rule in ./internal/goswagger/restapi/configure_tutor.go;
+#	- `setup` performs `setup.gomod`, `setup.ent` and `setup.swag` rules.
+#
+###################################################################################
+
+# setup:		setup.gomod setup.ent setup.swag
+
+# setup.gomod:
+# 			go mod init github.com/gmarcha/ent-goswagger-app
+
+# setup.ent:
+# 			bash scripts/setup/entgo.sh
+
+# setup.swag:
+# 			bash scripts/setup/goswagger.sh
+
+###################################################################################
