@@ -8,7 +8,7 @@ A web API written in Go programming language with entgo and goswagger.
 
 [![asciicast](https://asciinema.org/a/anyuVuGXzdLJFUiLIXmdsxstG.svg)](https://asciinema.org/a/anyuVuGXzdLJFUiLIXmdsxstG)
 
-## Prerequesites
+## Requirements
 
 - A Go [workspace](https://go.dev/doc/gopath_code), with Make[^1] and [Go Swagger](https://goswagger.io/install.html) already setup.
 - Install [Docker](https://docs.docker.com/get-docker/) and [Docker Compose](https://docs.docker.com/compose/install/).
@@ -36,7 +36,11 @@ Use them to perform code generation with entgo and goswagger.
 
 Other rules are used by application Dockerfile (in `./config/`) and Github Actions (in `./.github/workflows/`).
 
-## Development
+## Repository
+
+- _In Progress.._
+
+## Roadmap
 
 Application development follows a design-first approach. It uses two code generation tools and it can be separated in three steps.
 
