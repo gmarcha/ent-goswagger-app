@@ -51,60 +51,70 @@ Application development follows a design-first approach. It uses two code genera
 3. API routes are interfaces with `Handle` method which need to be implemented by the developer.\
    Authentication mechanisms as OAuth need to be implemented too.
 
-## Stack
+## Tools
 
 - **Go**\
-  Golang is a modern compiled programming language with strong typing, low-level capabilities and code generation tools.\
+  Golang is a modern compiled programming language with strong typing, low-level capabilities and a builtin code generation tool.\
   *Links to [documentation](https://go.dev/doc/), [specification](https://go.dev/ref/spec) and [project layout](https://github.com/golang-standards/project-layout) examples.*
 
 - **OAuth 2.0**\
-  An authorization delegation protocol. In this application, authentication depends on this authorization.\
+  An authorization delegation protocol. Authentication in application depends on this authorization.\
   *Links to [documentation](https://oauth.net/2/) and how to use it to implement [user authentication](https://oauth.net/articles/authentication/).*
 
 ---
 
+- **Entgo**\
+  Entgo is an entity framework, a graph oriented ORM, used to perform database access.\
+  It abstracts SQL tables and queries as Go objects and methods.\
+  Data models are directly written in Go code as data schemas.\
+  Ent uses theses schemas to generate code.\
+  *Link to [documentation](https://entgo.io/docs/getting-started/).*
+
+---
+
 - **GoSwagger**\
-  A very powerful code generation tool. Generates server code from a Swagger specification (OAPIv2).\
+  A tool to generate server code based on an openapi specification version 2.0.\
+  This specification is often called a swagger specification, because of the name of the firm which developed it.\
+  The swagger firm also developed tools to generate a specification from source code or server/client/cli code from a specification.\
+  Goswagger is a Go implementation of these tools.\
   *Links to [documentation](https://goswagger.io/) and how to use [external models](https://goswagger.io/use/models/schemas.html#external-types) for code generation.*
   
-- **Swagger**\
-  A Swagger Specification is a json/yaml file documenting routes, data schemas and (sometimes) authentication model about an API.\
+- **OpenAPI _(or Swagger)_ specification**\
+  An openapi specification is a json (or yaml) file documenting authentication model, route paths and data models of an API.\
   A specification can serve as a model to generate server code (as with goswagger), or it can be generated from comments in source code (as with gin-swagger). It is also possible to generate it from Go data schemas (as with entoas or ogent, from entgo).\
   *Links to [documentation](https://swagger.io/docs/specification/2-0/basic-structure/) and [specification](https://swagger.io/specification/v2/).*
   
 - **SwaggerEditor**\
-  A tool to write and visualize Swagger Specification online.\
+  A tool to write and visualize an openapi specification online.\
   *Link to [Swagger Editor](https://editor.swagger.io/).*
 
 ---
-
-- **GoEnt**\
-  Ent is an entity framework, a graph oriented ORM, used to perform database access.\
-  It abstracts SQL tables and queries as Go objects and methods.\
-  *Link to [documentation](https://entgo.io/docs/getting-started/).*
-
-- **PostGreSQL _(or any SQL database)_**\
-  A SQL relational database, running in a container in development phase or with a cloud provider in production.\
-  *Links to [documentation](https://www.postgresql.org/docs/14/index.html) and [DockerHub](https://hub.docker.com/_/postgres).*
-  
- - **Docker** and **Compose**\
-  Docker is an os-level virtualization technology based on container.\
-  They allow us to run our application in an isolated, platform independent environment.\
-  Compose is a container orchestrator, used to manage a group of containers.\
-  *Links to [Docker documentation](https://docs.docker.com/get-started/overview/) and to [Compose manual](https://docs.docker.com/compose/).*
-  
----
-  
-- **GitHub Actions**\
-  GH-Actions are CI (Continuous Integration) tools. They allow us to run automated processes triggered by specific events on our repository.\
-  Processes can be linters, validators or testers among other things.\
-  Events can be `push`, `pull-request` or issue creation for example.\
-  *Links to [documentation](https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions) and a Go workflow [example](https://medium.com/swlh/setting-up-github-actions-for-go-project-ea84f4ed3a40).*
 
 - **Make**\
   Make is a build automation tool used to build executables files. It can also be used to manage a project.\
   We use a file called Makefile which contains rules. These rules function as scripts.\
   *Links to [documentation](https://www.gnu.org/software/make/manual/make.html) and [wikipedia](https://en.wikipedia.org/wiki/Make_(software)).*
+
+- **Docker** and **Compose**\
+  Docker is an os-level virtualization technology based on containers.\
+  They allow us to run our application in an isolated, platform independent environment.\
+  Containers are run from images, themselves build from a Dockerfile.\
+  Compose is a container orchestrator, used to manage a group of containers.\
+  It is used to run simultaneously all our application services.
+  *Links to [Docker documentation](https://docs.docker.com/get-started/overview/) and to [Compose manual](https://docs.docker.com/compose/).*
+
+- **PostGreSQL _(or any SQL database)_**\
+  A SQL relational database, running in a container in development phase or with a cloud provider in production.\
+  *Links to [documentation](https://www.postgresql.org/docs/14/index.html) and [DockerHub](https://hub.docker.com/_/postgres).*
+
+- **GitHub Actions**\
+  GH-Actions are CI (Continuous Integration) tools.\
+  They allow us to run automated processes triggered by specific events on our repository.\
+  Processes can be linters, validators or testers among other things.\
+  Events can be `push`, `pull-request` or issue creation for example.\
+  *Links to [documentation](https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions) and a Go workflow [example](https://medium.com/swlh/setting-up-github-actions-for-go-project-ea84f4ed3a40).*
+
+---
 
 - **yq**\
   yq is a powerful yaml processor used to manipulate json or yaml files.\
@@ -113,7 +123,7 @@ Application development follows a design-first approach. It uses two code genera
   *Link to [documentation](https://mikefarah.gitbook.io/yq/)*
 
 - **Useful links**\
-  How to [makeareadme](https://www.makeareadme.com/)? to draw an application [workflow](https://asciiflow.com/#/)? to [record](https://asciinema.org/) a terminal session?
+  How to use [markdown](https://docs.github.com/en/get-started/writing-on-github/getting-started-with-writing-and-formatting-on-github/basic-writing-and-formatting-syntax) on Github ? to [makeareadme](https://www.makeareadme.com/)? to draw an application [workflow](https://asciiflow.com/#/)? to [record](https://asciinema.org/) a terminal session?
 
 ## Author
 
