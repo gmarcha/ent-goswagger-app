@@ -16,4 +16,5 @@
 
 # Specific to project
 .env
-test.c*
+config/pgadmin/servers.json
+user.yaml
