@@ -6,7 +6,7 @@
 //  Schemes:
 //    http
 //  Host: localhost
-//  BasePath: /
+//  BasePath: /v2
 //  Version: 0.0.1
 //  Contact:
 //

@@ -25,9 +25,14 @@ type Error struct {
 	Code *int64 `json:"code"`
 
 	// message
-	// Example: Internal Server Error
+	// Example: Explicit error message
 	// Required: true
 	Message *string `json:"message"`
+
+	// status
+	// Example: Internal Server Error
+	// Required: true
+	Status *string `json:"status"`
 }
 
 // Validate validates this error
@@ -39,6 +44,10 @@ func (m *Error) Validate(formats strfmt.Registry) error {
 	}
 
 	if err := m.validateMessage(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateStatus(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -60,6 +69,15 @@ func (m *Error) validateCode(formats strfmt.Registry) error {
 func (m *Error) validateMessage(formats strfmt.Registry) error {
 
 	if err := validate.Required("message", "body", m.Message); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (m *Error) validateStatus(formats strfmt.Registry) error {
+
+	if err := validate.Required("status", "body", m.Status); err != nil {
 		return err
 	}
 

@@ -29,11 +29,11 @@ func NewLogin(ctx *middleware.Context, handler LoginHandler) *Login {
 	return &Login{Context: ctx, Handler: handler}
 }
 
-/* Login swagger:route GET /login Authentication login
+/* Login swagger:route GET /auth/login Authentication login
 
 Login user
 
-Login to 42 API with OAuth 2.0.
+Login a user with 42 API.
 
 */
 type Login struct {

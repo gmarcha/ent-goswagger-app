@@ -31,9 +31,9 @@ func NewCallback(ctx *middleware.Context, handler CallbackHandler) *Callback {
 
 /* Callback swagger:route GET /auth/callback Authentication callback
 
-Return user token
+Receive token
 
-Retrieve token from 42 API.
+Receive token as a response from 42 API.
 
 */
 type Callback struct {

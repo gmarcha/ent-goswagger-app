@@ -98,6 +98,12 @@ func NewTutorAPI(spec *loads.Document) *TutorAPI {
 		UserSubscribeUserHandler: user.SubscribeUserHandlerFunc(func(params user.SubscribeUserParams, principal *models.Principal) middleware.Responder {
 			return middleware.NotImplemented("operation user.SubscribeUser has not yet been implemented")
 		}),
+		AuthenticationTokenInfoHandler: authentication.TokenInfoHandlerFunc(func(params authentication.TokenInfoParams, principal *models.Principal) middleware.Responder {
+			return middleware.NotImplemented("operation authentication.TokenInfo has not yet been implemented")
+		}),
+		AuthenticationTokenRefreshHandler: authentication.TokenRefreshHandlerFunc(func(params authentication.TokenRefreshParams, principal *models.Principal) middleware.Responder {
+			return middleware.NotImplemented("operation authentication.TokenRefresh has not yet been implemented")
+		}),
 		UserUnsubscribeMeHandler: user.UnsubscribeMeHandlerFunc(func(params user.UnsubscribeMeParams, principal *models.Principal) middleware.Responder {
 			return middleware.NotImplemented("operation user.UnsubscribeMe has not yet been implemented")
 		}),
@@ -114,8 +120,8 @@ func NewTutorAPI(spec *loads.Document) *TutorAPI {
 			return middleware.NotImplemented("operation user.UpdateUser has not yet been implemented")
 		}),
 
-		OauthSecurityAuth: func(token string, scopes []string) (*models.Principal, error) {
-			return nil, errors.NotImplemented("oauth2 bearer auth (OauthSecurity) has not yet been implemented")
+		OAuth2Auth: func(token string, scopes []string) (*models.Principal, error) {
+			return nil, errors.NotImplemented("oauth2 bearer auth (OAuth2) has not yet been implemented")
 		},
 		// default authorizer is authorized meaning no requests are blocked
 		APIAuthorizer: security.Authorized(),
@@ -155,9 +161,9 @@ type TutorAPI struct {
 	//   - application/json
 	JSONProducer runtime.Producer
 
-	// OauthSecurityAuth registers a function that takes an access token and a collection of required scopes and returns a principal
+	// OAuth2Auth registers a function that takes an access token and a collection of required scopes and returns a principal
 	// it performs authentication based on an oauth2 bearer token provided in the request
-	OauthSecurityAuth func(string, []string) (*models.Principal, error)
+	OAuth2Auth func(string, []string) (*models.Principal, error)
 
 	// APIAuthorizer provides access control (ACL/RBAC/ABAC) by providing access to the request and authenticated principal
 	APIAuthorizer runtime.Authorizer
@@ -196,6 +202,10 @@ type TutorAPI struct {
 	UserSubscribeMeHandler user.SubscribeMeHandler
 	// UserSubscribeUserHandler sets the operation handler for the subscribe user operation
 	UserSubscribeUserHandler user.SubscribeUserHandler
+	// AuthenticationTokenInfoHandler sets the operation handler for the token info operation
+	AuthenticationTokenInfoHandler authentication.TokenInfoHandler
+	// AuthenticationTokenRefreshHandler sets the operation handler for the token refresh operation
+	AuthenticationTokenRefreshHandler authentication.TokenRefreshHandler
 	// UserUnsubscribeMeHandler sets the operation handler for the unsubscribe me operation
 	UserUnsubscribeMeHandler user.UnsubscribeMeHandler
 	// UserUnsubscribeUserHandler sets the operation handler for the unsubscribe user operation
@@ -283,8 +293,8 @@ func (o *TutorAPI) Validate() error {
 		unregistered = append(unregistered, "JSONProducer")
 	}
 
-	if o.OauthSecurityAuth == nil {
-		unregistered = append(unregistered, "OauthSecurityAuth")
+	if o.OAuth2Auth == nil {
+		unregistered = append(unregistered, "OAuth2Auth")
 	}
 
 	if o.AuthenticationCallbackHandler == nil {
@@ -338,6 +348,12 @@ func (o *TutorAPI) Validate() error {
 	if o.UserSubscribeUserHandler == nil {
 		unregistered = append(unregistered, "user.SubscribeUserHandler")
 	}
+	if o.AuthenticationTokenInfoHandler == nil {
+		unregistered = append(unregistered, "authentication.TokenInfoHandler")
+	}
+	if o.AuthenticationTokenRefreshHandler == nil {
+		unregistered = append(unregistered, "authentication.TokenRefreshHandler")
+	}
 	if o.UserUnsubscribeMeHandler == nil {
 		unregistered = append(unregistered, "user.UnsubscribeMeHandler")
 	}
@@ -371,9 +387,9 @@ func (o *TutorAPI) AuthenticatorsFor(schemes map[string]spec.SecurityScheme) map
 	result := make(map[string]runtime.Authenticator)
 	for name := range schemes {
 		switch name {
-		case "OauthSecurity":
+		case "OAuth2":
 			result[name] = o.BearerAuthenticator(name, func(token string, scopes []string) (interface{}, error) {
-				return o.OauthSecurityAuth(token, scopes)
+				return o.OAuth2Auth(token, scopes)
 			})
 
 		}
@@ -498,7 +514,7 @@ func (o *TutorAPI) initHandlerCache() {
 	if o.handlers["GET"] == nil {
 		o.handlers["GET"] = make(map[string]http.Handler)
 	}
-	o.handlers["GET"]["/login"] = authentication.NewLogin(o.context, o.AuthenticationLoginHandler)
+	o.handlers["GET"]["/auth/login"] = authentication.NewLogin(o.context, o.AuthenticationLoginHandler)
 	if o.handlers["GET"] == nil {
 		o.handlers["GET"] = make(map[string]http.Handler)
 	}
@@ -519,6 +535,14 @@ func (o *TutorAPI) initHandlerCache() {
 		o.handlers["POST"] = make(map[string]http.Handler)
 	}
 	o.handlers["POST"]["/users/{userId}/events/{eventId}"] = user.NewSubscribeUser(o.context, o.UserSubscribeUserHandler)
+	if o.handlers["GET"] == nil {
+		o.handlers["GET"] = make(map[string]http.Handler)
+	}
+	o.handlers["GET"]["/auth/token/info"] = authentication.NewTokenInfo(o.context, o.AuthenticationTokenInfoHandler)
+	if o.handlers["GET"] == nil {
+		o.handlers["GET"] = make(map[string]http.Handler)
+	}
+	o.handlers["GET"]["/auth/token/refresh"] = authentication.NewTokenRefresh(o.context, o.AuthenticationTokenRefreshHandler)
 	if o.handlers["DELETE"] == nil {
 		o.handlers["DELETE"] = make(map[string]http.Handler)
 	}

@@ -31,15 +31,15 @@ func init() {
     "contact": {},
     "version": "0.0.1"
   },
+  "basePath": "/v2",
   "paths": {
     "/auth/callback": {
       "get": {
-        "security": [],
-        "description": "Retrieve token from 42 API.",
+        "description": "Receive token as a response from 42 API.",
         "tags": [
           "Authentication"
         ],
-        "summary": "Return user token",
+        "summary": "Receive token",
         "operationId": "callback",
         "responses": {
           "200": {
@@ -47,6 +47,89 @@ func init() {
             "schema": {
               "type": "string"
             }
+          },
+          "401": {
+            "$ref": "#/responses/401"
+          },
+          "500": {
+            "$ref": "#/responses/500"
+          }
+        }
+      }
+    },
+    "/auth/login": {
+      "get": {
+        "description": "Login a user with 42 API.",
+        "tags": [
+          "Authentication"
+        ],
+        "summary": "Login user",
+        "operationId": "login",
+        "responses": {
+          "302": {
+            "description": "Found"
+          },
+          "500": {
+            "$ref": "#/responses/500"
+          }
+        }
+      }
+    },
+    "/auth/token/info": {
+      "get": {
+        "security": [
+          {
+            "OAuth2": [
+              "tutor"
+            ]
+          }
+        ],
+        "description": "Send authenticated user information or unauthorized error response.",
+        "tags": [
+          "Authentication"
+        ],
+        "summary": "Send user information",
+        "operationId": "tokenInfo",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/User"
+            }
+          },
+          "401": {
+            "$ref": "#/responses/401"
+          },
+          "500": {
+            "$ref": "#/responses/500"
+          }
+        }
+      }
+    },
+    "/auth/token/refresh": {
+      "get": {
+        "security": [
+          {
+            "OAuth2": [
+              "tutor"
+            ]
+          }
+        ],
+        "description": "Refresh access token if refresh token is still valid.",
+        "tags": [
+          "Authentication"
+        ],
+        "summary": "Refresh token",
+        "operationId": "tokenRefresh",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "string"
+            }
+          },
+          "401": {
+            "$ref": "#/responses/401"
           },
           "500": {
             "$ref": "#/responses/500"
@@ -56,6 +139,13 @@ func init() {
     },
     "/events": {
       "get": {
+        "security": [
+          {
+            "OAuth2": [
+              "tutor"
+            ]
+          }
+        ],
         "description": "List all events.",
         "tags": [
           "Event"
@@ -101,6 +191,13 @@ func init() {
         }
       },
       "post": {
+        "security": [
+          {
+            "OAuth2": [
+              "event"
+            ]
+          }
+        ],
         "description": "Create a new event.",
         "tags": [
           "Event"
@@ -136,6 +233,13 @@ func init() {
     },
     "/events/{id}": {
       "get": {
+        "security": [
+          {
+            "OAuth2": [
+              "tutor"
+            ]
+          }
+        ],
         "description": "Read an event by ID.",
         "tags": [
           "Event"
@@ -161,6 +265,13 @@ func init() {
         }
       },
       "put": {
+        "security": [
+          {
+            "OAuth2": [
+              "event"
+            ]
+          }
+        ],
         "description": "Update an event by ID.",
         "tags": [
           "Event"
@@ -197,6 +308,13 @@ func init() {
         }
       },
       "delete": {
+        "security": [
+          {
+            "OAuth2": [
+              "event"
+            ]
+          }
+        ],
         "description": "Delete an event by ID.",
         "tags": [
           "Event"
@@ -230,6 +348,13 @@ func init() {
     },
     "/events/{id}/users": {
       "get": {
+        "security": [
+          {
+            "OAuth2": [
+              "tutor"
+            ]
+          }
+        ],
         "description": "List users subscribed to an event.",
         "tags": [
           "Event"
@@ -267,27 +392,15 @@ func init() {
         }
       ]
     },
-    "/login": {
-      "get": {
-        "security": [],
-        "description": "Login to 42 API with OAuth 2.0.",
-        "tags": [
-          "Authentication"
-        ],
-        "summary": "Login user",
-        "operationId": "login",
-        "responses": {
-          "302": {
-            "description": "Found"
-          },
-          "500": {
-            "$ref": "#/responses/500"
-          }
-        }
-      }
-    },
     "/users": {
       "get": {
+        "security": [
+          {
+            "OAuth2": [
+              "tutor"
+            ]
+          }
+        ],
         "description": "List all users.",
         "tags": [
           "User"
@@ -321,6 +434,13 @@ func init() {
         }
       },
       "post": {
+        "security": [
+          {
+            "OAuth2": [
+              "admin"
+            ]
+          }
+        ],
         "description": "Create a new user.",
         "tags": [
           "User"
@@ -356,6 +476,13 @@ func init() {
     },
     "/users/me": {
       "get": {
+        "security": [
+          {
+            "OAuth2": [
+              "tutor"
+            ]
+          }
+        ],
         "description": "Read the authenticated user.",
         "tags": [
           "User"
@@ -375,6 +502,13 @@ func init() {
         }
       },
       "put": {
+        "security": [
+          {
+            "OAuth2": [
+              "tutor"
+            ]
+          }
+        ],
         "description": "Update the authenticated user.",
         "tags": [
           "User"
@@ -405,6 +539,13 @@ func init() {
         }
       },
       "delete": {
+        "security": [
+          {
+            "OAuth2": [
+              "tutor"
+            ]
+          }
+        ],
         "description": "Delete the authenticated user.",
         "tags": [
           "User"
@@ -423,6 +564,13 @@ func init() {
     },
     "/users/me/events": {
       "get": {
+        "security": [
+          {
+            "OAuth2": [
+              "tutor"
+            ]
+          }
+        ],
         "description": "List the authenticated user's subscribed events.",
         "tags": [
           "User"
@@ -447,6 +595,13 @@ func init() {
     },
     "/users/me/events/{id}": {
       "post": {
+        "security": [
+          {
+            "OAuth2": [
+              "tutor"
+            ]
+          }
+        ],
         "description": "Subscribe an authenticated user to an event.",
         "tags": [
           "User"
@@ -473,6 +628,13 @@ func init() {
         }
       },
       "delete": {
+        "security": [
+          {
+            "OAuth2": [
+              "tutor"
+            ]
+          }
+        ],
         "description": "Unsubscribe an authenticated user to an event.",
         "tags": [
           "User"
@@ -506,6 +668,13 @@ func init() {
     },
     "/users/{id}": {
       "get": {
+        "security": [
+          {
+            "OAuth2": [
+              "tutor"
+            ]
+          }
+        ],
         "description": "Read an user by ID.",
         "tags": [
           "User"
@@ -531,6 +700,13 @@ func init() {
         }
       },
       "put": {
+        "security": [
+          {
+            "OAuth2": [
+              "admin"
+            ]
+          }
+        ],
         "description": "Update an user by ID.",
         "tags": [
           "User"
@@ -567,6 +743,13 @@ func init() {
         }
       },
       "delete": {
+        "security": [
+          {
+            "OAuth2": [
+              "admin"
+            ]
+          }
+        ],
         "description": "Delete an user by ID.",
         "tags": [
           "User"
@@ -600,6 +783,13 @@ func init() {
     },
     "/users/{id}/events": {
       "get": {
+        "security": [
+          {
+            "OAuth2": [
+              "tutor"
+            ]
+          }
+        ],
         "description": "List user's subscribed events.",
         "tags": [
           "User"
@@ -639,6 +829,13 @@ func init() {
     },
     "/users/{userId}/events/{eventId}": {
       "post": {
+        "security": [
+          {
+            "OAuth2": [
+              "admin"
+            ]
+          }
+        ],
         "description": "Subscribe a user to an event.",
         "tags": [
           "User"
@@ -665,6 +862,13 @@ func init() {
         }
       },
       "delete": {
+        "security": [
+          {
+            "OAuth2": [
+              "admin"
+            ]
+          }
+        ],
         "description": "Unsubscribe a user to an event.",
         "tags": [
           "User"
@@ -709,6 +913,7 @@ func init() {
       "type": "object",
       "required": [
         "code",
+        "status",
         "message"
       ],
       "properties": {
@@ -717,6 +922,10 @@ func init() {
           "example": 500
         },
         "message": {
+          "type": "string",
+          "example": "Explicit error message"
+        },
+        "status": {
           "type": "string",
           "example": "Internal Server Error"
         }
@@ -729,12 +938,13 @@ func init() {
         "endAt",
         "id",
         "name",
-        "startAt",
-        "tutorsRequired",
-        "tutorsSubscribed",
-        "walletsRewards"
+        "startAt"
       ],
       "properties": {
+        "category": {
+          "type": "string",
+          "example": "exam"
+        },
         "createdAt": {
           "type": "string",
           "format": "date-time"
@@ -760,17 +970,13 @@ func init() {
           "type": "integer",
           "format": "int64"
         },
-        "tutorsSubscribed": {
-          "type": "integer",
-          "format": "int64"
-        },
         "users": {
           "type": "array",
           "items": {
             "$ref": "#/definitions/User"
           }
         },
-        "walletsRewards": {
+        "walletsReward": {
           "type": "integer",
           "format": "int64"
         }
@@ -786,13 +992,15 @@ func init() {
       "type": "object",
       "required": [
         "adminScope",
-        "hoursDone",
+        "calendarScope",
         "id",
-        "login",
-        "tutorScope"
+        "login"
       ],
       "properties": {
         "adminScope": {
+          "type": "boolean"
+        },
+        "calendarScope": {
           "type": "boolean"
         },
         "events": {
@@ -804,11 +1012,10 @@ func init() {
         "firstName": {
           "type": "string"
         },
-        "hoursDone": {
-          "type": "integer",
-          "format": "int64"
-        },
         "id": {
+          "type": "string"
+        },
+        "imagePath": {
           "type": "string"
         },
         "lastName": {
@@ -816,9 +1023,6 @@ func init() {
         },
         "login": {
           "type": "string"
-        },
-        "tutorScope": {
-          "type": "boolean"
         }
       },
       "x-go-type": {
@@ -865,23 +1069,18 @@ func init() {
     }
   },
   "securityDefinitions": {
-    "OauthSecurity": {
+    "OAuth2": {
       "type": "oauth2",
       "flow": "accessCode",
       "authorizationUrl": "https://api.intra.42.fr/oauth/authorize",
       "tokenUrl": "https://api.intra.42.fr/oauth/token",
       "scopes": {
+        "admin": "Admin scope",
+        "event": "Event scope",
         "tutor": "Tutor scope"
       }
     }
-  },
-  "security": [
-    {
-      "OauthSecurity": [
-        "tutor"
-      ]
-    }
-  ]
+  }
 }`))
 	FlatSwaggerJSON = json.RawMessage([]byte(`{
   "consumes": [
@@ -897,21 +1096,122 @@ func init() {
     "contact": {},
     "version": "0.0.1"
   },
+  "basePath": "/v2",
   "paths": {
     "/auth/callback": {
       "get": {
-        "security": [],
-        "description": "Retrieve token from 42 API.",
+        "description": "Receive token as a response from 42 API.",
         "tags": [
           "Authentication"
         ],
-        "summary": "Return user token",
+        "summary": "Receive token",
         "operationId": "callback",
         "responses": {
           "200": {
             "description": "OK",
             "schema": {
               "type": "string"
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      }
+    },
+    "/auth/login": {
+      "get": {
+        "description": "Login a user with 42 API.",
+        "tags": [
+          "Authentication"
+        ],
+        "summary": "Login user",
+        "operationId": "login",
+        "responses": {
+          "302": {
+            "description": "Found"
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      }
+    },
+    "/auth/token/info": {
+      "get": {
+        "security": [
+          {
+            "OAuth2": [
+              "tutor"
+            ]
+          }
+        ],
+        "description": "Send authenticated user information or unauthorized error response.",
+        "tags": [
+          "Authentication"
+        ],
+        "summary": "Send user information",
+        "operationId": "tokenInfo",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/User"
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      }
+    },
+    "/auth/token/refresh": {
+      "get": {
+        "security": [
+          {
+            "OAuth2": [
+              "tutor"
+            ]
+          }
+        ],
+        "description": "Refresh access token if refresh token is still valid.",
+        "tags": [
+          "Authentication"
+        ],
+        "summary": "Refresh token",
+        "operationId": "tokenRefresh",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "string"
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "schema": {
+              "$ref": "#/definitions/Error"
             }
           },
           "500": {
@@ -925,6 +1225,13 @@ func init() {
     },
     "/events": {
       "get": {
+        "security": [
+          {
+            "OAuth2": [
+              "tutor"
+            ]
+          }
+        ],
         "description": "List all events.",
         "tags": [
           "Event"
@@ -976,6 +1283,13 @@ func init() {
         }
       },
       "post": {
+        "security": [
+          {
+            "OAuth2": [
+              "event"
+            ]
+          }
+        ],
         "description": "Create a new event.",
         "tags": [
           "Event"
@@ -1017,6 +1331,13 @@ func init() {
     },
     "/events/{id}": {
       "get": {
+        "security": [
+          {
+            "OAuth2": [
+              "tutor"
+            ]
+          }
+        ],
         "description": "Read an event by ID.",
         "tags": [
           "Event"
@@ -1051,6 +1372,13 @@ func init() {
         }
       },
       "put": {
+        "security": [
+          {
+            "OAuth2": [
+              "event"
+            ]
+          }
+        ],
         "description": "Update an event by ID.",
         "tags": [
           "Event"
@@ -1096,6 +1424,13 @@ func init() {
         }
       },
       "delete": {
+        "security": [
+          {
+            "OAuth2": [
+              "event"
+            ]
+          }
+        ],
         "description": "Delete an event by ID.",
         "tags": [
           "Event"
@@ -1138,6 +1473,13 @@ func init() {
     },
     "/events/{id}/users": {
       "get": {
+        "security": [
+          {
+            "OAuth2": [
+              "tutor"
+            ]
+          }
+        ],
         "description": "List users subscribed to an event.",
         "tags": [
           "Event"
@@ -1184,30 +1526,15 @@ func init() {
         }
       ]
     },
-    "/login": {
-      "get": {
-        "security": [],
-        "description": "Login to 42 API with OAuth 2.0.",
-        "tags": [
-          "Authentication"
-        ],
-        "summary": "Login user",
-        "operationId": "login",
-        "responses": {
-          "302": {
-            "description": "Found"
-          },
-          "500": {
-            "description": "Internal Server Error",
-            "schema": {
-              "$ref": "#/definitions/Error"
-            }
-          }
-        }
-      }
-    },
     "/users": {
       "get": {
+        "security": [
+          {
+            "OAuth2": [
+              "tutor"
+            ]
+          }
+        ],
         "description": "List all users.",
         "tags": [
           "User"
@@ -1247,6 +1574,13 @@ func init() {
         }
       },
       "post": {
+        "security": [
+          {
+            "OAuth2": [
+              "admin"
+            ]
+          }
+        ],
         "description": "Create a new user.",
         "tags": [
           "User"
@@ -1288,6 +1622,13 @@ func init() {
     },
     "/users/me": {
       "get": {
+        "security": [
+          {
+            "OAuth2": [
+              "tutor"
+            ]
+          }
+        ],
         "description": "Read the authenticated user.",
         "tags": [
           "User"
@@ -1310,6 +1651,13 @@ func init() {
         }
       },
       "put": {
+        "security": [
+          {
+            "OAuth2": [
+              "tutor"
+            ]
+          }
+        ],
         "description": "Update the authenticated user.",
         "tags": [
           "User"
@@ -1343,6 +1691,13 @@ func init() {
         }
       },
       "delete": {
+        "security": [
+          {
+            "OAuth2": [
+              "tutor"
+            ]
+          }
+        ],
         "description": "Delete the authenticated user.",
         "tags": [
           "User"
@@ -1364,6 +1719,13 @@ func init() {
     },
     "/users/me/events": {
       "get": {
+        "security": [
+          {
+            "OAuth2": [
+              "tutor"
+            ]
+          }
+        ],
         "description": "List the authenticated user's subscribed events.",
         "tags": [
           "User"
@@ -1391,6 +1753,13 @@ func init() {
     },
     "/users/me/events/{id}": {
       "post": {
+        "security": [
+          {
+            "OAuth2": [
+              "tutor"
+            ]
+          }
+        ],
         "description": "Subscribe an authenticated user to an event.",
         "tags": [
           "User"
@@ -1426,6 +1795,13 @@ func init() {
         }
       },
       "delete": {
+        "security": [
+          {
+            "OAuth2": [
+              "tutor"
+            ]
+          }
+        ],
         "description": "Unsubscribe an authenticated user to an event.",
         "tags": [
           "User"
@@ -1468,6 +1844,13 @@ func init() {
     },
     "/users/{id}": {
       "get": {
+        "security": [
+          {
+            "OAuth2": [
+              "tutor"
+            ]
+          }
+        ],
         "description": "Read an user by ID.",
         "tags": [
           "User"
@@ -1502,6 +1885,13 @@ func init() {
         }
       },
       "put": {
+        "security": [
+          {
+            "OAuth2": [
+              "admin"
+            ]
+          }
+        ],
         "description": "Update an user by ID.",
         "tags": [
           "User"
@@ -1547,6 +1937,13 @@ func init() {
         }
       },
       "delete": {
+        "security": [
+          {
+            "OAuth2": [
+              "admin"
+            ]
+          }
+        ],
         "description": "Delete an user by ID.",
         "tags": [
           "User"
@@ -1589,6 +1986,13 @@ func init() {
     },
     "/users/{id}/events": {
       "get": {
+        "security": [
+          {
+            "OAuth2": [
+              "tutor"
+            ]
+          }
+        ],
         "description": "List user's subscribed events.",
         "tags": [
           "User"
@@ -1637,6 +2041,13 @@ func init() {
     },
     "/users/{userId}/events/{eventId}": {
       "post": {
+        "security": [
+          {
+            "OAuth2": [
+              "admin"
+            ]
+          }
+        ],
         "description": "Subscribe a user to an event.",
         "tags": [
           "User"
@@ -1672,6 +2083,13 @@ func init() {
         }
       },
       "delete": {
+        "security": [
+          {
+            "OAuth2": [
+              "admin"
+            ]
+          }
+        ],
         "description": "Unsubscribe a user to an event.",
         "tags": [
           "User"
@@ -1725,6 +2143,7 @@ func init() {
       "type": "object",
       "required": [
         "code",
+        "status",
         "message"
       ],
       "properties": {
@@ -1733,6 +2152,10 @@ func init() {
           "example": 500
         },
         "message": {
+          "type": "string",
+          "example": "Explicit error message"
+        },
+        "status": {
           "type": "string",
           "example": "Internal Server Error"
         }
@@ -1745,12 +2168,13 @@ func init() {
         "endAt",
         "id",
         "name",
-        "startAt",
-        "tutorsRequired",
-        "tutorsSubscribed",
-        "walletsRewards"
+        "startAt"
       ],
       "properties": {
+        "category": {
+          "type": "string",
+          "example": "exam"
+        },
         "createdAt": {
           "type": "string",
           "format": "date-time"
@@ -1776,17 +2200,13 @@ func init() {
           "type": "integer",
           "format": "int64"
         },
-        "tutorsSubscribed": {
-          "type": "integer",
-          "format": "int64"
-        },
         "users": {
           "type": "array",
           "items": {
             "$ref": "#/definitions/User"
           }
         },
-        "walletsRewards": {
+        "walletsReward": {
           "type": "integer",
           "format": "int64"
         }
@@ -1802,13 +2222,15 @@ func init() {
       "type": "object",
       "required": [
         "adminScope",
-        "hoursDone",
+        "calendarScope",
         "id",
-        "login",
-        "tutorScope"
+        "login"
       ],
       "properties": {
         "adminScope": {
+          "type": "boolean"
+        },
+        "calendarScope": {
           "type": "boolean"
         },
         "events": {
@@ -1820,11 +2242,10 @@ func init() {
         "firstName": {
           "type": "string"
         },
-        "hoursDone": {
-          "type": "integer",
-          "format": "int64"
-        },
         "id": {
+          "type": "string"
+        },
+        "imagePath": {
           "type": "string"
         },
         "lastName": {
@@ -1832,9 +2253,6 @@ func init() {
         },
         "login": {
           "type": "string"
-        },
-        "tutorScope": {
-          "type": "boolean"
         }
       },
       "x-go-type": {
@@ -1881,22 +2299,17 @@ func init() {
     }
   },
   "securityDefinitions": {
-    "OauthSecurity": {
+    "OAuth2": {
       "type": "oauth2",
       "flow": "accessCode",
       "authorizationUrl": "https://api.intra.42.fr/oauth/authorize",
       "tokenUrl": "https://api.intra.42.fr/oauth/token",
       "scopes": {
+        "admin": "Admin scope",
+        "event": "Event scope",
         "tutor": "Tutor scope"
       }
     }
-  },
-  "security": [
-    {
-      "OauthSecurity": [
-        "tutor"
-      ]
-    }
-  ]
+  }
 }`))
 }

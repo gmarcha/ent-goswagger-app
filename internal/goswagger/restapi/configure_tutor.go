@@ -4,16 +4,16 @@ package restapi
 
 import (
 	"crypto/tls"
-	"log"
 	"net/http"
 
 	"github.com/go-openapi/errors"
 	"github.com/go-openapi/runtime"
-	"github.com/joho/godotenv"
 
 	"github.com/gmarcha/ent-goswagger-app/internal/clients/database"
+	"github.com/gmarcha/ent-goswagger-app/internal/clients/env"
 	"github.com/gmarcha/ent-goswagger-app/internal/goswagger/restapi/operations"
 	"github.com/gmarcha/ent-goswagger-app/internal/modules/auth"
+	"github.com/gmarcha/ent-goswagger-app/internal/modules/user"
 )
 
 //go:generate swagger generate server --target ../../goswagger --name Tutor --spec ../../../docs/swagger.yaml --principal models.Principal --exclude-main
@@ -25,6 +25,12 @@ func configureFlags(api *operations.TutorAPI) {
 func configureAPI(api *operations.TutorAPI) http.Handler {
 	// configure the api here
 	api.ServeError = errors.ServeError
+
+	api.UseSwaggerUI()
+
+	api.JSONConsumer = runtime.JSONConsumer()
+
+	api.JSONProducer = runtime.JSONProducer()
 
 	// Set your custom logger if needed. Default one is log.Printf
 	// Expected interface func(string, ...interface{})
@@ -38,20 +44,12 @@ func configureAPI(api *operations.TutorAPI) http.Handler {
 	// Example:
 	// api.APIAuthorizer = security.Authorized()
 
-	api.UseSwaggerUI()
-
-	api.JSONConsumer = runtime.JSONConsumer()
-
-	api.JSONProducer = runtime.JSONProducer()
-
-	err := godotenv.Load("config/.env")
-	if err != nil {
-		log.Fatalf("Error loading .env file")
-	}
+	env.Init("config/.env")
 
 	db := database.Init()
 
 	auth.Init(api, db)
+	user.Init(api, db)
 
 	api.ServerShutdown = func() {
 		db.Close()
