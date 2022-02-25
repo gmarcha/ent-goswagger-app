@@ -1,0 +1,20 @@
+{
+    "Servers": {
+      "1": {
+        "Name": "tutor",
+        "Group": "Servers",
+        "Host": "$POSTGRES_HOST",
+        "Port": "$POSTGRES_PORT",
+        "MaintenanceDB": "$POSTGRES_DB",
+        "Username": "$POSTGRES_USER",
+        "PassFile": "/tmp/pgpass",
+        "SSLMode": "prefer"
+      }
+    }
+  }
+
+# export $(cat config/.env | grep POSTGRES)
+# yq -P -o json '(.. | select(tag == "!!str")) |= envsubst' config/pgadmin/servers.json.sample > config/pgadmin/servers.json
+# unset $(cat config/.env | grep POSTGRES | cut -d = -f1)
+# - Run these commands to load environment, to perform substitution and to unset environment.
+# - Or create servers.json file next to servers.json.sample with correct values.
