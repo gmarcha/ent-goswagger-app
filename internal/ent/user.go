@@ -24,10 +24,10 @@ type User struct {
 	FirstName string `json:"firstName,omitempty"`
 	// LastName holds the value of the "lastName" field.
 	LastName string `json:"lastName,omitempty"`
-	// HoursDone holds the value of the "hoursDone" field.
-	HoursDone int64 `json:"hoursDone,omitempty"`
-	// TutorScope holds the value of the "tutorScope" field.
-	TutorScope bool `json:"tutorScope,omitempty"`
+	// ImagePath holds the value of the "imagePath" field.
+	ImagePath string `json:"imagePath,omitempty"`
+	// CalendarScope holds the value of the "calendarScope" field.
+	CalendarScope bool `json:"calendarScope,omitempty"`
 	// AdminScope holds the value of the "adminScope" field.
 	AdminScope bool `json:"adminScope,omitempty"`
 	// Edges holds the relations/edges for other nodes in the graph.
@@ -58,11 +58,9 @@ func (*User) scanValues(columns []string) ([]interface{}, error) {
 	values := make([]interface{}, len(columns))
 	for i := range columns {
 		switch columns[i] {
-		case user.FieldTutorScope, user.FieldAdminScope:
+		case user.FieldCalendarScope, user.FieldAdminScope:
 			values[i] = new(sql.NullBool)
-		case user.FieldHoursDone:
-			values[i] = new(sql.NullInt64)
-		case user.FieldLogin, user.FieldFirstName, user.FieldLastName:
+		case user.FieldLogin, user.FieldFirstName, user.FieldLastName, user.FieldImagePath:
 			values[i] = new(sql.NullString)
 		case user.FieldID:
 			values[i] = new(uuid.UUID)
@@ -105,17 +103,17 @@ func (u *User) assignValues(columns []string, values []interface{}) error {
 			} else if value.Valid {
 				u.LastName = value.String
 			}
-		case user.FieldHoursDone:
-			if value, ok := values[i].(*sql.NullInt64); !ok {
-				return fmt.Errorf("unexpected type %T for field hoursDone", values[i])
+		case user.FieldImagePath:
+			if value, ok := values[i].(*sql.NullString); !ok {
+				return fmt.Errorf("unexpected type %T for field imagePath", values[i])
 			} else if value.Valid {
-				u.HoursDone = value.Int64
+				u.ImagePath = value.String
 			}
-		case user.FieldTutorScope:
+		case user.FieldCalendarScope:
 			if value, ok := values[i].(*sql.NullBool); !ok {
-				return fmt.Errorf("unexpected type %T for field tutorScope", values[i])
+				return fmt.Errorf("unexpected type %T for field calendarScope", values[i])
 			} else if value.Valid {
-				u.TutorScope = value.Bool
+				u.CalendarScope = value.Bool
 			}
 		case user.FieldAdminScope:
 			if value, ok := values[i].(*sql.NullBool); !ok {
@@ -162,10 +160,10 @@ func (u *User) String() string {
 	builder.WriteString(u.FirstName)
 	builder.WriteString(", lastName=")
 	builder.WriteString(u.LastName)
-	builder.WriteString(", hoursDone=")
-	builder.WriteString(fmt.Sprintf("%v", u.HoursDone))
-	builder.WriteString(", tutorScope=")
-	builder.WriteString(fmt.Sprintf("%v", u.TutorScope))
+	builder.WriteString(", imagePath=")
+	builder.WriteString(u.ImagePath)
+	builder.WriteString(", calendarScope=")
+	builder.WriteString(fmt.Sprintf("%v", u.CalendarScope))
 	builder.WriteString(", adminScope=")
 	builder.WriteString(fmt.Sprintf("%v", u.AdminScope))
 	builder.WriteByte(')')

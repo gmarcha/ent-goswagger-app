@@ -17,18 +17,18 @@ import (
 func init() {
 	eventFields := schema.Event{}.Fields()
 	_ = eventFields
+	// eventDescName is the schema descriptor for name field.
+	eventDescName := eventFields[1].Descriptor()
+	// event.NameValidator is a validator for the "name" field. It is called by the builders before save.
+	event.NameValidator = eventDescName.Validators[0].(func(string) error)
 	// eventDescTutorsRequired is the schema descriptor for tutorsRequired field.
-	eventDescTutorsRequired := eventFields[3].Descriptor()
+	eventDescTutorsRequired := eventFields[4].Descriptor()
 	// event.TutorsRequiredValidator is a validator for the "tutorsRequired" field. It is called by the builders before save.
 	event.TutorsRequiredValidator = eventDescTutorsRequired.Validators[0].(func(int64) error)
-	// eventDescTutorsSubscribed is the schema descriptor for tutorsSubscribed field.
-	eventDescTutorsSubscribed := eventFields[4].Descriptor()
-	// event.TutorsSubscribedValidator is a validator for the "tutorsSubscribed" field. It is called by the builders before save.
-	event.TutorsSubscribedValidator = eventDescTutorsSubscribed.Validators[0].(func(int64) error)
-	// eventDescWalletsRewards is the schema descriptor for walletsRewards field.
-	eventDescWalletsRewards := eventFields[5].Descriptor()
-	// event.WalletsRewardsValidator is a validator for the "walletsRewards" field. It is called by the builders before save.
-	event.WalletsRewardsValidator = eventDescWalletsRewards.Validators[0].(func(int64) error)
+	// eventDescWalletsReward is the schema descriptor for walletsReward field.
+	eventDescWalletsReward := eventFields[5].Descriptor()
+	// event.WalletsRewardValidator is a validator for the "walletsReward" field. It is called by the builders before save.
+	event.WalletsRewardValidator = eventDescWalletsReward.Validators[0].(func(int64) error)
 	// eventDescCreatedAt is the schema descriptor for createdAt field.
 	eventDescCreatedAt := eventFields[6].Descriptor()
 	// event.DefaultCreatedAt holds the default value on creation for the createdAt field.
@@ -39,14 +39,22 @@ func init() {
 	event.DefaultID = eventDescID.Default.(func() uuid.UUID)
 	userFields := schema.User{}.Fields()
 	_ = userFields
-	// userDescHoursDone is the schema descriptor for hoursDone field.
-	userDescHoursDone := userFields[4].Descriptor()
-	// user.HoursDoneValidator is a validator for the "hoursDone" field. It is called by the builders before save.
-	user.HoursDoneValidator = userDescHoursDone.Validators[0].(func(int64) error)
-	// userDescTutorScope is the schema descriptor for tutorScope field.
-	userDescTutorScope := userFields[5].Descriptor()
-	// user.DefaultTutorScope holds the default value on creation for the tutorScope field.
-	user.DefaultTutorScope = userDescTutorScope.Default.(bool)
+	// userDescLogin is the schema descriptor for login field.
+	userDescLogin := userFields[1].Descriptor()
+	// user.LoginValidator is a validator for the "login" field. It is called by the builders before save.
+	user.LoginValidator = userDescLogin.Validators[0].(func(string) error)
+	// userDescFirstName is the schema descriptor for firstName field.
+	userDescFirstName := userFields[2].Descriptor()
+	// user.FirstNameValidator is a validator for the "firstName" field. It is called by the builders before save.
+	user.FirstNameValidator = userDescFirstName.Validators[0].(func(string) error)
+	// userDescLastName is the schema descriptor for lastName field.
+	userDescLastName := userFields[3].Descriptor()
+	// user.LastNameValidator is a validator for the "lastName" field. It is called by the builders before save.
+	user.LastNameValidator = userDescLastName.Validators[0].(func(string) error)
+	// userDescCalendarScope is the schema descriptor for calendarScope field.
+	userDescCalendarScope := userFields[5].Descriptor()
+	// user.DefaultCalendarScope holds the default value on creation for the calendarScope field.
+	user.DefaultCalendarScope = userDescCalendarScope.Default.(bool)
 	// userDescAdminScope is the schema descriptor for adminScope field.
 	userDescAdminScope := userFields[6].Descriptor()
 	// user.DefaultAdminScope holds the default value on creation for the adminScope field.

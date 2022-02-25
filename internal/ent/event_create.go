@@ -28,6 +28,20 @@ func (ec *EventCreate) SetName(s string) *EventCreate {
 	return ec
 }
 
+// SetCategory sets the "category" field.
+func (ec *EventCreate) SetCategory(e event.Category) *EventCreate {
+	ec.mutation.SetCategory(e)
+	return ec
+}
+
+// SetNillableCategory sets the "category" field if the given value is not nil.
+func (ec *EventCreate) SetNillableCategory(e *event.Category) *EventCreate {
+	if e != nil {
+		ec.SetCategory(*e)
+	}
+	return ec
+}
+
 // SetDescription sets the "description" field.
 func (ec *EventCreate) SetDescription(s string) *EventCreate {
 	ec.mutation.SetDescription(s)
@@ -48,15 +62,25 @@ func (ec *EventCreate) SetTutorsRequired(i int64) *EventCreate {
 	return ec
 }
 
-// SetTutorsSubscribed sets the "tutorsSubscribed" field.
-func (ec *EventCreate) SetTutorsSubscribed(i int64) *EventCreate {
-	ec.mutation.SetTutorsSubscribed(i)
+// SetNillableTutorsRequired sets the "tutorsRequired" field if the given value is not nil.
+func (ec *EventCreate) SetNillableTutorsRequired(i *int64) *EventCreate {
+	if i != nil {
+		ec.SetTutorsRequired(*i)
+	}
 	return ec
 }
 
-// SetWalletsRewards sets the "walletsRewards" field.
-func (ec *EventCreate) SetWalletsRewards(i int64) *EventCreate {
-	ec.mutation.SetWalletsRewards(i)
+// SetWalletsReward sets the "walletsReward" field.
+func (ec *EventCreate) SetWalletsReward(i int64) *EventCreate {
+	ec.mutation.SetWalletsReward(i)
+	return ec
+}
+
+// SetNillableWalletsReward sets the "walletsReward" field if the given value is not nil.
+func (ec *EventCreate) SetNillableWalletsReward(i *int64) *EventCreate {
+	if i != nil {
+		ec.SetWalletsReward(*i)
+	}
 	return ec
 }
 
@@ -201,28 +225,24 @@ func (ec *EventCreate) check() error {
 	if _, ok := ec.mutation.Name(); !ok {
 		return &ValidationError{Name: "name", err: errors.New(`ent: missing required field "Event.name"`)}
 	}
-	if _, ok := ec.mutation.TutorsRequired(); !ok {
-		return &ValidationError{Name: "tutorsRequired", err: errors.New(`ent: missing required field "Event.tutorsRequired"`)}
+	if v, ok := ec.mutation.Name(); ok {
+		if err := event.NameValidator(v); err != nil {
+			return &ValidationError{Name: "name", err: fmt.Errorf(`ent: validator failed for field "Event.name": %w`, err)}
+		}
+	}
+	if v, ok := ec.mutation.Category(); ok {
+		if err := event.CategoryValidator(v); err != nil {
+			return &ValidationError{Name: "category", err: fmt.Errorf(`ent: validator failed for field "Event.category": %w`, err)}
+		}
 	}
 	if v, ok := ec.mutation.TutorsRequired(); ok {
 		if err := event.TutorsRequiredValidator(v); err != nil {
 			return &ValidationError{Name: "tutorsRequired", err: fmt.Errorf(`ent: validator failed for field "Event.tutorsRequired": %w`, err)}
 		}
 	}
-	if _, ok := ec.mutation.TutorsSubscribed(); !ok {
-		return &ValidationError{Name: "tutorsSubscribed", err: errors.New(`ent: missing required field "Event.tutorsSubscribed"`)}
-	}
-	if v, ok := ec.mutation.TutorsSubscribed(); ok {
-		if err := event.TutorsSubscribedValidator(v); err != nil {
-			return &ValidationError{Name: "tutorsSubscribed", err: fmt.Errorf(`ent: validator failed for field "Event.tutorsSubscribed": %w`, err)}
-		}
-	}
-	if _, ok := ec.mutation.WalletsRewards(); !ok {
-		return &ValidationError{Name: "walletsRewards", err: errors.New(`ent: missing required field "Event.walletsRewards"`)}
-	}
-	if v, ok := ec.mutation.WalletsRewards(); ok {
-		if err := event.WalletsRewardsValidator(v); err != nil {
-			return &ValidationError{Name: "walletsRewards", err: fmt.Errorf(`ent: validator failed for field "Event.walletsRewards": %w`, err)}
+	if v, ok := ec.mutation.WalletsReward(); ok {
+		if err := event.WalletsRewardValidator(v); err != nil {
+			return &ValidationError{Name: "walletsReward", err: fmt.Errorf(`ent: validator failed for field "Event.walletsReward": %w`, err)}
 		}
 	}
 	if _, ok := ec.mutation.CreatedAt(); !ok {
@@ -278,6 +298,14 @@ func (ec *EventCreate) createSpec() (*Event, *sqlgraph.CreateSpec) {
 		})
 		_node.Name = value
 	}
+	if value, ok := ec.mutation.Category(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeEnum,
+			Value:  value,
+			Column: event.FieldCategory,
+		})
+		_node.Category = value
+	}
 	if value, ok := ec.mutation.Description(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
@@ -292,23 +320,15 @@ func (ec *EventCreate) createSpec() (*Event, *sqlgraph.CreateSpec) {
 			Value:  value,
 			Column: event.FieldTutorsRequired,
 		})
-		_node.TutorsRequired = value
+		_node.TutorsRequired = &value
 	}
-	if value, ok := ec.mutation.TutorsSubscribed(); ok {
+	if value, ok := ec.mutation.WalletsReward(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
 			Type:   field.TypeInt64,
 			Value:  value,
-			Column: event.FieldTutorsSubscribed,
+			Column: event.FieldWalletsReward,
 		})
-		_node.TutorsSubscribed = value
-	}
-	if value, ok := ec.mutation.WalletsRewards(); ok {
-		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
-			Type:   field.TypeInt64,
-			Value:  value,
-			Column: event.FieldWalletsRewards,
-		})
-		_node.WalletsRewards = value
+		_node.WalletsReward = &value
 	}
 	if value, ok := ec.mutation.CreatedAt(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{

@@ -55,22 +55,30 @@ func (uc *UserCreate) SetNillableLastName(s *string) *UserCreate {
 	return uc
 }
 
-// SetHoursDone sets the "hoursDone" field.
-func (uc *UserCreate) SetHoursDone(i int64) *UserCreate {
-	uc.mutation.SetHoursDone(i)
+// SetImagePath sets the "imagePath" field.
+func (uc *UserCreate) SetImagePath(s string) *UserCreate {
+	uc.mutation.SetImagePath(s)
 	return uc
 }
 
-// SetTutorScope sets the "tutorScope" field.
-func (uc *UserCreate) SetTutorScope(b bool) *UserCreate {
-	uc.mutation.SetTutorScope(b)
+// SetNillableImagePath sets the "imagePath" field if the given value is not nil.
+func (uc *UserCreate) SetNillableImagePath(s *string) *UserCreate {
+	if s != nil {
+		uc.SetImagePath(*s)
+	}
 	return uc
 }
 
-// SetNillableTutorScope sets the "tutorScope" field if the given value is not nil.
-func (uc *UserCreate) SetNillableTutorScope(b *bool) *UserCreate {
+// SetCalendarScope sets the "calendarScope" field.
+func (uc *UserCreate) SetCalendarScope(b bool) *UserCreate {
+	uc.mutation.SetCalendarScope(b)
+	return uc
+}
+
+// SetNillableCalendarScope sets the "calendarScope" field if the given value is not nil.
+func (uc *UserCreate) SetNillableCalendarScope(b *bool) *UserCreate {
 	if b != nil {
-		uc.SetTutorScope(*b)
+		uc.SetCalendarScope(*b)
 	}
 	return uc
 }
@@ -189,9 +197,9 @@ func (uc *UserCreate) ExecX(ctx context.Context) {
 
 // defaults sets the default values of the builder before save.
 func (uc *UserCreate) defaults() {
-	if _, ok := uc.mutation.TutorScope(); !ok {
-		v := user.DefaultTutorScope
-		uc.mutation.SetTutorScope(v)
+	if _, ok := uc.mutation.CalendarScope(); !ok {
+		v := user.DefaultCalendarScope
+		uc.mutation.SetCalendarScope(v)
 	}
 	if _, ok := uc.mutation.AdminScope(); !ok {
 		v := user.DefaultAdminScope
@@ -208,16 +216,23 @@ func (uc *UserCreate) check() error {
 	if _, ok := uc.mutation.Login(); !ok {
 		return &ValidationError{Name: "login", err: errors.New(`ent: missing required field "User.login"`)}
 	}
-	if _, ok := uc.mutation.HoursDone(); !ok {
-		return &ValidationError{Name: "hoursDone", err: errors.New(`ent: missing required field "User.hoursDone"`)}
-	}
-	if v, ok := uc.mutation.HoursDone(); ok {
-		if err := user.HoursDoneValidator(v); err != nil {
-			return &ValidationError{Name: "hoursDone", err: fmt.Errorf(`ent: validator failed for field "User.hoursDone": %w`, err)}
+	if v, ok := uc.mutation.Login(); ok {
+		if err := user.LoginValidator(v); err != nil {
+			return &ValidationError{Name: "login", err: fmt.Errorf(`ent: validator failed for field "User.login": %w`, err)}
 		}
 	}
-	if _, ok := uc.mutation.TutorScope(); !ok {
-		return &ValidationError{Name: "tutorScope", err: errors.New(`ent: missing required field "User.tutorScope"`)}
+	if v, ok := uc.mutation.FirstName(); ok {
+		if err := user.FirstNameValidator(v); err != nil {
+			return &ValidationError{Name: "firstName", err: fmt.Errorf(`ent: validator failed for field "User.firstName": %w`, err)}
+		}
+	}
+	if v, ok := uc.mutation.LastName(); ok {
+		if err := user.LastNameValidator(v); err != nil {
+			return &ValidationError{Name: "lastName", err: fmt.Errorf(`ent: validator failed for field "User.lastName": %w`, err)}
+		}
+	}
+	if _, ok := uc.mutation.CalendarScope(); !ok {
+		return &ValidationError{Name: "calendarScope", err: errors.New(`ent: missing required field "User.calendarScope"`)}
 	}
 	if _, ok := uc.mutation.AdminScope(); !ok {
 		return &ValidationError{Name: "adminScope", err: errors.New(`ent: missing required field "User.adminScope"`)}
@@ -282,21 +297,21 @@ func (uc *UserCreate) createSpec() (*User, *sqlgraph.CreateSpec) {
 		})
 		_node.LastName = value
 	}
-	if value, ok := uc.mutation.HoursDone(); ok {
+	if value, ok := uc.mutation.ImagePath(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
-			Type:   field.TypeInt64,
+			Type:   field.TypeString,
 			Value:  value,
-			Column: user.FieldHoursDone,
+			Column: user.FieldImagePath,
 		})
-		_node.HoursDone = value
+		_node.ImagePath = value
 	}
-	if value, ok := uc.mutation.TutorScope(); ok {
+	if value, ok := uc.mutation.CalendarScope(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
 			Type:   field.TypeBool,
 			Value:  value,
-			Column: user.FieldTutorScope,
+			Column: user.FieldCalendarScope,
 		})
-		_node.TutorScope = value
+		_node.CalendarScope = value
 	}
 	if value, ok := uc.mutation.AdminScope(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{

@@ -21,14 +21,14 @@ type Event struct {
 	ID uuid.UUID `json:"id,omitempty"`
 	// Name holds the value of the "name" field.
 	Name string `json:"name,omitempty"`
+	// Category holds the value of the "category" field.
+	Category event.Category `json:"category,omitempty"`
 	// Description holds the value of the "description" field.
 	Description string `json:"description,omitempty"`
 	// TutorsRequired holds the value of the "tutorsRequired" field.
-	TutorsRequired int64 `json:"tutorsRequired,omitempty"`
-	// TutorsSubscribed holds the value of the "tutorsSubscribed" field.
-	TutorsSubscribed int64 `json:"tutorsSubscribed,omitempty"`
-	// WalletsRewards holds the value of the "walletsRewards" field.
-	WalletsRewards int64 `json:"walletsRewards,omitempty"`
+	TutorsRequired *int64 `json:"tutorsRequired,omitempty"`
+	// WalletsReward holds the value of the "walletsReward" field.
+	WalletsReward *int64 `json:"walletsReward,omitempty"`
 	// CreatedAt holds the value of the "createdAt" field.
 	CreatedAt time.Time `json:"createdAt,omitempty"`
 	// StartAt holds the value of the "startAt" field.
@@ -63,9 +63,9 @@ func (*Event) scanValues(columns []string) ([]interface{}, error) {
 	values := make([]interface{}, len(columns))
 	for i := range columns {
 		switch columns[i] {
-		case event.FieldTutorsRequired, event.FieldTutorsSubscribed, event.FieldWalletsRewards:
+		case event.FieldTutorsRequired, event.FieldWalletsReward:
 			values[i] = new(sql.NullInt64)
-		case event.FieldName, event.FieldDescription:
+		case event.FieldName, event.FieldCategory, event.FieldDescription:
 			values[i] = new(sql.NullString)
 		case event.FieldCreatedAt, event.FieldStartAt, event.FieldEndAt:
 			values[i] = new(sql.NullTime)
@@ -98,6 +98,12 @@ func (e *Event) assignValues(columns []string, values []interface{}) error {
 			} else if value.Valid {
 				e.Name = value.String
 			}
+		case event.FieldCategory:
+			if value, ok := values[i].(*sql.NullString); !ok {
+				return fmt.Errorf("unexpected type %T for field category", values[i])
+			} else if value.Valid {
+				e.Category = event.Category(value.String)
+			}
 		case event.FieldDescription:
 			if value, ok := values[i].(*sql.NullString); !ok {
 				return fmt.Errorf("unexpected type %T for field description", values[i])
@@ -108,19 +114,15 @@ func (e *Event) assignValues(columns []string, values []interface{}) error {
 			if value, ok := values[i].(*sql.NullInt64); !ok {
 				return fmt.Errorf("unexpected type %T for field tutorsRequired", values[i])
 			} else if value.Valid {
-				e.TutorsRequired = value.Int64
+				e.TutorsRequired = new(int64)
+				*e.TutorsRequired = value.Int64
 			}
-		case event.FieldTutorsSubscribed:
+		case event.FieldWalletsReward:
 			if value, ok := values[i].(*sql.NullInt64); !ok {
-				return fmt.Errorf("unexpected type %T for field tutorsSubscribed", values[i])
+				return fmt.Errorf("unexpected type %T for field walletsReward", values[i])
 			} else if value.Valid {
-				e.TutorsSubscribed = value.Int64
-			}
-		case event.FieldWalletsRewards:
-			if value, ok := values[i].(*sql.NullInt64); !ok {
-				return fmt.Errorf("unexpected type %T for field walletsRewards", values[i])
-			} else if value.Valid {
-				e.WalletsRewards = value.Int64
+				e.WalletsReward = new(int64)
+				*e.WalletsReward = value.Int64
 			}
 		case event.FieldCreatedAt:
 			if value, ok := values[i].(*sql.NullTime); !ok {
@@ -175,14 +177,18 @@ func (e *Event) String() string {
 	builder.WriteString(fmt.Sprintf("id=%v", e.ID))
 	builder.WriteString(", name=")
 	builder.WriteString(e.Name)
+	builder.WriteString(", category=")
+	builder.WriteString(fmt.Sprintf("%v", e.Category))
 	builder.WriteString(", description=")
 	builder.WriteString(e.Description)
-	builder.WriteString(", tutorsRequired=")
-	builder.WriteString(fmt.Sprintf("%v", e.TutorsRequired))
-	builder.WriteString(", tutorsSubscribed=")
-	builder.WriteString(fmt.Sprintf("%v", e.TutorsSubscribed))
-	builder.WriteString(", walletsRewards=")
-	builder.WriteString(fmt.Sprintf("%v", e.WalletsRewards))
+	if v := e.TutorsRequired; v != nil {
+		builder.WriteString(", tutorsRequired=")
+		builder.WriteString(fmt.Sprintf("%v", *v))
+	}
+	if v := e.WalletsReward; v != nil {
+		builder.WriteString(", walletsReward=")
+		builder.WriteString(fmt.Sprintf("%v", *v))
+	}
 	builder.WriteString(", createdAt=")
 	builder.WriteString(e.CreatedAt.Format(time.ANSIC))
 	builder.WriteString(", startAt=")

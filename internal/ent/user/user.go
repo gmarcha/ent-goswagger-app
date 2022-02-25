@@ -17,10 +17,10 @@ const (
 	FieldFirstName = "first_name"
 	// FieldLastName holds the string denoting the lastname field in the database.
 	FieldLastName = "last_name"
-	// FieldHoursDone holds the string denoting the hoursdone field in the database.
-	FieldHoursDone = "hours_done"
-	// FieldTutorScope holds the string denoting the tutorscope field in the database.
-	FieldTutorScope = "tutor_scope"
+	// FieldImagePath holds the string denoting the imagepath field in the database.
+	FieldImagePath = "image_path"
+	// FieldCalendarScope holds the string denoting the calendarscope field in the database.
+	FieldCalendarScope = "calendar_scope"
 	// FieldAdminScope holds the string denoting the adminscope field in the database.
 	FieldAdminScope = "admin_scope"
 	// EdgeEvents holds the string denoting the events edge name in mutations.
@@ -40,8 +40,8 @@ var Columns = []string{
 	FieldLogin,
 	FieldFirstName,
 	FieldLastName,
-	FieldHoursDone,
-	FieldTutorScope,
+	FieldImagePath,
+	FieldCalendarScope,
 	FieldAdminScope,
 }
 
@@ -62,10 +62,14 @@ func ValidColumn(column string) bool {
 }
 
 var (
-	// HoursDoneValidator is a validator for the "hoursDone" field. It is called by the builders before save.
-	HoursDoneValidator func(int64) error
-	// DefaultTutorScope holds the default value on creation for the "tutorScope" field.
-	DefaultTutorScope bool
+	// LoginValidator is a validator for the "login" field. It is called by the builders before save.
+	LoginValidator func(string) error
+	// FirstNameValidator is a validator for the "firstName" field. It is called by the builders before save.
+	FirstNameValidator func(string) error
+	// LastNameValidator is a validator for the "lastName" field. It is called by the builders before save.
+	LastNameValidator func(string) error
+	// DefaultCalendarScope holds the default value on creation for the "calendarScope" field.
+	DefaultCalendarScope bool
 	// DefaultAdminScope holds the default value on creation for the "adminScope" field.
 	DefaultAdminScope bool
 	// DefaultID holds the default value on creation for the "id" field.

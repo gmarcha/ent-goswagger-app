@@ -113,17 +113,17 @@ func LastName(v string) predicate.User {
 	})
 }
 
-// HoursDone applies equality check predicate on the "hoursDone" field. It's identical to HoursDoneEQ.
-func HoursDone(v int64) predicate.User {
+// ImagePath applies equality check predicate on the "imagePath" field. It's identical to ImagePathEQ.
+func ImagePath(v string) predicate.User {
 	return predicate.User(func(s *sql.Selector) {
-		s.Where(sql.EQ(s.C(FieldHoursDone), v))
+		s.Where(sql.EQ(s.C(FieldImagePath), v))
 	})
 }
 
-// TutorScope applies equality check predicate on the "tutorScope" field. It's identical to TutorScopeEQ.
-func TutorScope(v bool) predicate.User {
+// CalendarScope applies equality check predicate on the "calendarScope" field. It's identical to CalendarScopeEQ.
+func CalendarScope(v bool) predicate.User {
 	return predicate.User(func(s *sql.Selector) {
-		s.Where(sql.EQ(s.C(FieldTutorScope), v))
+		s.Where(sql.EQ(s.C(FieldCalendarScope), v))
 	})
 }
 
@@ -495,22 +495,22 @@ func LastNameContainsFold(v string) predicate.User {
 	})
 }
 
-// HoursDoneEQ applies the EQ predicate on the "hoursDone" field.
-func HoursDoneEQ(v int64) predicate.User {
+// ImagePathEQ applies the EQ predicate on the "imagePath" field.
+func ImagePathEQ(v string) predicate.User {
 	return predicate.User(func(s *sql.Selector) {
-		s.Where(sql.EQ(s.C(FieldHoursDone), v))
+		s.Where(sql.EQ(s.C(FieldImagePath), v))
 	})
 }
 
-// HoursDoneNEQ applies the NEQ predicate on the "hoursDone" field.
-func HoursDoneNEQ(v int64) predicate.User {
+// ImagePathNEQ applies the NEQ predicate on the "imagePath" field.
+func ImagePathNEQ(v string) predicate.User {
 	return predicate.User(func(s *sql.Selector) {
-		s.Where(sql.NEQ(s.C(FieldHoursDone), v))
+		s.Where(sql.NEQ(s.C(FieldImagePath), v))
 	})
 }
 
-// HoursDoneIn applies the In predicate on the "hoursDone" field.
-func HoursDoneIn(vs ...int64) predicate.User {
+// ImagePathIn applies the In predicate on the "imagePath" field.
+func ImagePathIn(vs ...string) predicate.User {
 	v := make([]interface{}, len(vs))
 	for i := range v {
 		v[i] = vs[i]
@@ -522,12 +522,12 @@ func HoursDoneIn(vs ...int64) predicate.User {
 			s.Where(sql.False())
 			return
 		}
-		s.Where(sql.In(s.C(FieldHoursDone), v...))
+		s.Where(sql.In(s.C(FieldImagePath), v...))
 	})
 }
 
-// HoursDoneNotIn applies the NotIn predicate on the "hoursDone" field.
-func HoursDoneNotIn(vs ...int64) predicate.User {
+// ImagePathNotIn applies the NotIn predicate on the "imagePath" field.
+func ImagePathNotIn(vs ...string) predicate.User {
 	v := make([]interface{}, len(vs))
 	for i := range v {
 		v[i] = vs[i]
@@ -539,49 +539,98 @@ func HoursDoneNotIn(vs ...int64) predicate.User {
 			s.Where(sql.False())
 			return
 		}
-		s.Where(sql.NotIn(s.C(FieldHoursDone), v...))
+		s.Where(sql.NotIn(s.C(FieldImagePath), v...))
 	})
 }
 
-// HoursDoneGT applies the GT predicate on the "hoursDone" field.
-func HoursDoneGT(v int64) predicate.User {
+// ImagePathGT applies the GT predicate on the "imagePath" field.
+func ImagePathGT(v string) predicate.User {
 	return predicate.User(func(s *sql.Selector) {
-		s.Where(sql.GT(s.C(FieldHoursDone), v))
+		s.Where(sql.GT(s.C(FieldImagePath), v))
 	})
 }
 
-// HoursDoneGTE applies the GTE predicate on the "hoursDone" field.
-func HoursDoneGTE(v int64) predicate.User {
+// ImagePathGTE applies the GTE predicate on the "imagePath" field.
+func ImagePathGTE(v string) predicate.User {
 	return predicate.User(func(s *sql.Selector) {
-		s.Where(sql.GTE(s.C(FieldHoursDone), v))
+		s.Where(sql.GTE(s.C(FieldImagePath), v))
 	})
 }
 
-// HoursDoneLT applies the LT predicate on the "hoursDone" field.
-func HoursDoneLT(v int64) predicate.User {
+// ImagePathLT applies the LT predicate on the "imagePath" field.
+func ImagePathLT(v string) predicate.User {
 	return predicate.User(func(s *sql.Selector) {
-		s.Where(sql.LT(s.C(FieldHoursDone), v))
+		s.Where(sql.LT(s.C(FieldImagePath), v))
 	})
 }
 
-// HoursDoneLTE applies the LTE predicate on the "hoursDone" field.
-func HoursDoneLTE(v int64) predicate.User {
+// ImagePathLTE applies the LTE predicate on the "imagePath" field.
+func ImagePathLTE(v string) predicate.User {
 	return predicate.User(func(s *sql.Selector) {
-		s.Where(sql.LTE(s.C(FieldHoursDone), v))
+		s.Where(sql.LTE(s.C(FieldImagePath), v))
 	})
 }
 
-// TutorScopeEQ applies the EQ predicate on the "tutorScope" field.
-func TutorScopeEQ(v bool) predicate.User {
+// ImagePathContains applies the Contains predicate on the "imagePath" field.
+func ImagePathContains(v string) predicate.User {
 	return predicate.User(func(s *sql.Selector) {
-		s.Where(sql.EQ(s.C(FieldTutorScope), v))
+		s.Where(sql.Contains(s.C(FieldImagePath), v))
 	})
 }
 
-// TutorScopeNEQ applies the NEQ predicate on the "tutorScope" field.
-func TutorScopeNEQ(v bool) predicate.User {
+// ImagePathHasPrefix applies the HasPrefix predicate on the "imagePath" field.
+func ImagePathHasPrefix(v string) predicate.User {
 	return predicate.User(func(s *sql.Selector) {
-		s.Where(sql.NEQ(s.C(FieldTutorScope), v))
+		s.Where(sql.HasPrefix(s.C(FieldImagePath), v))
+	})
+}
+
+// ImagePathHasSuffix applies the HasSuffix predicate on the "imagePath" field.
+func ImagePathHasSuffix(v string) predicate.User {
+	return predicate.User(func(s *sql.Selector) {
+		s.Where(sql.HasSuffix(s.C(FieldImagePath), v))
+	})
+}
+
+// ImagePathIsNil applies the IsNil predicate on the "imagePath" field.
+func ImagePathIsNil() predicate.User {
+	return predicate.User(func(s *sql.Selector) {
+		s.Where(sql.IsNull(s.C(FieldImagePath)))
+	})
+}
+
+// ImagePathNotNil applies the NotNil predicate on the "imagePath" field.
+func ImagePathNotNil() predicate.User {
+	return predicate.User(func(s *sql.Selector) {
+		s.Where(sql.NotNull(s.C(FieldImagePath)))
+	})
+}
+
+// ImagePathEqualFold applies the EqualFold predicate on the "imagePath" field.
+func ImagePathEqualFold(v string) predicate.User {
+	return predicate.User(func(s *sql.Selector) {
+		s.Where(sql.EqualFold(s.C(FieldImagePath), v))
+	})
+}
+
+// ImagePathContainsFold applies the ContainsFold predicate on the "imagePath" field.
+func ImagePathContainsFold(v string) predicate.User {
+	return predicate.User(func(s *sql.Selector) {
+		s.Where(sql.ContainsFold(s.C(FieldImagePath), v))
+	})
+}
+
+// CalendarScopeEQ applies the EQ predicate on the "calendarScope" field.
+func CalendarScopeEQ(v bool) predicate.User {
+	return predicate.User(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldCalendarScope), v))
+	})
+}
+
+// CalendarScopeNEQ applies the NEQ predicate on the "calendarScope" field.
+func CalendarScopeNEQ(v bool) predicate.User {
+	return predicate.User(func(s *sql.Selector) {
+		s.Where(sql.NEQ(s.C(FieldCalendarScope), v))
 	})
 }
 

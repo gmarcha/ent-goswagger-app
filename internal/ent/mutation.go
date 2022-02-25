@@ -33,27 +33,26 @@ const (
 // EventMutation represents an operation that mutates the Event nodes in the graph.
 type EventMutation struct {
 	config
-	op                  Op
-	typ                 string
-	id                  *uuid.UUID
-	name                *string
-	description         *string
-	tutorsRequired      *int64
-	addtutorsRequired   *int64
-	tutorsSubscribed    *int64
-	addtutorsSubscribed *int64
-	walletsRewards      *int64
-	addwalletsRewards   *int64
-	createdAt           *time.Time
-	startAt             *time.Time
-	endAt               *time.Time
-	clearedFields       map[string]struct{}
-	users               map[uuid.UUID]struct{}
-	removedusers        map[uuid.UUID]struct{}
-	clearedusers        bool
-	done                bool
-	oldValue            func(context.Context) (*Event, error)
-	predicates          []predicate.Event
+	op                Op
+	typ               string
+	id                *uuid.UUID
+	name              *string
+	category          *event.Category
+	description       *string
+	tutorsRequired    *int64
+	addtutorsRequired *int64
+	walletsReward     *int64
+	addwalletsReward  *int64
+	createdAt         *time.Time
+	startAt           *time.Time
+	endAt             *time.Time
+	clearedFields     map[string]struct{}
+	users             map[uuid.UUID]struct{}
+	removedusers      map[uuid.UUID]struct{}
+	clearedusers      bool
+	done              bool
+	oldValue          func(context.Context) (*Event, error)
+	predicates        []predicate.Event
 }
 
 var _ ent.Mutation = (*EventMutation)(nil)
@@ -196,6 +195,55 @@ func (m *EventMutation) ResetName() {
 	m.name = nil
 }
 
+// SetCategory sets the "category" field.
+func (m *EventMutation) SetCategory(e event.Category) {
+	m.category = &e
+}
+
+// Category returns the value of the "category" field in the mutation.
+func (m *EventMutation) Category() (r event.Category, exists bool) {
+	v := m.category
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldCategory returns the old "category" field's value of the Event entity.
+// If the Event object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *EventMutation) OldCategory(ctx context.Context) (v event.Category, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldCategory is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldCategory requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldCategory: %w", err)
+	}
+	return oldValue.Category, nil
+}
+
+// ClearCategory clears the value of the "category" field.
+func (m *EventMutation) ClearCategory() {
+	m.category = nil
+	m.clearedFields[event.FieldCategory] = struct{}{}
+}
+
+// CategoryCleared returns if the "category" field was cleared in this mutation.
+func (m *EventMutation) CategoryCleared() bool {
+	_, ok := m.clearedFields[event.FieldCategory]
+	return ok
+}
+
+// ResetCategory resets all changes to the "category" field.
+func (m *EventMutation) ResetCategory() {
+	m.category = nil
+	delete(m.clearedFields, event.FieldCategory)
+}
+
 // SetDescription sets the "description" field.
 func (m *EventMutation) SetDescription(s string) {
 	m.description = &s
@@ -263,7 +311,7 @@ func (m *EventMutation) TutorsRequired() (r int64, exists bool) {
 // OldTutorsRequired returns the old "tutorsRequired" field's value of the Event entity.
 // If the Event object wasn't provided to the builder, the object is fetched from the database.
 // An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *EventMutation) OldTutorsRequired(ctx context.Context) (v int64, err error) {
+func (m *EventMutation) OldTutorsRequired(ctx context.Context) (v *int64, err error) {
 	if !m.op.Is(OpUpdateOne) {
 		return v, errors.New("OldTutorsRequired is only allowed on UpdateOne operations")
 	}
@@ -295,122 +343,94 @@ func (m *EventMutation) AddedTutorsRequired() (r int64, exists bool) {
 	return *v, true
 }
 
+// ClearTutorsRequired clears the value of the "tutorsRequired" field.
+func (m *EventMutation) ClearTutorsRequired() {
+	m.tutorsRequired = nil
+	m.addtutorsRequired = nil
+	m.clearedFields[event.FieldTutorsRequired] = struct{}{}
+}
+
+// TutorsRequiredCleared returns if the "tutorsRequired" field was cleared in this mutation.
+func (m *EventMutation) TutorsRequiredCleared() bool {
+	_, ok := m.clearedFields[event.FieldTutorsRequired]
+	return ok
+}
+
 // ResetTutorsRequired resets all changes to the "tutorsRequired" field.
 func (m *EventMutation) ResetTutorsRequired() {
 	m.tutorsRequired = nil
 	m.addtutorsRequired = nil
+	delete(m.clearedFields, event.FieldTutorsRequired)
 }
 
-// SetTutorsSubscribed sets the "tutorsSubscribed" field.
-func (m *EventMutation) SetTutorsSubscribed(i int64) {
-	m.tutorsSubscribed = &i
-	m.addtutorsSubscribed = nil
+// SetWalletsReward sets the "walletsReward" field.
+func (m *EventMutation) SetWalletsReward(i int64) {
+	m.walletsReward = &i
+	m.addwalletsReward = nil
 }
 
-// TutorsSubscribed returns the value of the "tutorsSubscribed" field in the mutation.
-func (m *EventMutation) TutorsSubscribed() (r int64, exists bool) {
-	v := m.tutorsSubscribed
+// WalletsReward returns the value of the "walletsReward" field in the mutation.
+func (m *EventMutation) WalletsReward() (r int64, exists bool) {
+	v := m.walletsReward
 	if v == nil {
 		return
 	}
 	return *v, true
 }
 
-// OldTutorsSubscribed returns the old "tutorsSubscribed" field's value of the Event entity.
+// OldWalletsReward returns the old "walletsReward" field's value of the Event entity.
 // If the Event object wasn't provided to the builder, the object is fetched from the database.
 // An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *EventMutation) OldTutorsSubscribed(ctx context.Context) (v int64, err error) {
+func (m *EventMutation) OldWalletsReward(ctx context.Context) (v *int64, err error) {
 	if !m.op.Is(OpUpdateOne) {
-		return v, errors.New("OldTutorsSubscribed is only allowed on UpdateOne operations")
+		return v, errors.New("OldWalletsReward is only allowed on UpdateOne operations")
 	}
 	if m.id == nil || m.oldValue == nil {
-		return v, errors.New("OldTutorsSubscribed requires an ID field in the mutation")
+		return v, errors.New("OldWalletsReward requires an ID field in the mutation")
 	}
 	oldValue, err := m.oldValue(ctx)
 	if err != nil {
-		return v, fmt.Errorf("querying old value for OldTutorsSubscribed: %w", err)
+		return v, fmt.Errorf("querying old value for OldWalletsReward: %w", err)
 	}
-	return oldValue.TutorsSubscribed, nil
+	return oldValue.WalletsReward, nil
 }
 
-// AddTutorsSubscribed adds i to the "tutorsSubscribed" field.
-func (m *EventMutation) AddTutorsSubscribed(i int64) {
-	if m.addtutorsSubscribed != nil {
-		*m.addtutorsSubscribed += i
+// AddWalletsReward adds i to the "walletsReward" field.
+func (m *EventMutation) AddWalletsReward(i int64) {
+	if m.addwalletsReward != nil {
+		*m.addwalletsReward += i
 	} else {
-		m.addtutorsSubscribed = &i
+		m.addwalletsReward = &i
 	}
 }
 
-// AddedTutorsSubscribed returns the value that was added to the "tutorsSubscribed" field in this mutation.
-func (m *EventMutation) AddedTutorsSubscribed() (r int64, exists bool) {
-	v := m.addtutorsSubscribed
+// AddedWalletsReward returns the value that was added to the "walletsReward" field in this mutation.
+func (m *EventMutation) AddedWalletsReward() (r int64, exists bool) {
+	v := m.addwalletsReward
 	if v == nil {
 		return
 	}
 	return *v, true
 }
 
-// ResetTutorsSubscribed resets all changes to the "tutorsSubscribed" field.
-func (m *EventMutation) ResetTutorsSubscribed() {
-	m.tutorsSubscribed = nil
-	m.addtutorsSubscribed = nil
+// ClearWalletsReward clears the value of the "walletsReward" field.
+func (m *EventMutation) ClearWalletsReward() {
+	m.walletsReward = nil
+	m.addwalletsReward = nil
+	m.clearedFields[event.FieldWalletsReward] = struct{}{}
 }
 
-// SetWalletsRewards sets the "walletsRewards" field.
-func (m *EventMutation) SetWalletsRewards(i int64) {
-	m.walletsRewards = &i
-	m.addwalletsRewards = nil
+// WalletsRewardCleared returns if the "walletsReward" field was cleared in this mutation.
+func (m *EventMutation) WalletsRewardCleared() bool {
+	_, ok := m.clearedFields[event.FieldWalletsReward]
+	return ok
 }
 
-// WalletsRewards returns the value of the "walletsRewards" field in the mutation.
-func (m *EventMutation) WalletsRewards() (r int64, exists bool) {
-	v := m.walletsRewards
-	if v == nil {
-		return
-	}
-	return *v, true
-}
-
-// OldWalletsRewards returns the old "walletsRewards" field's value of the Event entity.
-// If the Event object wasn't provided to the builder, the object is fetched from the database.
-// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *EventMutation) OldWalletsRewards(ctx context.Context) (v int64, err error) {
-	if !m.op.Is(OpUpdateOne) {
-		return v, errors.New("OldWalletsRewards is only allowed on UpdateOne operations")
-	}
-	if m.id == nil || m.oldValue == nil {
-		return v, errors.New("OldWalletsRewards requires an ID field in the mutation")
-	}
-	oldValue, err := m.oldValue(ctx)
-	if err != nil {
-		return v, fmt.Errorf("querying old value for OldWalletsRewards: %w", err)
-	}
-	return oldValue.WalletsRewards, nil
-}
-
-// AddWalletsRewards adds i to the "walletsRewards" field.
-func (m *EventMutation) AddWalletsRewards(i int64) {
-	if m.addwalletsRewards != nil {
-		*m.addwalletsRewards += i
-	} else {
-		m.addwalletsRewards = &i
-	}
-}
-
-// AddedWalletsRewards returns the value that was added to the "walletsRewards" field in this mutation.
-func (m *EventMutation) AddedWalletsRewards() (r int64, exists bool) {
-	v := m.addwalletsRewards
-	if v == nil {
-		return
-	}
-	return *v, true
-}
-
-// ResetWalletsRewards resets all changes to the "walletsRewards" field.
-func (m *EventMutation) ResetWalletsRewards() {
-	m.walletsRewards = nil
-	m.addwalletsRewards = nil
+// ResetWalletsReward resets all changes to the "walletsReward" field.
+func (m *EventMutation) ResetWalletsReward() {
+	m.walletsReward = nil
+	m.addwalletsReward = nil
+	delete(m.clearedFields, event.FieldWalletsReward)
 }
 
 // SetCreatedAt sets the "createdAt" field.
@@ -598,17 +618,17 @@ func (m *EventMutation) Fields() []string {
 	if m.name != nil {
 		fields = append(fields, event.FieldName)
 	}
+	if m.category != nil {
+		fields = append(fields, event.FieldCategory)
+	}
 	if m.description != nil {
 		fields = append(fields, event.FieldDescription)
 	}
 	if m.tutorsRequired != nil {
 		fields = append(fields, event.FieldTutorsRequired)
 	}
-	if m.tutorsSubscribed != nil {
-		fields = append(fields, event.FieldTutorsSubscribed)
-	}
-	if m.walletsRewards != nil {
-		fields = append(fields, event.FieldWalletsRewards)
+	if m.walletsReward != nil {
+		fields = append(fields, event.FieldWalletsReward)
 	}
 	if m.createdAt != nil {
 		fields = append(fields, event.FieldCreatedAt)
@@ -629,14 +649,14 @@ func (m *EventMutation) Field(name string) (ent.Value, bool) {
 	switch name {
 	case event.FieldName:
 		return m.Name()
+	case event.FieldCategory:
+		return m.Category()
 	case event.FieldDescription:
 		return m.Description()
 	case event.FieldTutorsRequired:
 		return m.TutorsRequired()
-	case event.FieldTutorsSubscribed:
-		return m.TutorsSubscribed()
-	case event.FieldWalletsRewards:
-		return m.WalletsRewards()
+	case event.FieldWalletsReward:
+		return m.WalletsReward()
 	case event.FieldCreatedAt:
 		return m.CreatedAt()
 	case event.FieldStartAt:
@@ -654,14 +674,14 @@ func (m *EventMutation) OldField(ctx context.Context, name string) (ent.Value, e
 	switch name {
 	case event.FieldName:
 		return m.OldName(ctx)
+	case event.FieldCategory:
+		return m.OldCategory(ctx)
 	case event.FieldDescription:
 		return m.OldDescription(ctx)
 	case event.FieldTutorsRequired:
 		return m.OldTutorsRequired(ctx)
-	case event.FieldTutorsSubscribed:
-		return m.OldTutorsSubscribed(ctx)
-	case event.FieldWalletsRewards:
-		return m.OldWalletsRewards(ctx)
+	case event.FieldWalletsReward:
+		return m.OldWalletsReward(ctx)
 	case event.FieldCreatedAt:
 		return m.OldCreatedAt(ctx)
 	case event.FieldStartAt:
@@ -684,6 +704,13 @@ func (m *EventMutation) SetField(name string, value ent.Value) error {
 		}
 		m.SetName(v)
 		return nil
+	case event.FieldCategory:
+		v, ok := value.(event.Category)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetCategory(v)
+		return nil
 	case event.FieldDescription:
 		v, ok := value.(string)
 		if !ok {
@@ -698,19 +725,12 @@ func (m *EventMutation) SetField(name string, value ent.Value) error {
 		}
 		m.SetTutorsRequired(v)
 		return nil
-	case event.FieldTutorsSubscribed:
+	case event.FieldWalletsReward:
 		v, ok := value.(int64)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
-		m.SetTutorsSubscribed(v)
-		return nil
-	case event.FieldWalletsRewards:
-		v, ok := value.(int64)
-		if !ok {
-			return fmt.Errorf("unexpected type %T for field %s", value, name)
-		}
-		m.SetWalletsRewards(v)
+		m.SetWalletsReward(v)
 		return nil
 	case event.FieldCreatedAt:
 		v, ok := value.(time.Time)
@@ -744,11 +764,8 @@ func (m *EventMutation) AddedFields() []string {
 	if m.addtutorsRequired != nil {
 		fields = append(fields, event.FieldTutorsRequired)
 	}
-	if m.addtutorsSubscribed != nil {
-		fields = append(fields, event.FieldTutorsSubscribed)
-	}
-	if m.addwalletsRewards != nil {
-		fields = append(fields, event.FieldWalletsRewards)
+	if m.addwalletsReward != nil {
+		fields = append(fields, event.FieldWalletsReward)
 	}
 	return fields
 }
@@ -760,10 +777,8 @@ func (m *EventMutation) AddedField(name string) (ent.Value, bool) {
 	switch name {
 	case event.FieldTutorsRequired:
 		return m.AddedTutorsRequired()
-	case event.FieldTutorsSubscribed:
-		return m.AddedTutorsSubscribed()
-	case event.FieldWalletsRewards:
-		return m.AddedWalletsRewards()
+	case event.FieldWalletsReward:
+		return m.AddedWalletsReward()
 	}
 	return nil, false
 }
@@ -780,19 +795,12 @@ func (m *EventMutation) AddField(name string, value ent.Value) error {
 		}
 		m.AddTutorsRequired(v)
 		return nil
-	case event.FieldTutorsSubscribed:
+	case event.FieldWalletsReward:
 		v, ok := value.(int64)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
-		m.AddTutorsSubscribed(v)
-		return nil
-	case event.FieldWalletsRewards:
-		v, ok := value.(int64)
-		if !ok {
-			return fmt.Errorf("unexpected type %T for field %s", value, name)
-		}
-		m.AddWalletsRewards(v)
+		m.AddWalletsReward(v)
 		return nil
 	}
 	return fmt.Errorf("unknown Event numeric field %s", name)
@@ -802,8 +810,17 @@ func (m *EventMutation) AddField(name string, value ent.Value) error {
 // mutation.
 func (m *EventMutation) ClearedFields() []string {
 	var fields []string
+	if m.FieldCleared(event.FieldCategory) {
+		fields = append(fields, event.FieldCategory)
+	}
 	if m.FieldCleared(event.FieldDescription) {
 		fields = append(fields, event.FieldDescription)
+	}
+	if m.FieldCleared(event.FieldTutorsRequired) {
+		fields = append(fields, event.FieldTutorsRequired)
+	}
+	if m.FieldCleared(event.FieldWalletsReward) {
+		fields = append(fields, event.FieldWalletsReward)
 	}
 	return fields
 }
@@ -819,8 +836,17 @@ func (m *EventMutation) FieldCleared(name string) bool {
 // error if the field is not defined in the schema.
 func (m *EventMutation) ClearField(name string) error {
 	switch name {
+	case event.FieldCategory:
+		m.ClearCategory()
+		return nil
 	case event.FieldDescription:
 		m.ClearDescription()
+		return nil
+	case event.FieldTutorsRequired:
+		m.ClearTutorsRequired()
+		return nil
+	case event.FieldWalletsReward:
+		m.ClearWalletsReward()
 		return nil
 	}
 	return fmt.Errorf("unknown Event nullable field %s", name)
@@ -833,17 +859,17 @@ func (m *EventMutation) ResetField(name string) error {
 	case event.FieldName:
 		m.ResetName()
 		return nil
+	case event.FieldCategory:
+		m.ResetCategory()
+		return nil
 	case event.FieldDescription:
 		m.ResetDescription()
 		return nil
 	case event.FieldTutorsRequired:
 		m.ResetTutorsRequired()
 		return nil
-	case event.FieldTutorsSubscribed:
-		m.ResetTutorsSubscribed()
-		return nil
-	case event.FieldWalletsRewards:
-		m.ResetWalletsRewards()
+	case event.FieldWalletsReward:
+		m.ResetWalletsReward()
 		return nil
 	case event.FieldCreatedAt:
 		m.ResetCreatedAt()
@@ -951,9 +977,8 @@ type UserMutation struct {
 	login         *string
 	firstName     *string
 	lastName      *string
-	hoursDone     *int64
-	addhoursDone  *int64
-	tutorScope    *bool
+	imagePath     *string
+	calendarScope *bool
 	adminScope    *bool
 	clearedFields map[string]struct{}
 	events        map[uuid.UUID]struct{}
@@ -1202,96 +1227,89 @@ func (m *UserMutation) ResetLastName() {
 	delete(m.clearedFields, user.FieldLastName)
 }
 
-// SetHoursDone sets the "hoursDone" field.
-func (m *UserMutation) SetHoursDone(i int64) {
-	m.hoursDone = &i
-	m.addhoursDone = nil
+// SetImagePath sets the "imagePath" field.
+func (m *UserMutation) SetImagePath(s string) {
+	m.imagePath = &s
 }
 
-// HoursDone returns the value of the "hoursDone" field in the mutation.
-func (m *UserMutation) HoursDone() (r int64, exists bool) {
-	v := m.hoursDone
+// ImagePath returns the value of the "imagePath" field in the mutation.
+func (m *UserMutation) ImagePath() (r string, exists bool) {
+	v := m.imagePath
 	if v == nil {
 		return
 	}
 	return *v, true
 }
 
-// OldHoursDone returns the old "hoursDone" field's value of the User entity.
+// OldImagePath returns the old "imagePath" field's value of the User entity.
 // If the User object wasn't provided to the builder, the object is fetched from the database.
 // An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *UserMutation) OldHoursDone(ctx context.Context) (v int64, err error) {
+func (m *UserMutation) OldImagePath(ctx context.Context) (v string, err error) {
 	if !m.op.Is(OpUpdateOne) {
-		return v, errors.New("OldHoursDone is only allowed on UpdateOne operations")
+		return v, errors.New("OldImagePath is only allowed on UpdateOne operations")
 	}
 	if m.id == nil || m.oldValue == nil {
-		return v, errors.New("OldHoursDone requires an ID field in the mutation")
+		return v, errors.New("OldImagePath requires an ID field in the mutation")
 	}
 	oldValue, err := m.oldValue(ctx)
 	if err != nil {
-		return v, fmt.Errorf("querying old value for OldHoursDone: %w", err)
+		return v, fmt.Errorf("querying old value for OldImagePath: %w", err)
 	}
-	return oldValue.HoursDone, nil
+	return oldValue.ImagePath, nil
 }
 
-// AddHoursDone adds i to the "hoursDone" field.
-func (m *UserMutation) AddHoursDone(i int64) {
-	if m.addhoursDone != nil {
-		*m.addhoursDone += i
-	} else {
-		m.addhoursDone = &i
-	}
+// ClearImagePath clears the value of the "imagePath" field.
+func (m *UserMutation) ClearImagePath() {
+	m.imagePath = nil
+	m.clearedFields[user.FieldImagePath] = struct{}{}
 }
 
-// AddedHoursDone returns the value that was added to the "hoursDone" field in this mutation.
-func (m *UserMutation) AddedHoursDone() (r int64, exists bool) {
-	v := m.addhoursDone
+// ImagePathCleared returns if the "imagePath" field was cleared in this mutation.
+func (m *UserMutation) ImagePathCleared() bool {
+	_, ok := m.clearedFields[user.FieldImagePath]
+	return ok
+}
+
+// ResetImagePath resets all changes to the "imagePath" field.
+func (m *UserMutation) ResetImagePath() {
+	m.imagePath = nil
+	delete(m.clearedFields, user.FieldImagePath)
+}
+
+// SetCalendarScope sets the "calendarScope" field.
+func (m *UserMutation) SetCalendarScope(b bool) {
+	m.calendarScope = &b
+}
+
+// CalendarScope returns the value of the "calendarScope" field in the mutation.
+func (m *UserMutation) CalendarScope() (r bool, exists bool) {
+	v := m.calendarScope
 	if v == nil {
 		return
 	}
 	return *v, true
 }
 
-// ResetHoursDone resets all changes to the "hoursDone" field.
-func (m *UserMutation) ResetHoursDone() {
-	m.hoursDone = nil
-	m.addhoursDone = nil
-}
-
-// SetTutorScope sets the "tutorScope" field.
-func (m *UserMutation) SetTutorScope(b bool) {
-	m.tutorScope = &b
-}
-
-// TutorScope returns the value of the "tutorScope" field in the mutation.
-func (m *UserMutation) TutorScope() (r bool, exists bool) {
-	v := m.tutorScope
-	if v == nil {
-		return
-	}
-	return *v, true
-}
-
-// OldTutorScope returns the old "tutorScope" field's value of the User entity.
+// OldCalendarScope returns the old "calendarScope" field's value of the User entity.
 // If the User object wasn't provided to the builder, the object is fetched from the database.
 // An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *UserMutation) OldTutorScope(ctx context.Context) (v bool, err error) {
+func (m *UserMutation) OldCalendarScope(ctx context.Context) (v bool, err error) {
 	if !m.op.Is(OpUpdateOne) {
-		return v, errors.New("OldTutorScope is only allowed on UpdateOne operations")
+		return v, errors.New("OldCalendarScope is only allowed on UpdateOne operations")
 	}
 	if m.id == nil || m.oldValue == nil {
-		return v, errors.New("OldTutorScope requires an ID field in the mutation")
+		return v, errors.New("OldCalendarScope requires an ID field in the mutation")
 	}
 	oldValue, err := m.oldValue(ctx)
 	if err != nil {
-		return v, fmt.Errorf("querying old value for OldTutorScope: %w", err)
+		return v, fmt.Errorf("querying old value for OldCalendarScope: %w", err)
 	}
-	return oldValue.TutorScope, nil
+	return oldValue.CalendarScope, nil
 }
 
-// ResetTutorScope resets all changes to the "tutorScope" field.
-func (m *UserMutation) ResetTutorScope() {
-	m.tutorScope = nil
+// ResetCalendarScope resets all changes to the "calendarScope" field.
+func (m *UserMutation) ResetCalendarScope() {
+	m.calendarScope = nil
 }
 
 // SetAdminScope sets the "adminScope" field.
@@ -1413,11 +1431,11 @@ func (m *UserMutation) Fields() []string {
 	if m.lastName != nil {
 		fields = append(fields, user.FieldLastName)
 	}
-	if m.hoursDone != nil {
-		fields = append(fields, user.FieldHoursDone)
+	if m.imagePath != nil {
+		fields = append(fields, user.FieldImagePath)
 	}
-	if m.tutorScope != nil {
-		fields = append(fields, user.FieldTutorScope)
+	if m.calendarScope != nil {
+		fields = append(fields, user.FieldCalendarScope)
 	}
 	if m.adminScope != nil {
 		fields = append(fields, user.FieldAdminScope)
@@ -1436,10 +1454,10 @@ func (m *UserMutation) Field(name string) (ent.Value, bool) {
 		return m.FirstName()
 	case user.FieldLastName:
 		return m.LastName()
-	case user.FieldHoursDone:
-		return m.HoursDone()
-	case user.FieldTutorScope:
-		return m.TutorScope()
+	case user.FieldImagePath:
+		return m.ImagePath()
+	case user.FieldCalendarScope:
+		return m.CalendarScope()
 	case user.FieldAdminScope:
 		return m.AdminScope()
 	}
@@ -1457,10 +1475,10 @@ func (m *UserMutation) OldField(ctx context.Context, name string) (ent.Value, er
 		return m.OldFirstName(ctx)
 	case user.FieldLastName:
 		return m.OldLastName(ctx)
-	case user.FieldHoursDone:
-		return m.OldHoursDone(ctx)
-	case user.FieldTutorScope:
-		return m.OldTutorScope(ctx)
+	case user.FieldImagePath:
+		return m.OldImagePath(ctx)
+	case user.FieldCalendarScope:
+		return m.OldCalendarScope(ctx)
 	case user.FieldAdminScope:
 		return m.OldAdminScope(ctx)
 	}
@@ -1493,19 +1511,19 @@ func (m *UserMutation) SetField(name string, value ent.Value) error {
 		}
 		m.SetLastName(v)
 		return nil
-	case user.FieldHoursDone:
-		v, ok := value.(int64)
+	case user.FieldImagePath:
+		v, ok := value.(string)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
-		m.SetHoursDone(v)
+		m.SetImagePath(v)
 		return nil
-	case user.FieldTutorScope:
+	case user.FieldCalendarScope:
 		v, ok := value.(bool)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
-		m.SetTutorScope(v)
+		m.SetCalendarScope(v)
 		return nil
 	case user.FieldAdminScope:
 		v, ok := value.(bool)
@@ -1521,21 +1539,13 @@ func (m *UserMutation) SetField(name string, value ent.Value) error {
 // AddedFields returns all numeric fields that were incremented/decremented during
 // this mutation.
 func (m *UserMutation) AddedFields() []string {
-	var fields []string
-	if m.addhoursDone != nil {
-		fields = append(fields, user.FieldHoursDone)
-	}
-	return fields
+	return nil
 }
 
 // AddedField returns the numeric value that was incremented/decremented on a field
 // with the given name. The second boolean return value indicates that this field
 // was not set, or was not defined in the schema.
 func (m *UserMutation) AddedField(name string) (ent.Value, bool) {
-	switch name {
-	case user.FieldHoursDone:
-		return m.AddedHoursDone()
-	}
 	return nil, false
 }
 
@@ -1544,13 +1554,6 @@ func (m *UserMutation) AddedField(name string) (ent.Value, bool) {
 // type.
 func (m *UserMutation) AddField(name string, value ent.Value) error {
 	switch name {
-	case user.FieldHoursDone:
-		v, ok := value.(int64)
-		if !ok {
-			return fmt.Errorf("unexpected type %T for field %s", value, name)
-		}
-		m.AddHoursDone(v)
-		return nil
 	}
 	return fmt.Errorf("unknown User numeric field %s", name)
 }
@@ -1564,6 +1567,9 @@ func (m *UserMutation) ClearedFields() []string {
 	}
 	if m.FieldCleared(user.FieldLastName) {
 		fields = append(fields, user.FieldLastName)
+	}
+	if m.FieldCleared(user.FieldImagePath) {
+		fields = append(fields, user.FieldImagePath)
 	}
 	return fields
 }
@@ -1585,6 +1591,9 @@ func (m *UserMutation) ClearField(name string) error {
 	case user.FieldLastName:
 		m.ClearLastName()
 		return nil
+	case user.FieldImagePath:
+		m.ClearImagePath()
+		return nil
 	}
 	return fmt.Errorf("unknown User nullable field %s", name)
 }
@@ -1602,11 +1611,11 @@ func (m *UserMutation) ResetField(name string) error {
 	case user.FieldLastName:
 		m.ResetLastName()
 		return nil
-	case user.FieldHoursDone:
-		m.ResetHoursDone()
+	case user.FieldImagePath:
+		m.ResetImagePath()
 		return nil
-	case user.FieldTutorScope:
-		m.ResetTutorScope()
+	case user.FieldCalendarScope:
+		m.ResetCalendarScope()
 		return nil
 	case user.FieldAdminScope:
 		m.ResetAdminScope()

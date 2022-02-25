@@ -75,29 +75,36 @@ func (uu *UserUpdate) ClearLastName() *UserUpdate {
 	return uu
 }
 
-// SetHoursDone sets the "hoursDone" field.
-func (uu *UserUpdate) SetHoursDone(i int64) *UserUpdate {
-	uu.mutation.ResetHoursDone()
-	uu.mutation.SetHoursDone(i)
+// SetImagePath sets the "imagePath" field.
+func (uu *UserUpdate) SetImagePath(s string) *UserUpdate {
+	uu.mutation.SetImagePath(s)
 	return uu
 }
 
-// AddHoursDone adds i to the "hoursDone" field.
-func (uu *UserUpdate) AddHoursDone(i int64) *UserUpdate {
-	uu.mutation.AddHoursDone(i)
+// SetNillableImagePath sets the "imagePath" field if the given value is not nil.
+func (uu *UserUpdate) SetNillableImagePath(s *string) *UserUpdate {
+	if s != nil {
+		uu.SetImagePath(*s)
+	}
 	return uu
 }
 
-// SetTutorScope sets the "tutorScope" field.
-func (uu *UserUpdate) SetTutorScope(b bool) *UserUpdate {
-	uu.mutation.SetTutorScope(b)
+// ClearImagePath clears the value of the "imagePath" field.
+func (uu *UserUpdate) ClearImagePath() *UserUpdate {
+	uu.mutation.ClearImagePath()
 	return uu
 }
 
-// SetNillableTutorScope sets the "tutorScope" field if the given value is not nil.
-func (uu *UserUpdate) SetNillableTutorScope(b *bool) *UserUpdate {
+// SetCalendarScope sets the "calendarScope" field.
+func (uu *UserUpdate) SetCalendarScope(b bool) *UserUpdate {
+	uu.mutation.SetCalendarScope(b)
+	return uu
+}
+
+// SetNillableCalendarScope sets the "calendarScope" field if the given value is not nil.
+func (uu *UserUpdate) SetNillableCalendarScope(b *bool) *UserUpdate {
 	if b != nil {
-		uu.SetTutorScope(*b)
+		uu.SetCalendarScope(*b)
 	}
 	return uu
 }
@@ -219,9 +226,19 @@ func (uu *UserUpdate) ExecX(ctx context.Context) {
 
 // check runs all checks and user-defined validators on the builder.
 func (uu *UserUpdate) check() error {
-	if v, ok := uu.mutation.HoursDone(); ok {
-		if err := user.HoursDoneValidator(v); err != nil {
-			return &ValidationError{Name: "hoursDone", err: fmt.Errorf(`ent: validator failed for field "User.hoursDone": %w`, err)}
+	if v, ok := uu.mutation.Login(); ok {
+		if err := user.LoginValidator(v); err != nil {
+			return &ValidationError{Name: "login", err: fmt.Errorf(`ent: validator failed for field "User.login": %w`, err)}
+		}
+	}
+	if v, ok := uu.mutation.FirstName(); ok {
+		if err := user.FirstNameValidator(v); err != nil {
+			return &ValidationError{Name: "firstName", err: fmt.Errorf(`ent: validator failed for field "User.firstName": %w`, err)}
+		}
+	}
+	if v, ok := uu.mutation.LastName(); ok {
+		if err := user.LastNameValidator(v); err != nil {
+			return &ValidationError{Name: "lastName", err: fmt.Errorf(`ent: validator failed for field "User.lastName": %w`, err)}
 		}
 	}
 	return nil
@@ -278,25 +295,24 @@ func (uu *UserUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Column: user.FieldLastName,
 		})
 	}
-	if value, ok := uu.mutation.HoursDone(); ok {
+	if value, ok := uu.mutation.ImagePath(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeInt64,
+			Type:   field.TypeString,
 			Value:  value,
-			Column: user.FieldHoursDone,
+			Column: user.FieldImagePath,
 		})
 	}
-	if value, ok := uu.mutation.AddedHoursDone(); ok {
-		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
-			Type:   field.TypeInt64,
-			Value:  value,
-			Column: user.FieldHoursDone,
+	if uu.mutation.ImagePathCleared() {
+		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Column: user.FieldImagePath,
 		})
 	}
-	if value, ok := uu.mutation.TutorScope(); ok {
+	if value, ok := uu.mutation.CalendarScope(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeBool,
 			Value:  value,
-			Column: user.FieldTutorScope,
+			Column: user.FieldCalendarScope,
 		})
 	}
 	if value, ok := uu.mutation.AdminScope(); ok {
@@ -425,29 +441,36 @@ func (uuo *UserUpdateOne) ClearLastName() *UserUpdateOne {
 	return uuo
 }
 
-// SetHoursDone sets the "hoursDone" field.
-func (uuo *UserUpdateOne) SetHoursDone(i int64) *UserUpdateOne {
-	uuo.mutation.ResetHoursDone()
-	uuo.mutation.SetHoursDone(i)
+// SetImagePath sets the "imagePath" field.
+func (uuo *UserUpdateOne) SetImagePath(s string) *UserUpdateOne {
+	uuo.mutation.SetImagePath(s)
 	return uuo
 }
 
-// AddHoursDone adds i to the "hoursDone" field.
-func (uuo *UserUpdateOne) AddHoursDone(i int64) *UserUpdateOne {
-	uuo.mutation.AddHoursDone(i)
+// SetNillableImagePath sets the "imagePath" field if the given value is not nil.
+func (uuo *UserUpdateOne) SetNillableImagePath(s *string) *UserUpdateOne {
+	if s != nil {
+		uuo.SetImagePath(*s)
+	}
 	return uuo
 }
 
-// SetTutorScope sets the "tutorScope" field.
-func (uuo *UserUpdateOne) SetTutorScope(b bool) *UserUpdateOne {
-	uuo.mutation.SetTutorScope(b)
+// ClearImagePath clears the value of the "imagePath" field.
+func (uuo *UserUpdateOne) ClearImagePath() *UserUpdateOne {
+	uuo.mutation.ClearImagePath()
 	return uuo
 }
 
-// SetNillableTutorScope sets the "tutorScope" field if the given value is not nil.
-func (uuo *UserUpdateOne) SetNillableTutorScope(b *bool) *UserUpdateOne {
+// SetCalendarScope sets the "calendarScope" field.
+func (uuo *UserUpdateOne) SetCalendarScope(b bool) *UserUpdateOne {
+	uuo.mutation.SetCalendarScope(b)
+	return uuo
+}
+
+// SetNillableCalendarScope sets the "calendarScope" field if the given value is not nil.
+func (uuo *UserUpdateOne) SetNillableCalendarScope(b *bool) *UserUpdateOne {
 	if b != nil {
-		uuo.SetTutorScope(*b)
+		uuo.SetCalendarScope(*b)
 	}
 	return uuo
 }
@@ -576,9 +599,19 @@ func (uuo *UserUpdateOne) ExecX(ctx context.Context) {
 
 // check runs all checks and user-defined validators on the builder.
 func (uuo *UserUpdateOne) check() error {
-	if v, ok := uuo.mutation.HoursDone(); ok {
-		if err := user.HoursDoneValidator(v); err != nil {
-			return &ValidationError{Name: "hoursDone", err: fmt.Errorf(`ent: validator failed for field "User.hoursDone": %w`, err)}
+	if v, ok := uuo.mutation.Login(); ok {
+		if err := user.LoginValidator(v); err != nil {
+			return &ValidationError{Name: "login", err: fmt.Errorf(`ent: validator failed for field "User.login": %w`, err)}
+		}
+	}
+	if v, ok := uuo.mutation.FirstName(); ok {
+		if err := user.FirstNameValidator(v); err != nil {
+			return &ValidationError{Name: "firstName", err: fmt.Errorf(`ent: validator failed for field "User.firstName": %w`, err)}
+		}
+	}
+	if v, ok := uuo.mutation.LastName(); ok {
+		if err := user.LastNameValidator(v); err != nil {
+			return &ValidationError{Name: "lastName", err: fmt.Errorf(`ent: validator failed for field "User.lastName": %w`, err)}
 		}
 	}
 	return nil
@@ -652,25 +685,24 @@ func (uuo *UserUpdateOne) sqlSave(ctx context.Context) (_node *User, err error) 
 			Column: user.FieldLastName,
 		})
 	}
-	if value, ok := uuo.mutation.HoursDone(); ok {
+	if value, ok := uuo.mutation.ImagePath(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeInt64,
+			Type:   field.TypeString,
 			Value:  value,
-			Column: user.FieldHoursDone,
+			Column: user.FieldImagePath,
 		})
 	}
-	if value, ok := uuo.mutation.AddedHoursDone(); ok {
-		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
-			Type:   field.TypeInt64,
-			Value:  value,
-			Column: user.FieldHoursDone,
+	if uuo.mutation.ImagePathCleared() {
+		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Column: user.FieldImagePath,
 		})
 	}
-	if value, ok := uuo.mutation.TutorScope(); ok {
+	if value, ok := uuo.mutation.CalendarScope(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeBool,
 			Value:  value,
-			Column: user.FieldTutorScope,
+			Column: user.FieldCalendarScope,
 		})
 	}
 	if value, ok := uuo.mutation.AdminScope(); ok {

@@ -12,10 +12,10 @@ var (
 	EventsColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeUUID},
 		{Name: "name", Type: field.TypeString},
+		{Name: "category", Type: field.TypeEnum, Nullable: true, Enums: []string{"exam", "rush", "meeting", "events"}},
 		{Name: "description", Type: field.TypeString, Nullable: true},
-		{Name: "tutors_required", Type: field.TypeInt64},
-		{Name: "tutors_subscribed", Type: field.TypeInt64},
-		{Name: "wallets_rewards", Type: field.TypeInt64},
+		{Name: "tutors_required", Type: field.TypeInt64, Nullable: true},
+		{Name: "wallets_reward", Type: field.TypeInt64, Nullable: true},
 		{Name: "created_at", Type: field.TypeTime},
 		{Name: "start_at", Type: field.TypeTime},
 		{Name: "end_at", Type: field.TypeTime},
@@ -29,11 +29,11 @@ var (
 	// UsersColumns holds the columns for the "users" table.
 	UsersColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeUUID},
-		{Name: "login", Type: field.TypeString},
+		{Name: "login", Type: field.TypeString, Unique: true},
 		{Name: "first_name", Type: field.TypeString, Nullable: true},
 		{Name: "last_name", Type: field.TypeString, Nullable: true},
-		{Name: "hours_done", Type: field.TypeInt64},
-		{Name: "tutor_scope", Type: field.TypeBool, Default: false},
+		{Name: "image_path", Type: field.TypeString, Nullable: true},
+		{Name: "calendar_scope", Type: field.TypeBool, Default: false},
 		{Name: "admin_scope", Type: field.TypeBool, Default: false},
 	}
 	// UsersTable holds the schema information for the "users" table.

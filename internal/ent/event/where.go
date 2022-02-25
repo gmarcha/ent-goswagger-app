@@ -115,17 +115,10 @@ func TutorsRequired(v int64) predicate.Event {
 	})
 }
 
-// TutorsSubscribed applies equality check predicate on the "tutorsSubscribed" field. It's identical to TutorsSubscribedEQ.
-func TutorsSubscribed(v int64) predicate.Event {
+// WalletsReward applies equality check predicate on the "walletsReward" field. It's identical to WalletsRewardEQ.
+func WalletsReward(v int64) predicate.Event {
 	return predicate.Event(func(s *sql.Selector) {
-		s.Where(sql.EQ(s.C(FieldTutorsSubscribed), v))
-	})
-}
-
-// WalletsRewards applies equality check predicate on the "walletsRewards" field. It's identical to WalletsRewardsEQ.
-func WalletsRewards(v int64) predicate.Event {
-	return predicate.Event(func(s *sql.Selector) {
-		s.Where(sql.EQ(s.C(FieldWalletsRewards), v))
+		s.Where(sql.EQ(s.C(FieldWalletsReward), v))
 	})
 }
 
@@ -258,6 +251,68 @@ func NameEqualFold(v string) predicate.Event {
 func NameContainsFold(v string) predicate.Event {
 	return predicate.Event(func(s *sql.Selector) {
 		s.Where(sql.ContainsFold(s.C(FieldName), v))
+	})
+}
+
+// CategoryEQ applies the EQ predicate on the "category" field.
+func CategoryEQ(v Category) predicate.Event {
+	return predicate.Event(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldCategory), v))
+	})
+}
+
+// CategoryNEQ applies the NEQ predicate on the "category" field.
+func CategoryNEQ(v Category) predicate.Event {
+	return predicate.Event(func(s *sql.Selector) {
+		s.Where(sql.NEQ(s.C(FieldCategory), v))
+	})
+}
+
+// CategoryIn applies the In predicate on the "category" field.
+func CategoryIn(vs ...Category) predicate.Event {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.Event(func(s *sql.Selector) {
+		// if not arguments were provided, append the FALSE constants,
+		// since we can't apply "IN ()". This will make this predicate falsy.
+		if len(v) == 0 {
+			s.Where(sql.False())
+			return
+		}
+		s.Where(sql.In(s.C(FieldCategory), v...))
+	})
+}
+
+// CategoryNotIn applies the NotIn predicate on the "category" field.
+func CategoryNotIn(vs ...Category) predicate.Event {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.Event(func(s *sql.Selector) {
+		// if not arguments were provided, append the FALSE constants,
+		// since we can't apply "IN ()". This will make this predicate falsy.
+		if len(v) == 0 {
+			s.Where(sql.False())
+			return
+		}
+		s.Where(sql.NotIn(s.C(FieldCategory), v...))
+	})
+}
+
+// CategoryIsNil applies the IsNil predicate on the "category" field.
+func CategoryIsNil() predicate.Event {
+	return predicate.Event(func(s *sql.Selector) {
+		s.Where(sql.IsNull(s.C(FieldCategory)))
+	})
+}
+
+// CategoryNotNil applies the NotNil predicate on the "category" field.
+func CategoryNotNil() predicate.Event {
+	return predicate.Event(func(s *sql.Selector) {
+		s.Where(sql.NotNull(s.C(FieldCategory)))
 	})
 }
 
@@ -462,22 +517,36 @@ func TutorsRequiredLTE(v int64) predicate.Event {
 	})
 }
 
-// TutorsSubscribedEQ applies the EQ predicate on the "tutorsSubscribed" field.
-func TutorsSubscribedEQ(v int64) predicate.Event {
+// TutorsRequiredIsNil applies the IsNil predicate on the "tutorsRequired" field.
+func TutorsRequiredIsNil() predicate.Event {
 	return predicate.Event(func(s *sql.Selector) {
-		s.Where(sql.EQ(s.C(FieldTutorsSubscribed), v))
+		s.Where(sql.IsNull(s.C(FieldTutorsRequired)))
 	})
 }
 
-// TutorsSubscribedNEQ applies the NEQ predicate on the "tutorsSubscribed" field.
-func TutorsSubscribedNEQ(v int64) predicate.Event {
+// TutorsRequiredNotNil applies the NotNil predicate on the "tutorsRequired" field.
+func TutorsRequiredNotNil() predicate.Event {
 	return predicate.Event(func(s *sql.Selector) {
-		s.Where(sql.NEQ(s.C(FieldTutorsSubscribed), v))
+		s.Where(sql.NotNull(s.C(FieldTutorsRequired)))
 	})
 }
 
-// TutorsSubscribedIn applies the In predicate on the "tutorsSubscribed" field.
-func TutorsSubscribedIn(vs ...int64) predicate.Event {
+// WalletsRewardEQ applies the EQ predicate on the "walletsReward" field.
+func WalletsRewardEQ(v int64) predicate.Event {
+	return predicate.Event(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldWalletsReward), v))
+	})
+}
+
+// WalletsRewardNEQ applies the NEQ predicate on the "walletsReward" field.
+func WalletsRewardNEQ(v int64) predicate.Event {
+	return predicate.Event(func(s *sql.Selector) {
+		s.Where(sql.NEQ(s.C(FieldWalletsReward), v))
+	})
+}
+
+// WalletsRewardIn applies the In predicate on the "walletsReward" field.
+func WalletsRewardIn(vs ...int64) predicate.Event {
 	v := make([]interface{}, len(vs))
 	for i := range v {
 		v[i] = vs[i]
@@ -489,12 +558,12 @@ func TutorsSubscribedIn(vs ...int64) predicate.Event {
 			s.Where(sql.False())
 			return
 		}
-		s.Where(sql.In(s.C(FieldTutorsSubscribed), v...))
+		s.Where(sql.In(s.C(FieldWalletsReward), v...))
 	})
 }
 
-// TutorsSubscribedNotIn applies the NotIn predicate on the "tutorsSubscribed" field.
-func TutorsSubscribedNotIn(vs ...int64) predicate.Event {
+// WalletsRewardNotIn applies the NotIn predicate on the "walletsReward" field.
+func WalletsRewardNotIn(vs ...int64) predicate.Event {
 	v := make([]interface{}, len(vs))
 	for i := range v {
 		v[i] = vs[i]
@@ -506,111 +575,49 @@ func TutorsSubscribedNotIn(vs ...int64) predicate.Event {
 			s.Where(sql.False())
 			return
 		}
-		s.Where(sql.NotIn(s.C(FieldTutorsSubscribed), v...))
+		s.Where(sql.NotIn(s.C(FieldWalletsReward), v...))
 	})
 }
 
-// TutorsSubscribedGT applies the GT predicate on the "tutorsSubscribed" field.
-func TutorsSubscribedGT(v int64) predicate.Event {
+// WalletsRewardGT applies the GT predicate on the "walletsReward" field.
+func WalletsRewardGT(v int64) predicate.Event {
 	return predicate.Event(func(s *sql.Selector) {
-		s.Where(sql.GT(s.C(FieldTutorsSubscribed), v))
+		s.Where(sql.GT(s.C(FieldWalletsReward), v))
 	})
 }
 
-// TutorsSubscribedGTE applies the GTE predicate on the "tutorsSubscribed" field.
-func TutorsSubscribedGTE(v int64) predicate.Event {
+// WalletsRewardGTE applies the GTE predicate on the "walletsReward" field.
+func WalletsRewardGTE(v int64) predicate.Event {
 	return predicate.Event(func(s *sql.Selector) {
-		s.Where(sql.GTE(s.C(FieldTutorsSubscribed), v))
+		s.Where(sql.GTE(s.C(FieldWalletsReward), v))
 	})
 }
 
-// TutorsSubscribedLT applies the LT predicate on the "tutorsSubscribed" field.
-func TutorsSubscribedLT(v int64) predicate.Event {
+// WalletsRewardLT applies the LT predicate on the "walletsReward" field.
+func WalletsRewardLT(v int64) predicate.Event {
 	return predicate.Event(func(s *sql.Selector) {
-		s.Where(sql.LT(s.C(FieldTutorsSubscribed), v))
+		s.Where(sql.LT(s.C(FieldWalletsReward), v))
 	})
 }
 
-// TutorsSubscribedLTE applies the LTE predicate on the "tutorsSubscribed" field.
-func TutorsSubscribedLTE(v int64) predicate.Event {
+// WalletsRewardLTE applies the LTE predicate on the "walletsReward" field.
+func WalletsRewardLTE(v int64) predicate.Event {
 	return predicate.Event(func(s *sql.Selector) {
-		s.Where(sql.LTE(s.C(FieldTutorsSubscribed), v))
+		s.Where(sql.LTE(s.C(FieldWalletsReward), v))
 	})
 }
 
-// WalletsRewardsEQ applies the EQ predicate on the "walletsRewards" field.
-func WalletsRewardsEQ(v int64) predicate.Event {
+// WalletsRewardIsNil applies the IsNil predicate on the "walletsReward" field.
+func WalletsRewardIsNil() predicate.Event {
 	return predicate.Event(func(s *sql.Selector) {
-		s.Where(sql.EQ(s.C(FieldWalletsRewards), v))
+		s.Where(sql.IsNull(s.C(FieldWalletsReward)))
 	})
 }
 
-// WalletsRewardsNEQ applies the NEQ predicate on the "walletsRewards" field.
-func WalletsRewardsNEQ(v int64) predicate.Event {
+// WalletsRewardNotNil applies the NotNil predicate on the "walletsReward" field.
+func WalletsRewardNotNil() predicate.Event {
 	return predicate.Event(func(s *sql.Selector) {
-		s.Where(sql.NEQ(s.C(FieldWalletsRewards), v))
-	})
-}
-
-// WalletsRewardsIn applies the In predicate on the "walletsRewards" field.
-func WalletsRewardsIn(vs ...int64) predicate.Event {
-	v := make([]interface{}, len(vs))
-	for i := range v {
-		v[i] = vs[i]
-	}
-	return predicate.Event(func(s *sql.Selector) {
-		// if not arguments were provided, append the FALSE constants,
-		// since we can't apply "IN ()". This will make this predicate falsy.
-		if len(v) == 0 {
-			s.Where(sql.False())
-			return
-		}
-		s.Where(sql.In(s.C(FieldWalletsRewards), v...))
-	})
-}
-
-// WalletsRewardsNotIn applies the NotIn predicate on the "walletsRewards" field.
-func WalletsRewardsNotIn(vs ...int64) predicate.Event {
-	v := make([]interface{}, len(vs))
-	for i := range v {
-		v[i] = vs[i]
-	}
-	return predicate.Event(func(s *sql.Selector) {
-		// if not arguments were provided, append the FALSE constants,
-		// since we can't apply "IN ()". This will make this predicate falsy.
-		if len(v) == 0 {
-			s.Where(sql.False())
-			return
-		}
-		s.Where(sql.NotIn(s.C(FieldWalletsRewards), v...))
-	})
-}
-
-// WalletsRewardsGT applies the GT predicate on the "walletsRewards" field.
-func WalletsRewardsGT(v int64) predicate.Event {
-	return predicate.Event(func(s *sql.Selector) {
-		s.Where(sql.GT(s.C(FieldWalletsRewards), v))
-	})
-}
-
-// WalletsRewardsGTE applies the GTE predicate on the "walletsRewards" field.
-func WalletsRewardsGTE(v int64) predicate.Event {
-	return predicate.Event(func(s *sql.Selector) {
-		s.Where(sql.GTE(s.C(FieldWalletsRewards), v))
-	})
-}
-
-// WalletsRewardsLT applies the LT predicate on the "walletsRewards" field.
-func WalletsRewardsLT(v int64) predicate.Event {
-	return predicate.Event(func(s *sql.Selector) {
-		s.Where(sql.LT(s.C(FieldWalletsRewards), v))
-	})
-}
-
-// WalletsRewardsLTE applies the LTE predicate on the "walletsRewards" field.
-func WalletsRewardsLTE(v int64) predicate.Event {
-	return predicate.Event(func(s *sql.Selector) {
-		s.Where(sql.LTE(s.C(FieldWalletsRewards), v))
+		s.Where(sql.NotNull(s.C(FieldWalletsReward)))
 	})
 }
 

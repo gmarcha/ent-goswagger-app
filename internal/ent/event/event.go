@@ -3,6 +3,7 @@
 package event
 
 import (
+	"fmt"
 	"time"
 
 	"github.com/google/uuid"
@@ -15,14 +16,14 @@ const (
 	FieldID = "id"
 	// FieldName holds the string denoting the name field in the database.
 	FieldName = "name"
+	// FieldCategory holds the string denoting the category field in the database.
+	FieldCategory = "category"
 	// FieldDescription holds the string denoting the description field in the database.
 	FieldDescription = "description"
 	// FieldTutorsRequired holds the string denoting the tutorsrequired field in the database.
 	FieldTutorsRequired = "tutors_required"
-	// FieldTutorsSubscribed holds the string denoting the tutorssubscribed field in the database.
-	FieldTutorsSubscribed = "tutors_subscribed"
-	// FieldWalletsRewards holds the string denoting the walletsrewards field in the database.
-	FieldWalletsRewards = "wallets_rewards"
+	// FieldWalletsReward holds the string denoting the walletsreward field in the database.
+	FieldWalletsReward = "wallets_reward"
 	// FieldCreatedAt holds the string denoting the createdat field in the database.
 	FieldCreatedAt = "created_at"
 	// FieldStartAt holds the string denoting the startat field in the database.
@@ -44,10 +45,10 @@ const (
 var Columns = []string{
 	FieldID,
 	FieldName,
+	FieldCategory,
 	FieldDescription,
 	FieldTutorsRequired,
-	FieldTutorsSubscribed,
-	FieldWalletsRewards,
+	FieldWalletsReward,
 	FieldCreatedAt,
 	FieldStartAt,
 	FieldEndAt,
@@ -70,14 +71,39 @@ func ValidColumn(column string) bool {
 }
 
 var (
+	// NameValidator is a validator for the "name" field. It is called by the builders before save.
+	NameValidator func(string) error
 	// TutorsRequiredValidator is a validator for the "tutorsRequired" field. It is called by the builders before save.
 	TutorsRequiredValidator func(int64) error
-	// TutorsSubscribedValidator is a validator for the "tutorsSubscribed" field. It is called by the builders before save.
-	TutorsSubscribedValidator func(int64) error
-	// WalletsRewardsValidator is a validator for the "walletsRewards" field. It is called by the builders before save.
-	WalletsRewardsValidator func(int64) error
+	// WalletsRewardValidator is a validator for the "walletsReward" field. It is called by the builders before save.
+	WalletsRewardValidator func(int64) error
 	// DefaultCreatedAt holds the default value on creation for the "createdAt" field.
 	DefaultCreatedAt func() time.Time
 	// DefaultID holds the default value on creation for the "id" field.
 	DefaultID func() uuid.UUID
 )
+
+// Category defines the type for the "category" enum field.
+type Category string
+
+// Category values.
+const (
+	CategoryExam    Category = "exam"
+	CategoryRush    Category = "rush"
+	CategoryMeeting Category = "meeting"
+	CategoryEvents  Category = "events"
+)
+
+func (c Category) String() string {
+	return string(c)
+}
+
+// CategoryValidator is a validator for the "category" field enum values. It is called by the builders before save.
+func CategoryValidator(c Category) error {
+	switch c {
+	case CategoryExam, CategoryRush, CategoryMeeting, CategoryEvents:
+		return nil
+	default:
+		return fmt.Errorf("event: invalid enum value for category field: %q", c)
+	}
+}

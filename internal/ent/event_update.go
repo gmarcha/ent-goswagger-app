@@ -36,6 +36,26 @@ func (eu *EventUpdate) SetName(s string) *EventUpdate {
 	return eu
 }
 
+// SetCategory sets the "category" field.
+func (eu *EventUpdate) SetCategory(e event.Category) *EventUpdate {
+	eu.mutation.SetCategory(e)
+	return eu
+}
+
+// SetNillableCategory sets the "category" field if the given value is not nil.
+func (eu *EventUpdate) SetNillableCategory(e *event.Category) *EventUpdate {
+	if e != nil {
+		eu.SetCategory(*e)
+	}
+	return eu
+}
+
+// ClearCategory clears the value of the "category" field.
+func (eu *EventUpdate) ClearCategory() *EventUpdate {
+	eu.mutation.ClearCategory()
+	return eu
+}
+
 // SetDescription sets the "description" field.
 func (eu *EventUpdate) SetDescription(s string) *EventUpdate {
 	eu.mutation.SetDescription(s)
@@ -63,35 +83,50 @@ func (eu *EventUpdate) SetTutorsRequired(i int64) *EventUpdate {
 	return eu
 }
 
+// SetNillableTutorsRequired sets the "tutorsRequired" field if the given value is not nil.
+func (eu *EventUpdate) SetNillableTutorsRequired(i *int64) *EventUpdate {
+	if i != nil {
+		eu.SetTutorsRequired(*i)
+	}
+	return eu
+}
+
 // AddTutorsRequired adds i to the "tutorsRequired" field.
 func (eu *EventUpdate) AddTutorsRequired(i int64) *EventUpdate {
 	eu.mutation.AddTutorsRequired(i)
 	return eu
 }
 
-// SetTutorsSubscribed sets the "tutorsSubscribed" field.
-func (eu *EventUpdate) SetTutorsSubscribed(i int64) *EventUpdate {
-	eu.mutation.ResetTutorsSubscribed()
-	eu.mutation.SetTutorsSubscribed(i)
+// ClearTutorsRequired clears the value of the "tutorsRequired" field.
+func (eu *EventUpdate) ClearTutorsRequired() *EventUpdate {
+	eu.mutation.ClearTutorsRequired()
 	return eu
 }
 
-// AddTutorsSubscribed adds i to the "tutorsSubscribed" field.
-func (eu *EventUpdate) AddTutorsSubscribed(i int64) *EventUpdate {
-	eu.mutation.AddTutorsSubscribed(i)
+// SetWalletsReward sets the "walletsReward" field.
+func (eu *EventUpdate) SetWalletsReward(i int64) *EventUpdate {
+	eu.mutation.ResetWalletsReward()
+	eu.mutation.SetWalletsReward(i)
 	return eu
 }
 
-// SetWalletsRewards sets the "walletsRewards" field.
-func (eu *EventUpdate) SetWalletsRewards(i int64) *EventUpdate {
-	eu.mutation.ResetWalletsRewards()
-	eu.mutation.SetWalletsRewards(i)
+// SetNillableWalletsReward sets the "walletsReward" field if the given value is not nil.
+func (eu *EventUpdate) SetNillableWalletsReward(i *int64) *EventUpdate {
+	if i != nil {
+		eu.SetWalletsReward(*i)
+	}
 	return eu
 }
 
-// AddWalletsRewards adds i to the "walletsRewards" field.
-func (eu *EventUpdate) AddWalletsRewards(i int64) *EventUpdate {
-	eu.mutation.AddWalletsRewards(i)
+// AddWalletsReward adds i to the "walletsReward" field.
+func (eu *EventUpdate) AddWalletsReward(i int64) *EventUpdate {
+	eu.mutation.AddWalletsReward(i)
+	return eu
+}
+
+// ClearWalletsReward clears the value of the "walletsReward" field.
+func (eu *EventUpdate) ClearWalletsReward() *EventUpdate {
+	eu.mutation.ClearWalletsReward()
 	return eu
 }
 
@@ -210,19 +245,24 @@ func (eu *EventUpdate) ExecX(ctx context.Context) {
 
 // check runs all checks and user-defined validators on the builder.
 func (eu *EventUpdate) check() error {
+	if v, ok := eu.mutation.Name(); ok {
+		if err := event.NameValidator(v); err != nil {
+			return &ValidationError{Name: "name", err: fmt.Errorf(`ent: validator failed for field "Event.name": %w`, err)}
+		}
+	}
+	if v, ok := eu.mutation.Category(); ok {
+		if err := event.CategoryValidator(v); err != nil {
+			return &ValidationError{Name: "category", err: fmt.Errorf(`ent: validator failed for field "Event.category": %w`, err)}
+		}
+	}
 	if v, ok := eu.mutation.TutorsRequired(); ok {
 		if err := event.TutorsRequiredValidator(v); err != nil {
 			return &ValidationError{Name: "tutorsRequired", err: fmt.Errorf(`ent: validator failed for field "Event.tutorsRequired": %w`, err)}
 		}
 	}
-	if v, ok := eu.mutation.TutorsSubscribed(); ok {
-		if err := event.TutorsSubscribedValidator(v); err != nil {
-			return &ValidationError{Name: "tutorsSubscribed", err: fmt.Errorf(`ent: validator failed for field "Event.tutorsSubscribed": %w`, err)}
-		}
-	}
-	if v, ok := eu.mutation.WalletsRewards(); ok {
-		if err := event.WalletsRewardsValidator(v); err != nil {
-			return &ValidationError{Name: "walletsRewards", err: fmt.Errorf(`ent: validator failed for field "Event.walletsRewards": %w`, err)}
+	if v, ok := eu.mutation.WalletsReward(); ok {
+		if err := event.WalletsRewardValidator(v); err != nil {
+			return &ValidationError{Name: "walletsReward", err: fmt.Errorf(`ent: validator failed for field "Event.walletsReward": %w`, err)}
 		}
 	}
 	return nil
@@ -253,6 +293,19 @@ func (eu *EventUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Column: event.FieldName,
 		})
 	}
+	if value, ok := eu.mutation.Category(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeEnum,
+			Value:  value,
+			Column: event.FieldCategory,
+		})
+	}
+	if eu.mutation.CategoryCleared() {
+		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
+			Type:   field.TypeEnum,
+			Column: event.FieldCategory,
+		})
+	}
 	if value, ok := eu.mutation.Description(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
@@ -280,32 +333,30 @@ func (eu *EventUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Column: event.FieldTutorsRequired,
 		})
 	}
-	if value, ok := eu.mutation.TutorsSubscribed(); ok {
+	if eu.mutation.TutorsRequiredCleared() {
+		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
+			Type:   field.TypeInt64,
+			Column: event.FieldTutorsRequired,
+		})
+	}
+	if value, ok := eu.mutation.WalletsReward(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeInt64,
 			Value:  value,
-			Column: event.FieldTutorsSubscribed,
+			Column: event.FieldWalletsReward,
 		})
 	}
-	if value, ok := eu.mutation.AddedTutorsSubscribed(); ok {
+	if value, ok := eu.mutation.AddedWalletsReward(); ok {
 		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
 			Type:   field.TypeInt64,
 			Value:  value,
-			Column: event.FieldTutorsSubscribed,
+			Column: event.FieldWalletsReward,
 		})
 	}
-	if value, ok := eu.mutation.WalletsRewards(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+	if eu.mutation.WalletsRewardCleared() {
+		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
 			Type:   field.TypeInt64,
-			Value:  value,
-			Column: event.FieldWalletsRewards,
-		})
-	}
-	if value, ok := eu.mutation.AddedWalletsRewards(); ok {
-		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
-			Type:   field.TypeInt64,
-			Value:  value,
-			Column: event.FieldWalletsRewards,
+			Column: event.FieldWalletsReward,
 		})
 	}
 	if value, ok := eu.mutation.StartAt(); ok {
@@ -401,6 +452,26 @@ func (euo *EventUpdateOne) SetName(s string) *EventUpdateOne {
 	return euo
 }
 
+// SetCategory sets the "category" field.
+func (euo *EventUpdateOne) SetCategory(e event.Category) *EventUpdateOne {
+	euo.mutation.SetCategory(e)
+	return euo
+}
+
+// SetNillableCategory sets the "category" field if the given value is not nil.
+func (euo *EventUpdateOne) SetNillableCategory(e *event.Category) *EventUpdateOne {
+	if e != nil {
+		euo.SetCategory(*e)
+	}
+	return euo
+}
+
+// ClearCategory clears the value of the "category" field.
+func (euo *EventUpdateOne) ClearCategory() *EventUpdateOne {
+	euo.mutation.ClearCategory()
+	return euo
+}
+
 // SetDescription sets the "description" field.
 func (euo *EventUpdateOne) SetDescription(s string) *EventUpdateOne {
 	euo.mutation.SetDescription(s)
@@ -428,35 +499,50 @@ func (euo *EventUpdateOne) SetTutorsRequired(i int64) *EventUpdateOne {
 	return euo
 }
 
+// SetNillableTutorsRequired sets the "tutorsRequired" field if the given value is not nil.
+func (euo *EventUpdateOne) SetNillableTutorsRequired(i *int64) *EventUpdateOne {
+	if i != nil {
+		euo.SetTutorsRequired(*i)
+	}
+	return euo
+}
+
 // AddTutorsRequired adds i to the "tutorsRequired" field.
 func (euo *EventUpdateOne) AddTutorsRequired(i int64) *EventUpdateOne {
 	euo.mutation.AddTutorsRequired(i)
 	return euo
 }
 
-// SetTutorsSubscribed sets the "tutorsSubscribed" field.
-func (euo *EventUpdateOne) SetTutorsSubscribed(i int64) *EventUpdateOne {
-	euo.mutation.ResetTutorsSubscribed()
-	euo.mutation.SetTutorsSubscribed(i)
+// ClearTutorsRequired clears the value of the "tutorsRequired" field.
+func (euo *EventUpdateOne) ClearTutorsRequired() *EventUpdateOne {
+	euo.mutation.ClearTutorsRequired()
 	return euo
 }
 
-// AddTutorsSubscribed adds i to the "tutorsSubscribed" field.
-func (euo *EventUpdateOne) AddTutorsSubscribed(i int64) *EventUpdateOne {
-	euo.mutation.AddTutorsSubscribed(i)
+// SetWalletsReward sets the "walletsReward" field.
+func (euo *EventUpdateOne) SetWalletsReward(i int64) *EventUpdateOne {
+	euo.mutation.ResetWalletsReward()
+	euo.mutation.SetWalletsReward(i)
 	return euo
 }
 
-// SetWalletsRewards sets the "walletsRewards" field.
-func (euo *EventUpdateOne) SetWalletsRewards(i int64) *EventUpdateOne {
-	euo.mutation.ResetWalletsRewards()
-	euo.mutation.SetWalletsRewards(i)
+// SetNillableWalletsReward sets the "walletsReward" field if the given value is not nil.
+func (euo *EventUpdateOne) SetNillableWalletsReward(i *int64) *EventUpdateOne {
+	if i != nil {
+		euo.SetWalletsReward(*i)
+	}
 	return euo
 }
 
-// AddWalletsRewards adds i to the "walletsRewards" field.
-func (euo *EventUpdateOne) AddWalletsRewards(i int64) *EventUpdateOne {
-	euo.mutation.AddWalletsRewards(i)
+// AddWalletsReward adds i to the "walletsReward" field.
+func (euo *EventUpdateOne) AddWalletsReward(i int64) *EventUpdateOne {
+	euo.mutation.AddWalletsReward(i)
+	return euo
+}
+
+// ClearWalletsReward clears the value of the "walletsReward" field.
+func (euo *EventUpdateOne) ClearWalletsReward() *EventUpdateOne {
+	euo.mutation.ClearWalletsReward()
 	return euo
 }
 
@@ -582,19 +668,24 @@ func (euo *EventUpdateOne) ExecX(ctx context.Context) {
 
 // check runs all checks and user-defined validators on the builder.
 func (euo *EventUpdateOne) check() error {
+	if v, ok := euo.mutation.Name(); ok {
+		if err := event.NameValidator(v); err != nil {
+			return &ValidationError{Name: "name", err: fmt.Errorf(`ent: validator failed for field "Event.name": %w`, err)}
+		}
+	}
+	if v, ok := euo.mutation.Category(); ok {
+		if err := event.CategoryValidator(v); err != nil {
+			return &ValidationError{Name: "category", err: fmt.Errorf(`ent: validator failed for field "Event.category": %w`, err)}
+		}
+	}
 	if v, ok := euo.mutation.TutorsRequired(); ok {
 		if err := event.TutorsRequiredValidator(v); err != nil {
 			return &ValidationError{Name: "tutorsRequired", err: fmt.Errorf(`ent: validator failed for field "Event.tutorsRequired": %w`, err)}
 		}
 	}
-	if v, ok := euo.mutation.TutorsSubscribed(); ok {
-		if err := event.TutorsSubscribedValidator(v); err != nil {
-			return &ValidationError{Name: "tutorsSubscribed", err: fmt.Errorf(`ent: validator failed for field "Event.tutorsSubscribed": %w`, err)}
-		}
-	}
-	if v, ok := euo.mutation.WalletsRewards(); ok {
-		if err := event.WalletsRewardsValidator(v); err != nil {
-			return &ValidationError{Name: "walletsRewards", err: fmt.Errorf(`ent: validator failed for field "Event.walletsRewards": %w`, err)}
+	if v, ok := euo.mutation.WalletsReward(); ok {
+		if err := event.WalletsRewardValidator(v); err != nil {
+			return &ValidationError{Name: "walletsReward", err: fmt.Errorf(`ent: validator failed for field "Event.walletsReward": %w`, err)}
 		}
 	}
 	return nil
@@ -642,6 +733,19 @@ func (euo *EventUpdateOne) sqlSave(ctx context.Context) (_node *Event, err error
 			Column: event.FieldName,
 		})
 	}
+	if value, ok := euo.mutation.Category(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeEnum,
+			Value:  value,
+			Column: event.FieldCategory,
+		})
+	}
+	if euo.mutation.CategoryCleared() {
+		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
+			Type:   field.TypeEnum,
+			Column: event.FieldCategory,
+		})
+	}
 	if value, ok := euo.mutation.Description(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
@@ -669,32 +773,30 @@ func (euo *EventUpdateOne) sqlSave(ctx context.Context) (_node *Event, err error
 			Column: event.FieldTutorsRequired,
 		})
 	}
-	if value, ok := euo.mutation.TutorsSubscribed(); ok {
+	if euo.mutation.TutorsRequiredCleared() {
+		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
+			Type:   field.TypeInt64,
+			Column: event.FieldTutorsRequired,
+		})
+	}
+	if value, ok := euo.mutation.WalletsReward(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeInt64,
 			Value:  value,
-			Column: event.FieldTutorsSubscribed,
+			Column: event.FieldWalletsReward,
 		})
 	}
-	if value, ok := euo.mutation.AddedTutorsSubscribed(); ok {
+	if value, ok := euo.mutation.AddedWalletsReward(); ok {
 		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
 			Type:   field.TypeInt64,
 			Value:  value,
-			Column: event.FieldTutorsSubscribed,
+			Column: event.FieldWalletsReward,
 		})
 	}
-	if value, ok := euo.mutation.WalletsRewards(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+	if euo.mutation.WalletsRewardCleared() {
+		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
 			Type:   field.TypeInt64,
-			Value:  value,
-			Column: event.FieldWalletsRewards,
-		})
-	}
-	if value, ok := euo.mutation.AddedWalletsRewards(); ok {
-		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
-			Type:   field.TypeInt64,
-			Value:  value,
-			Column: event.FieldWalletsRewards,
+			Column: event.FieldWalletsReward,
 		})
 	}
 	if value, ok := euo.mutation.StartAt(); ok {

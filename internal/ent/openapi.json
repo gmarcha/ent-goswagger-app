@@ -19,12 +19,13 @@
           "endAt",
           "id",
           "name",
-          "startAt",
-          "tutorsRequired",
-          "tutorsSubscribed",
-          "walletsRewards"
+          "startAt"
         ],
         "properties": {
+          "category": {
+            "type": "string",
+            "example": "exam"
+          },
           "createdAt": {
             "type": "string",
             "format": "date-time"
@@ -50,17 +51,13 @@
             "type": "integer",
             "format": "int64"
           },
-          "tutorsSubscribed": {
-            "type": "integer",
-            "format": "int64"
-          },
           "users": {
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/User"
             }
           },
-          "walletsRewards": {
+          "walletsReward": {
             "type": "integer",
             "format": "int64"
           }
@@ -76,13 +73,15 @@
         "type": "object",
         "required": [
           "adminScope",
-          "hoursDone",
+          "calendarScope",
           "id",
-          "login",
-          "tutorScope"
+          "login"
         ],
         "properties": {
           "adminScope": {
+            "type": "boolean"
+          },
+          "calendarScope": {
             "type": "boolean"
           },
           "events": {
@@ -94,11 +93,10 @@
           "firstName": {
             "type": "string"
           },
-          "hoursDone": {
-            "type": "integer",
-            "format": "int64"
-          },
           "id": {
+            "type": "string"
+          },
+          "imagePath": {
             "type": "string"
           },
           "lastName": {
@@ -106,9 +104,6 @@
           },
           "login": {
             "type": "string"
-          },
-          "tutorScope": {
-            "type": "boolean"
           }
         },
         "x-go-type": {
