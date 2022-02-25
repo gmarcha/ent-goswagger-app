@@ -30,7 +30,7 @@ An API for 42 tutors.
 
 ### Security Schemes
 
-#### OauthSecurity
+#### OAuth2
 
 
 
@@ -48,9 +48,8 @@ An API for 42 tutors.
 Name | Description
 -----|-------------
 tutor | Tutor scope
-
-### Security Requirements
-  * OauthSecurity: tutor
+event | Event scope
+admin | Admin scope
 
 ## All endpoints
 
@@ -58,8 +57,10 @@ tutor | Tutor scope
 
 | Method  | URI     | Name   | Summary |
 |---------|---------|--------|---------|
-| GET | /auth/callback | [callback](#callback) | Return user token |
-| GET | /login | [login](#login) | Login user |
+| GET | /v2/auth/callback | [callback](#callback) | Receive token |
+| GET | /v2/auth/login | [login](#login) | Login user |
+| GET | /v2/auth/token/info | [token info](#token-info) | Send user information |
+| GET | /v2/auth/token/refresh | [token refresh](#token-refresh) | Refresh token |
   
 
 
@@ -67,12 +68,12 @@ tutor | Tutor scope
 
 | Method  | URI     | Name   | Summary |
 |---------|---------|--------|---------|
-| POST | /events | [create event](#create-event) | Create event |
-| DELETE | /events/{id} | [delete event](#delete-event) | Delete event |
-| GET | /events | [list event](#list-event) | List events |
-| GET | /events/{id}/users | [list event users](#list-event-users) | List event users |
-| GET | /events/{id} | [read event](#read-event) | Read event |
-| PUT | /events/{id} | [update event](#update-event) | Update event |
+| POST | /v2/events | [create event](#create-event) | Create event |
+| DELETE | /v2/events/{id} | [delete event](#delete-event) | Delete event |
+| GET | /v2/events | [list event](#list-event) | List events |
+| GET | /v2/events/{id}/users | [list event users](#list-event-users) | List event users |
+| GET | /v2/events/{id} | [read event](#read-event) | Read event |
+| PUT | /v2/events/{id} | [update event](#update-event) | Update event |
   
 
 
@@ -80,37 +81,38 @@ tutor | Tutor scope
 
 | Method  | URI     | Name   | Summary |
 |---------|---------|--------|---------|
-| POST | /users | [create user](#create-user) | Create user |
-| DELETE | /users/me | [delete me](#delete-me) | Delete authenticated user |
-| DELETE | /users/{id} | [delete user](#delete-user) | Delete user |
-| GET | /users/me/events | [list me events](#list-me-events) | List authenticated user events |
-| GET | /users | [list user](#list-user) | List users |
-| GET | /users/{id}/events | [list user events](#list-user-events) | List user events |
-| GET | /users/me | [read me](#read-me) | Read authenticated user |
-| GET | /users/{id} | [read user](#read-user) | Read user |
-| POST | /users/me/events/{id} | [subscribe me](#subscribe-me) | Subscribe authenticated user |
-| POST | /users/{userId}/events/{eventId} | [subscribe user](#subscribe-user) | Subscribe user |
-| DELETE | /users/me/events/{id} | [unsubscribe me](#unsubscribe-me) | Unsubscribe authenticated user |
-| DELETE | /users/{userId}/events/{eventId} | [unsubscribe user](#unsubscribe-user) | Unsubscribe user |
-| PUT | /users/me | [update me](#update-me) | Update authenticated user |
-| PUT | /users/{id} | [update user](#update-user) | Update user |
+| POST | /v2/users | [create user](#create-user) | Create user |
+| DELETE | /v2/users/me | [delete me](#delete-me) | Delete authenticated user |
+| DELETE | /v2/users/{id} | [delete user](#delete-user) | Delete user |
+| GET | /v2/users/me/events | [list me events](#list-me-events) | List authenticated user events |
+| GET | /v2/users | [list user](#list-user) | List users |
+| GET | /v2/users/{id}/events | [list user events](#list-user-events) | List user events |
+| GET | /v2/users/me | [read me](#read-me) | Read authenticated user |
+| GET | /v2/users/{id} | [read user](#read-user) | Read user |
+| POST | /v2/users/me/events/{id} | [subscribe me](#subscribe-me) | Subscribe authenticated user |
+| POST | /v2/users/{userId}/events/{eventId} | [subscribe user](#subscribe-user) | Subscribe user |
+| DELETE | /v2/users/me/events/{id} | [unsubscribe me](#unsubscribe-me) | Unsubscribe authenticated user |
+| DELETE | /v2/users/{userId}/events/{eventId} | [unsubscribe user](#unsubscribe-user) | Unsubscribe user |
+| PUT | /v2/users/me | [update me](#update-me) | Update authenticated user |
+| PUT | /v2/users/{id} | [update user](#update-user) | Update user |
   
 
 
 ## Paths
 
-### <span id="callback"></span> Return user token (*callback*)
+### <span id="callback"></span> Receive token (*callback*)
 
 ```
-GET /auth/callback
+GET /v2/auth/callback
 ```
 
-Retrieve token from 42 API.
+Receive token as a response from 42 API.
 
 #### All responses
 | Code | Status | Description | Has headers | Schema |
 |------|--------|-------------|:-----------:|--------|
 | [200](#callback-200) | OK | OK |  | [schema](#callback-200-schema) |
+| [401](#callback-401) | Unauthorized | Unauthorized |  | [schema](#callback-401-schema) |
 | [500](#callback-500) | Internal Server Error | Internal Server Error |  | [schema](#callback-500-schema) |
 
 #### Responses
@@ -125,6 +127,15 @@ Status: OK
 
 
 
+##### <span id="callback-401"></span> 401 - Unauthorized
+Status: Unauthorized
+
+###### <span id="callback-401-schema"></span> Schema
+   
+  
+
+[Error](#error)
+
 ##### <span id="callback-500"></span> 500 - Internal Server Error
 Status: Internal Server Error
 
@@ -137,10 +148,13 @@ Status: Internal Server Error
 ### <span id="create-event"></span> Create event (*createEvent*)
 
 ```
-POST /events
+POST /v2/events
 ```
 
 Create a new event.
+
+#### Security Requirements
+  * OAuth2: event
 
 #### Parameters
 
@@ -188,10 +202,13 @@ Status: Internal Server Error
 ### <span id="create-user"></span> Create user (*createUser*)
 
 ```
-POST /users
+POST /v2/users
 ```
 
 Create a new user.
+
+#### Security Requirements
+  * OAuth2: admin
 
 #### Parameters
 
@@ -239,10 +256,13 @@ Status: Internal Server Error
 ### <span id="delete-event"></span> Delete event (*deleteEvent*)
 
 ```
-DELETE /events/{id}
+DELETE /v2/events/{id}
 ```
 
 Delete an event by ID.
+
+#### Security Requirements
+  * OAuth2: event
 
 #### Parameters
 
@@ -296,10 +316,13 @@ Status: Internal Server Error
 ### <span id="delete-me"></span> Delete authenticated user (*deleteMe*)
 
 ```
-DELETE /users/me
+DELETE /v2/users/me
 ```
 
 Delete the authenticated user.
+
+#### Security Requirements
+  * OAuth2: tutor
 
 #### All responses
 | Code | Status | Description | Has headers | Schema |
@@ -327,10 +350,13 @@ Status: Internal Server Error
 ### <span id="delete-user"></span> Delete user (*deleteUser*)
 
 ```
-DELETE /users/{id}
+DELETE /v2/users/{id}
 ```
 
 Delete an user by ID.
+
+#### Security Requirements
+  * OAuth2: admin
 
 #### Parameters
 
@@ -384,10 +410,13 @@ Status: Internal Server Error
 ### <span id="list-event"></span> List events (*listEvent*)
 
 ```
-GET /events
+GET /v2/events
 ```
 
 List all events.
+
+#### Security Requirements
+  * OAuth2: tutor
 
 #### Parameters
 
@@ -437,10 +466,13 @@ Status: Internal Server Error
 ### <span id="list-event-users"></span> List event users (*listEventUsers*)
 
 ```
-GET /events/{id}/users
+GET /v2/events/{id}/users
 ```
 
 List users subscribed to an event.
+
+#### Security Requirements
+  * OAuth2: tutor
 
 #### Parameters
 
@@ -498,10 +530,13 @@ Status: Internal Server Error
 ### <span id="list-me-events"></span> List authenticated user events (*listMeEvents*)
 
 ```
-GET /users/me/events
+GET /v2/users/me/events
 ```
 
 List the authenticated user's subscribed events.
+
+#### Security Requirements
+  * OAuth2: tutor
 
 #### All responses
 | Code | Status | Description | Has headers | Schema |
@@ -533,10 +568,13 @@ Status: Internal Server Error
 ### <span id="list-user"></span> List users (*listUser*)
 
 ```
-GET /users
+GET /v2/users
 ```
 
 List all users.
+
+#### Security Requirements
+  * OAuth2: tutor
 
 #### Parameters
 
@@ -584,10 +622,13 @@ Status: Internal Server Error
 ### <span id="list-user-events"></span> List user events (*listUserEvents*)
 
 ```
-GET /users/{id}/events
+GET /v2/users/{id}/events
 ```
 
 List user's subscribed events.
+
+#### Security Requirements
+  * OAuth2: tutor
 
 #### Parameters
 
@@ -645,10 +686,10 @@ Status: Internal Server Error
 ### <span id="login"></span> Login user (*login*)
 
 ```
-GET /login
+GET /v2/auth/login
 ```
 
-Login to 42 API with OAuth 2.0.
+Login a user with 42 API.
 
 #### All responses
 | Code | Status | Description | Has headers | Schema |
@@ -676,10 +717,13 @@ Status: Internal Server Error
 ### <span id="read-event"></span> Read event (*readEvent*)
 
 ```
-GET /events/{id}
+GET /v2/events/{id}
 ```
 
 Read an event by ID.
+
+#### Security Requirements
+  * OAuth2: tutor
 
 #### Parameters
 
@@ -737,10 +781,13 @@ Status: Internal Server Error
 ### <span id="read-me"></span> Read authenticated user (*readMe*)
 
 ```
-GET /users/me
+GET /v2/users/me
 ```
 
 Read the authenticated user.
+
+#### Security Requirements
+  * OAuth2: tutor
 
 #### All responses
 | Code | Status | Description | Has headers | Schema |
@@ -772,10 +819,13 @@ Status: Internal Server Error
 ### <span id="read-user"></span> Read user (*readUser*)
 
 ```
-GET /users/{id}
+GET /v2/users/{id}
 ```
 
 Read an user by ID.
+
+#### Security Requirements
+  * OAuth2: tutor
 
 #### Parameters
 
@@ -833,10 +883,13 @@ Status: Internal Server Error
 ### <span id="subscribe-me"></span> Subscribe authenticated user (*subscribeMe*)
 
 ```
-POST /users/me/events/{id}
+POST /v2/users/me/events/{id}
 ```
 
 Subscribe an authenticated user to an event.
+
+#### Security Requirements
+  * OAuth2: tutor
 
 #### Parameters
 
@@ -894,10 +947,13 @@ Status: Internal Server Error
 ### <span id="subscribe-user"></span> Subscribe user (*subscribeUser*)
 
 ```
-POST /users/{userId}/events/{eventId}
+POST /v2/users/{userId}/events/{eventId}
 ```
 
 Subscribe a user to an event.
+
+#### Security Requirements
+  * OAuth2: admin
 
 #### Parameters
 
@@ -953,13 +1009,112 @@ Status: Internal Server Error
 
 [Error](#error)
 
+### <span id="token-info"></span> Send user information (*tokenInfo*)
+
+```
+GET /v2/auth/token/info
+```
+
+Send authenticated user information or unauthorized error response.
+
+#### Security Requirements
+  * OAuth2: tutor
+
+#### All responses
+| Code | Status | Description | Has headers | Schema |
+|------|--------|-------------|:-----------:|--------|
+| [200](#token-info-200) | OK | OK |  | [schema](#token-info-200-schema) |
+| [401](#token-info-401) | Unauthorized | Unauthorized |  | [schema](#token-info-401-schema) |
+| [500](#token-info-500) | Internal Server Error | Internal Server Error |  | [schema](#token-info-500-schema) |
+
+#### Responses
+
+
+##### <span id="token-info-200"></span> 200 - OK
+Status: OK
+
+###### <span id="token-info-200-schema"></span> Schema
+   
+  
+
+[User](#user)
+
+##### <span id="token-info-401"></span> 401 - Unauthorized
+Status: Unauthorized
+
+###### <span id="token-info-401-schema"></span> Schema
+   
+  
+
+[Error](#error)
+
+##### <span id="token-info-500"></span> 500 - Internal Server Error
+Status: Internal Server Error
+
+###### <span id="token-info-500-schema"></span> Schema
+   
+  
+
+[Error](#error)
+
+### <span id="token-refresh"></span> Refresh token (*tokenRefresh*)
+
+```
+GET /v2/auth/token/refresh
+```
+
+Refresh access token if refresh token is still valid.
+
+#### Security Requirements
+  * OAuth2: tutor
+
+#### All responses
+| Code | Status | Description | Has headers | Schema |
+|------|--------|-------------|:-----------:|--------|
+| [200](#token-refresh-200) | OK | OK |  | [schema](#token-refresh-200-schema) |
+| [401](#token-refresh-401) | Unauthorized | Unauthorized |  | [schema](#token-refresh-401-schema) |
+| [500](#token-refresh-500) | Internal Server Error | Internal Server Error |  | [schema](#token-refresh-500-schema) |
+
+#### Responses
+
+
+##### <span id="token-refresh-200"></span> 200 - OK
+Status: OK
+
+###### <span id="token-refresh-200-schema"></span> Schema
+   
+  
+
+
+
+##### <span id="token-refresh-401"></span> 401 - Unauthorized
+Status: Unauthorized
+
+###### <span id="token-refresh-401-schema"></span> Schema
+   
+  
+
+[Error](#error)
+
+##### <span id="token-refresh-500"></span> 500 - Internal Server Error
+Status: Internal Server Error
+
+###### <span id="token-refresh-500-schema"></span> Schema
+   
+  
+
+[Error](#error)
+
 ### <span id="unsubscribe-me"></span> Unsubscribe authenticated user (*unsubscribeMe*)
 
 ```
-DELETE /users/me/events/{id}
+DELETE /v2/users/me/events/{id}
 ```
 
 Unsubscribe an authenticated user to an event.
+
+#### Security Requirements
+  * OAuth2: tutor
 
 #### Parameters
 
@@ -1013,10 +1168,13 @@ Status: Internal Server Error
 ### <span id="unsubscribe-user"></span> Unsubscribe user (*unsubscribeUser*)
 
 ```
-DELETE /users/{userId}/events/{eventId}
+DELETE /v2/users/{userId}/events/{eventId}
 ```
 
 Unsubscribe a user to an event.
+
+#### Security Requirements
+  * OAuth2: admin
 
 #### Parameters
 
@@ -1071,10 +1229,13 @@ Status: Internal Server Error
 ### <span id="update-event"></span> Update event (*updateEvent*)
 
 ```
-PUT /events/{id}
+PUT /v2/events/{id}
 ```
 
 Update an event by ID.
+
+#### Security Requirements
+  * OAuth2: event
 
 #### Parameters
 
@@ -1133,10 +1294,13 @@ Status: Internal Server Error
 ### <span id="update-me"></span> Update authenticated user (*updateMe*)
 
 ```
-PUT /users/me
+PUT /v2/users/me
 ```
 
 Update the authenticated user.
+
+#### Security Requirements
+  * OAuth2: tutor
 
 #### Parameters
 
@@ -1174,10 +1338,13 @@ Status: Internal Server Error
 ### <span id="update-user"></span> Update user (*updateUser*)
 
 ```
-PUT /users/{id}
+PUT /v2/users/{id}
 ```
 
 Update an user by ID.
+
+#### Security Requirements
+  * OAuth2: admin
 
 #### Parameters
 
@@ -1247,7 +1414,8 @@ Status: Internal Server Error
 | Name | Type | Go type | Required | Default | Description | Example |
 |------|------|---------|:--------:| ------- |-------------|---------|
 | code | integer| `int64` | ✓ | |  | `500` |
-| message | string| `string` | ✓ | |  | `Internal Server Error` |
+| message | string| `string` | ✓ | |  | `Explicit error message` |
+| status | string| `string` | ✓ | |  | `Internal Server Error` |
 
 
 
