@@ -7,6 +7,23 @@ services:
       - .env
     volumes:
       - postgres-volume:/var/lib/postgresql/data/
+  pgadmin:
+    image: dpage/pgadmin4
+    depends_on:
+      - postgres
+    ports:
+      - "${PGADMIN_LISTEN_PORT}:${PGADMIN_LISTEN_PORT}"
+    env_file:
+      - .env
+    volumes:
+      - pgadmin-volume:/var/lib/pgadmin
+      - ./pgadmin/servers.json:/pgadmin4/servers.json
+    entrypoint: >
+      /bin/sh -c "
+      echo $${POSTGRES_HOST}:$${POSTGRES_PORT}:$${POSTGRES_DB}:$${POSTGRES_USER}:$${POSTGRES_PASSWORD} > /tmp/pgpass;
+      chmod 600 /tmp/pgpass;
+      /entrypoint.sh
+      "
   goswagger:
     build:
       context: ../
@@ -19,8 +36,12 @@ services:
     env_file:
       - .env
     volumes:
-      - goswagger-volume:/go/pkg/mod/cache/download
+      - module-volume:/go/pkg/mod/cache/download
+      - build-volume:/root/.cache/go-build
 
 volumes:
   postgres-volume:
-  goswagger-volume:
+  pgadmin-volume:
+  module-volume:
+  build-volume:
+    # https://pkg.go.dev/cmd/go#hdr-Build_and_test_caching
