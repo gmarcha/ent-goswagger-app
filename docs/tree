@@ -8,6 +8,8 @@
 ├── config
 │   ├── Dockerfile
 │   ├── docker-compose.yaml
+│   ├── pgadmin
+│   │   └── servers.json.sample
 │   └── spec.yaml
 ├── docs
 │   ├── swagger.md
@@ -18,7 +20,9 @@
 ├── go.sum
 ├── internal
 │   ├── clients
-│   │   └── database
+│   │   ├── database
+│   │   │   └── init.go
+│   │   └── env
 │   │       └── init.go
 │   ├── ent
 │   │   ├── client.go
@@ -81,7 +85,15 @@
 │   │       │   │   ├── login.go
 │   │       │   │   ├── login_parameters.go
 │   │       │   │   ├── login_responses.go
-│   │       │   │   └── login_urlbuilder.go
+│   │       │   │   ├── login_urlbuilder.go
+│   │       │   │   ├── token_info.go
+│   │       │   │   ├── token_info_parameters.go
+│   │       │   │   ├── token_info_responses.go
+│   │       │   │   ├── token_info_urlbuilder.go
+│   │       │   │   ├── token_refresh.go
+│   │       │   │   ├── token_refresh_parameters.go
+│   │       │   │   ├── token_refresh_responses.go
+│   │       │   │   └── token_refresh_urlbuilder.go
 │   │       │   ├── event
 │   │       │   │   ├── create_event.go
 │   │       │   │   ├── create_event_parameters.go
@@ -166,19 +178,22 @@
 │   │       │       ├── update_user_responses.go
 │   │       │       └── update_user_urlbuilder.go
 │   │       └── server.go
-│   └── modules
-│       ├── auth
-│       │   ├── auth.go
-│       │   ├── handle.go
-│       │   └── init.go
-│       ├── event
-│       │   ├── handle.go
-│       │   ├── init.go
-│       │   └── service.go
-│       └── user
-│           ├── handle.go
-│           ├── init.go
-│           └── service.go
+│   ├── modules
+│   │   ├── auth
+│   │   │   ├── auth.go
+│   │   │   ├── handle.go
+│   │   │   └── init.go
+│   │   ├── event
+│   │   │   ├── handle.go
+│   │   │   ├── init.go
+│   │   │   └── service.go
+│   │   └── user
+│   │       ├── handle.go
+│   │       ├── init.go
+│   │       └── service.go
+│   └── utils
+│       ├── error.go
+│       └── random.go
 └── scripts
     ├── docgen.sh
     ├── setup
@@ -190,4 +205,4 @@
         ├── json.json
         └── yaml.json
 
-32 directories, 158 files
+35 directories, 170 files
