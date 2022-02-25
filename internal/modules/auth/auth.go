@@ -4,29 +4,17 @@ import (
 	"errors"
 	"fmt"
 	"io/ioutil"
-	"math/rand"
 	"net/http"
 	"os"
-	"time"
 
 	"github.com/gmarcha/ent-goswagger-app/internal/goswagger/models"
 )
 
-const letterBytes = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
-
-func init() {
-	rand.Seed(time.Now().UnixNano())
-}
-
-func randStringBytes(n int) string {
-	b := make([]byte, n)
-	for i := range b {
-		b[i] = letterBytes[rand.Intn(len(letterBytes))]
-	}
-	return string(b)
-}
-
 func authenticate(token string, scopes []string) (*models.Principal, error) {
+
+	for _, scope := range scopes {
+		fmt.Println("authentication scope:", scope)
+	}
 
 	ok, err := authenticated(token)
 	if err != nil {
