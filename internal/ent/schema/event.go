@@ -18,18 +18,26 @@ type Event struct {
 func (Event) Fields() []ent.Field {
 	return []ent.Field{
 		field.UUID("id", uuid.UUID{}).
-			Immutable().Default(uuid.New),
-		field.String("name"),
+			Immutable().
+			Default(uuid.New),
+		field.String("name").
+			MinLen(1),
 		field.Enum("category").
-			Values("exam", "rush", "meeting", "events"),
+			Values("exam", "rush", "meeting", "events").
+			Optional(),
 		field.String("description").
 			Optional(),
 		field.Int64("tutorsRequired").
-			NonNegative(),
+			NonNegative().
+			Optional().
+			Nillable(),
 		field.Int64("walletsReward").
-			NonNegative().Optional(),
+			NonNegative().
+			Optional().
+			Nillable(),
 		field.Time("createdAt").
-			Immutable().Default(time.Now),
+			Immutable().
+			Default(time.Now),
 		field.Time("startAt"),
 		field.Time("endAt"),
 	}
