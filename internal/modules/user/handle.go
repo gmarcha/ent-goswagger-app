@@ -1,1 +1,88 @@
-package users
+package user
+
+import (
+	"context"
+
+	"github.com/gmarcha/ent-goswagger-app/internal/goswagger/models"
+	"github.com/gmarcha/ent-goswagger-app/internal/goswagger/restapi/operations/user"
+	e "github.com/gmarcha/ent-goswagger-app/internal/utils"
+	"github.com/go-openapi/runtime/middleware"
+	"github.com/google/uuid"
+)
+
+type listUser struct {
+	user *Service
+}
+
+func (u *listUser) Handle(params user.ListUserParams, principal *models.Principal) middleware.Responder {
+	ctx := context.Background()
+	res, err := u.user.listUser(ctx)
+	if err != nil {
+		return user.NewListUserInternalServerError().WithPayload(e.Err(500, err))
+	}
+	return user.NewListUserOK().WithPayload(res)
+}
+
+type createUser struct {
+	user *Service
+}
+
+func (u *createUser) Handle(params user.CreateUserParams, principal *models.Principal) middleware.Responder {
+	ctx := context.Background()
+	res, err := u.user.createUser(ctx, params.User)
+	if err != nil {
+		return user.NewCreateUserInternalServerError().WithPayload(e.Err(500, err))
+	}
+	return user.NewCreateUserCreated().WithPayload(res)
+}
+
+type readUser struct {
+	user *Service
+}
+
+func (u *readUser) Handle(params user.ReadUserParams, principal *models.Principal) middleware.Responder {
+	ctx := context.Background()
+	id, err := uuid.Parse(params.ID)
+	if err != nil {
+		return user.NewReadUserBadRequest().WithPayload(e.Err(400, err))
+	}
+	res, err := u.user.readUser(ctx, id)
+	if err != nil {
+		return user.NewReadUserInternalServerError().WithPayload(e.Err(500, err))
+	}
+	return user.NewReadUserOK().WithPayload(res)
+}
+
+type updateUser struct {
+	user *Service
+}
+
+func (u *updateUser) Handle(params user.UpdateUserParams, principal *models.Principal) middleware.Responder {
+	ctx := context.Background()
+	id, err := uuid.Parse(params.ID)
+	if err != nil {
+		return user.NewUpdateUserBadRequest().WithPayload(e.Err(400, err))
+	}
+	res, err := u.user.updateUser(ctx, id, params.User)
+	if err != nil {
+		return user.NewUpdateUserInternalServerError().WithPayload(e.Err(500, err))
+	}
+	return user.NewUpdateUserOK().WithPayload(res)
+}
+
+type deleteUser struct {
+	user *Service
+}
+
+func (u *deleteUser) Handle(params user.DeleteUserParams, principal *models.Principal) middleware.Responder {
+	ctx := context.Background()
+	id, err := uuid.Parse(params.ID)
+	if err != nil {
+		return user.NewDeleteUserBadRequest().WithPayload(e.Err(400, err))
+	}
+	err = u.user.deleteUser(ctx, id)
+	if err != nil {
+		return user.NewDeleteUserInternalServerError().WithPayload(e.Err(500, err))
+	}
+	return user.NewDeleteUserNoContent()
+}
