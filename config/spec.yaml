@@ -6,34 +6,33 @@ info:
   contact: {}
   version: 0.0.1
 
+basePath: /v2
+
 consumes:
   - application/json
 produces:
   - application/json
 
 securityDefinitions:
-  OauthSecurity:
+  OAuth2:
     type: oauth2
     flow: accessCode
     authorizationUrl: 'https://api.intra.42.fr/oauth/authorize'
     tokenUrl: 'https://api.intra.42.fr/oauth/token'
     scopes:
       tutor: Tutor scope
-
-security:
-  - OauthSecurity:
-    - tutor
+      event: Event scope
+      admin: Admin scope
 
 paths:
 
-  /login:
+  /auth/login:
     get:
       summary: Login user
-      description: Login to 42 API with OAuth 2.0.
+      description: Login a user with 42 API.
       tags:
         - Authentication
       operationId: login
-      security: []
       responses:
         "302":
           description: Found
@@ -42,17 +41,56 @@ paths:
 
   /auth/callback:
     get:
-      summary: Return user token
-      description: Retrieve token from 42 API.
+      summary: Receive token
+      description: Receive token as a response from 42 API.
       tags:
         - Authentication
       operationId: callback
-      security: []
       responses:
         "200":
           description: OK
           schema:
             type: string
+        "401":
+          $ref: '#/responses/401'
+        "500":
+          $ref: '#/responses/500'
+
+  /auth/token/info:
+    get:
+      summary: Send user information
+      description: Send authenticated user information or unauthorized error response.
+      tags:
+        - Authentication
+      operationId: tokenInfo
+      security:
+        - OAuth2: [tutor]
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/User'
+        "401":
+          $ref: '#/responses/401'
+        "500":
+          $ref: '#/responses/500'
+
+  /auth/token/refresh:
+    get:
+      summary: Refresh token
+      description: Refresh access token if refresh token is still valid.
+      tags:
+        - Authentication
+      operationId: tokenRefresh
+      security:
+        - OAuth2: [tutor]
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+        "401":
+          $ref: '#/responses/401'
         "500":
           $ref: '#/responses/500'
 
@@ -63,6 +101,8 @@ paths:
       tags:
         - Event
       operationId: listEvent
+      security:
+        - OAuth2: [tutor]
       parameters:
       - in: query
         name: day
@@ -93,6 +133,8 @@ paths:
       tags:
         - Event
       operationId: createEvent
+      security:
+        - OAuth2: [event]
       parameters:
       - in: body
         name: event
@@ -123,6 +165,8 @@ paths:
       tags:
         - Event
       operationId: readEvent
+      security:
+        - OAuth2: [tutor]
       responses:
         "200":
           description: OK
@@ -140,6 +184,8 @@ paths:
       tags:
         - Event
       operationId: updateEvent
+      security:
+        - OAuth2: [event]
       parameters:
       - in: body
         name: event
@@ -164,6 +210,8 @@ paths:
       tags:
         - Event
       operationId: deleteEvent
+      security:
+        - OAuth2: [event]
       responses:
         "204":
           description: No Content
@@ -187,6 +235,8 @@ paths:
       tags:
         - Event
       operationId: listEventUsers
+      security:
+        - OAuth2: [tutor]
       responses:
         "200":
           description: OK
@@ -208,6 +258,8 @@ paths:
       tags:
         - User
       operationId: listUser
+      security:
+        - OAuth2: [tutor]
       parameters:
       - in: query
         name: tutor
@@ -230,6 +282,8 @@ paths:
       tags:
         - User
       operationId: createUser
+      security:
+        - OAuth2: [admin]
       parameters:
       - in: body
         name: user
@@ -260,6 +314,8 @@ paths:
       tags:
         - User
       operationId: readUser
+      security:
+        - OAuth2: [tutor]
       responses:
         "200":
           description: OK
@@ -277,6 +333,8 @@ paths:
       tags:
         - User
       operationId: updateUser
+      security:
+        - OAuth2: [admin]
       parameters:
       - in: body
         name: user
@@ -301,6 +359,8 @@ paths:
       tags:
         - User
       operationId: deleteUser
+      security:
+        - OAuth2: [admin]
       responses:
         "204":
           description: No Content
@@ -318,6 +378,8 @@ paths:
       tags:
         - User
       operationId: readMe
+      security:
+        - OAuth2: [tutor]
       responses:
         "200":
           description: OK
@@ -331,6 +393,8 @@ paths:
       tags:
         - User
       operationId: updateMe
+      security:
+        - OAuth2: [tutor]
       parameters:
       - in: body
         name: user
@@ -351,6 +415,8 @@ paths:
       tags:
         - User
       operationId: deleteMe
+      security:
+        - OAuth2: [tutor]
       responses:
         "204":
           description: No Content
@@ -370,6 +436,8 @@ paths:
       tags:
         - User
       operationId: listUserEvents
+      security:
+        - OAuth2: [tutor]
       responses:
         "200":
           description: OK
@@ -391,6 +459,8 @@ paths:
       tags:
         - User
       operationId: listMeEvents
+      security:
+        - OAuth2: [tutor]
       responses:
         "200":
           description: OK
@@ -419,6 +489,8 @@ paths:
       tags:
         - User
       operationId: subscribeUser
+      security:
+        - OAuth2: [admin]
       responses:
         "201":
           description: OK
@@ -437,6 +509,8 @@ paths:
       tags:
         - User
       operationId: unsubscribeUser
+      security:
+        - OAuth2: [admin]
       responses:
         "204":
           description: No Content
@@ -460,6 +534,8 @@ paths:
       tags:
         - User
       operationId: subscribeMe
+      security:
+        - OAuth2: [tutor]
       responses:
         "201":
           description: OK
@@ -478,6 +554,8 @@ paths:
       tags:
         - User
       operationId: unsubscribeMe
+      security:
+        - OAuth2: [tutor]
       responses:
         "204":
           description: No Content
@@ -513,8 +591,8 @@ responses:
 
 definitions:
 
-  Event:
-  User:
+  Event: {}
+  User: {}
 
   Error:
     type: object
@@ -522,11 +600,15 @@ definitions:
       code:
         type: integer
         example: 500
-      message:
+      status:
         type: string
         example: Internal Server Error
+      message:
+        type: string
+        example: Explicit error message
     required:
       - code
+      - status
       - message
 
   principal:
