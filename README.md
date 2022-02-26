@@ -61,8 +61,8 @@ Repository architecture follows some conventions:
       our authentication model (data model definitions should be leave empty, they are added
       in an other swagger specification which serves as a model to code generation and as a
       documentation);
-  - a `Dockerfile` defining an image to our application (based on golang:alpine);
-  - a `docker-compose.yaml` used to launch our API with a postgres database and pgadmin tool,
+  - a `Dockerfile` defining an image to our API (based on golang:alpine);
+  - a `docker-compose.yaml` used to launch our application with a postgres database and pgadmin tool,
       and their other related configuration files;
 - `/docs/` contains documentation about the project:
   - a generated swagger specification (`swagger.yaml`) used to code generation and
