@@ -13,23 +13,7 @@ import (
 func Init(api *operations.TutorAPI, db *ent.Client) {
 
 	state := utils.RandomString(64)
-
-	clientID := os.Getenv("API_CLIENT_ID")
-	clientSecret := os.Getenv("API_CLIENT_SECRET")
-	authUrl := os.Getenv("API_AUTH_URL")
-	tokenUrl := os.Getenv("API_TOKEN_URL")
-	callbackUrl := os.Getenv("API_CALLBACK_URL")
-
-	config := &oauth2.Config{
-		ClientID:     clientID,
-		ClientSecret: clientSecret,
-		Scopes:       []string{"public"},
-		Endpoint: oauth2.Endpoint{
-			AuthURL:  authUrl,
-			TokenURL: tokenUrl,
-		},
-		RedirectURL: callbackUrl,
-	}
+	config := createOAuthConfig()
 
 	userService := &user.Service{User: db.User}
 
@@ -42,4 +26,24 @@ func Init(api *operations.TutorAPI, db *ent.Client) {
 	}
 	api.AuthenticationTokenInfoHandler = &tokenInfo{user: userService}
 	api.AuthenticationTokenRefreshHandler = &tokenRefresh{user: userService}
+}
+
+func createOAuthConfig() *oauth2.Config {
+
+	clientID := os.Getenv("API_CLIENT_ID")
+	clientSecret := os.Getenv("API_CLIENT_SECRET")
+	authUrl := os.Getenv("API_AUTH_URL")
+	tokenUrl := os.Getenv("API_TOKEN_URL")
+	callbackUrl := os.Getenv("API_CALLBACK_URL")
+
+	return &oauth2.Config{
+		ClientID:     clientID,
+		ClientSecret: clientSecret,
+		Scopes:       []string{"public"},
+		Endpoint: oauth2.Endpoint{
+			AuthURL:  authUrl,
+			TokenURL: tokenUrl,
+		},
+		RedirectURL: callbackUrl,
+	}
 }

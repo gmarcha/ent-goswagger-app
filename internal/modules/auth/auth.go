@@ -1,13 +1,13 @@
 package auth
 
 import (
-	"errors"
 	"fmt"
 	"io/ioutil"
 	"net/http"
 	"os"
 
 	"github.com/gmarcha/ent-goswagger-app/internal/goswagger/models"
+	"github.com/go-openapi/errors"
 )
 
 func authenticate(token string, scopes []string) (*models.Principal, error) {
@@ -18,10 +18,10 @@ func authenticate(token string, scopes []string) (*models.Principal, error) {
 
 	ok, err := authenticated(token)
 	if err != nil {
-		return nil, errors.New("authentication error")
+		return nil, errors.New(500, "authentication error")
 	}
 	if !ok {
-		return nil, errors.New("invalid token")
+		return nil, errors.New(401, "invalid token")
 	}
 	prin := models.Principal(token)
 	return &prin, nil

@@ -9,8 +9,6 @@ import (
 
 	oidc "github.com/coreos/go-oidc"
 	"github.com/gmarcha/ent-goswagger-app/internal/ent"
-	entUser "github.com/gmarcha/ent-goswagger-app/internal/ent/user"
-	"github.com/gmarcha/ent-goswagger-app/internal/goswagger/models"
 	"github.com/gmarcha/ent-goswagger-app/internal/goswagger/restapi/operations/authentication"
 	"github.com/gmarcha/ent-goswagger-app/internal/modules/user"
 	"github.com/go-openapi/runtime"
@@ -46,14 +44,20 @@ func (c *callback) Handle(params authentication.CallbackParams) middleware.Respo
 	}
 	authCode := r.URL.Query().Get("code")
 
+	ctx := context.Background()
 	client := &http.Client{}
 
 	// Proceed to OAuth 2.0 handshake (sending authorisation code and receiving token).
-	ctx := oidc.ClientContext(context.Background(), client)
-	token, err := c.config.Exchange(ctx, authCode)
+	clientCtx := oidc.ClientContext(ctx, client)
+	token, err := c.config.Exchange(clientCtx, authCode)
 	if err != nil {
 		return middleware.Error(500, fmt.Sprintln("failed to fetch token"))
 	}
+
+	fmt.Println(token.AccessToken)
+	fmt.Println(token.RefreshToken)
+	fmt.Println(token.TokenType)
+	fmt.Println(token.Expiry)
 
 	userInfoUrl := os.Getenv("API_USERINFO_URL")
 	req, err := http.NewRequest("GET", userInfoUrl, nil)
@@ -73,38 +77,56 @@ func (c *callback) Handle(params authentication.CallbackParams) middleware.Respo
 	}
 
 	var info struct {
-		Login  string `json:"login"`
-		Image  string `json:"image_url"`
-		Staff  bool   `json:"staff?"`
-		Groups []struct {
-			Tutor string `json:"name"`
+		Login     string `json:"login"`
+		FirstName string `json:"first_name"`
+		LastName  string `json:"last_name"`
+		Image     string `json:"image_url"`
+		Staff     bool   `json:"staff?"`
+		Groups    []struct {
+			Tutor string `json:"name"` // field value: TUTEUR
 		} `json:"groups"`
 	}
+
 	err = json.NewDecoder(resp.Body).Decode(&info)
 	if err != nil {
 		return middleware.Error(500, fmt.Sprintln("failed to parse user info"))
 	}
 
-	user, err := c.user.User.Query().Where(entUser.Login(info.Login)).Only(ctx)
-	if err != nil {
-		return middleware.Error(403, fmt.Sprintln("invalid user"))
+	userInfo := &ent.User{
+		Login:     info.Login,
+		FirstName: info.FirstName,
+		LastName:  info.LastName,
+		ImagePath: info.Image,
 	}
 
-	res, err := user.Update().SetImagePath(info.Image).Save(ctx)
+	u, err := c.user.ReadMe(ctx, userInfo.Login)
 	if err != nil {
-		return middleware.Error(500, fmt.Sprintln("failed to save image url"))
+		if !ent.IsNotFound(err) {
+			return middleware.Error(500, fmt.Sprintln("failed to fetch internal user info"))
+		}
+		_, err = c.user.CreateUser(ctx, userInfo)
+		if err != nil {
+			return middleware.Error(500, fmt.Sprintln("failed to create user"))
+		}
+	} else {
+		_, err = u.Update().
+			SetFirstName(userInfo.FirstName).
+			SetLastName(userInfo.LastName).
+			SetImagePath(userInfo.ImagePath).
+			Save(ctx)
+		if err != nil {
+			return middleware.Error(500, fmt.Sprintln("failed to update user"))
+		}
 	}
 
-	fmt.Println(res.Login)
-
-	return authentication.NewCallbackOK().WithPayload(res.Login)
+	return authentication.NewCallbackOK().WithPayload(token.AccessToken)
 }
 
 type tokenInfo struct {
 	user *user.Service
 }
 
-func (t *tokenInfo) Handle(params authentication.TokenInfoParams, principal *models.Principal) middleware.Responder {
+func (t *tokenInfo) Handle(params authentication.TokenInfoParams) middleware.Responder {
 
 	return authentication.NewTokenInfoOK().WithPayload(&ent.User{})
 }
@@ -113,7 +135,7 @@ type tokenRefresh struct {
 	user *user.Service
 }
 
-func (t *tokenRefresh) Handle(params authentication.TokenRefreshParams, principal *models.Principal) middleware.Responder {
+func (t *tokenRefresh) Handle(params authentication.TokenRefreshParams) middleware.Responder {
 
 	return authentication.NewTokenRefreshOK().WithPayload("newToken")
 }
