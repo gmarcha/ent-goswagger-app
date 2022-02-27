@@ -20,11 +20,13 @@ Use Makefile rules to build and run application (see comments in `Makefile`).
 
 - `make` triggers `make all`;
 - `make all` uses `make build` and `make up` internally;
+- `make re` uses `make down` and `make all` internally;
 - `make build` builds docker-compose images;
 - `make up` starts docker-compose containers;
 - `make down` stops docker-compose containers;
-- `make re` uses `make down` and `make all` internally;
-- `make delete` stops docker-compose containers and erases docker-compose volumes.
+- `make delete` stops docker-compose containers and erases docker-compose volumes;
+- `make regen` uses `make gen` and `make reload` internally;
+- `make reload` restarts API container to update source code.
 
 Use them to perform code generation with entgo and goswagger.
  

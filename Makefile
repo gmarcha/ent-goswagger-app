@@ -15,23 +15,29 @@ SWAGGER-SPEC-PATH := ./config/spec.yaml
 SWAGGER-DOC-PATH := ./docs/swagger.yaml
 SWAGGER-MD-PATH := ./docs/swagger.md
 
+TREE := ./docs/tree
+
 ######################################################################################################
 #
 #	Docker compose rules:
 #
-#	- `build` builds docker-compose images, so postgres:alpine and goswagger (based on golang:alpine);
-#	- `up` runs $(NAME)_postgres_1 and $(NAME)_goswagger_1 containers (default names);
-#	- `down` stops both containers and their default associated network ($(NAME)_default);
-#	- `delete` stops containers and removes docker-compose volumes,
-#		i.e. data persistent storiage as postgres database;
+#	- `build` builds docker-compose images;
+#	- `up` runs one container for each service defined in docker-compose.yaml;
+#	- `down` stops containers and default application network;
+#	- `delete` stops containers and removes their associated volumes,
+#		i.e. persistent data storage (as postgres database);
+#	- `reload` restarts API container to update code changes;
 #	- `all` performs build and up rules;
-#	- `re` restarts both containers using down and all.
+#	- `re` restarts all containers using down and all;
+#	- `regen` performs gen and reload rules.
 #
 #		This setup serves development purpose.
 #
 ######################################################################################################
 
 all:		build up
+
+re:			down all
 
 build:
 			$(DOCKER-COMPOSE) -f $(DOCKER-COMPOSE-PATH) build --build-arg PORT=$(PORT)
@@ -45,14 +51,17 @@ down:
 delete:
 			$(DOCKER-COMPOSE) -f $(DOCKER-COMPOSE-PATH) down --volumes
 
-re:			down all
+regen:		gen reload
+
+reload:
+			$(DOCKER-COMPOSE) -f $(DOCKER-COMPOSE-PATH) restart goswagger
 
 ###################################################################################
 #
 #	API rules:
 #
-#	- `install` performs API installation in GoPath (i.e. /go with default value);
-#	- `run` launches installed server with port 5000 on 0.0.0.0 network interface.
+#	- `install` performs API installation in GOPATH (i.e. /go with default value in container);
+#	- `run` launches installed server with host and port defined in environment.
 #
 #		Note: 0.0.0.0 interface is required for server to be reachable
 #			  from outside the container.
@@ -94,7 +103,8 @@ gen.swag:
 #	Continuous Integration (CI) rules:
 #
 #	- `validate` validates a swagger specification against 2.0 version;
-#	- `markdown` generates a markdown description of a swagger specification.
+#	- `markdown` generates a markdown description of a swagger specification;
+#	- `tree` prints repository architecture with a tree representation.
 #
 ###################################################################################
 
@@ -105,7 +115,7 @@ markdown:
 			swagger generate markdown -f $(SWAGGER-DOC-PATH) --output $(SWAGGER-MD-PATH)
 
 tree:
-			tree > docs/tree
+			echo '$> ent-goswagger-app git:(main) ✗ tree' > $(TREE); tree >> $(TREE)
 
 ###################################################################################
 #
