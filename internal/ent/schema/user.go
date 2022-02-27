@@ -24,24 +24,21 @@ func (User) Fields() []ent.Field {
 			Match(regexp.MustCompile("^[a-z]+$")).
 			Unique(),
 		field.String("firstName").
-			Match(regexp.MustCompile("^[A-Z][a-z]*$")).
 			Optional(),
 		field.String("lastName").
-			Match(regexp.MustCompile("^[A-Z][a-z]*$")).
+			Optional(),
+		field.String("displayName").
 			Optional(),
 		field.String("imagePath").
-			// Todo: apply regexp (depending on if it is a path or an uri)
 			Optional(),
-		field.Bool("calendarScope").
-			Default(false),
-		field.Bool("adminScope").
-			Default(false),
 	}
 }
 
 // Edges of the User.
 func (User) Edges() []ent.Edge {
 	return []ent.Edge{
+		edge.From("roles", Role.Type).
+			Ref("users"),
 		edge.From("events", Event.Type).
 			Ref("users"),
 	}
