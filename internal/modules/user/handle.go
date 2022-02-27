@@ -16,7 +16,7 @@ type listUser struct {
 
 func (u *listUser) Handle(params user.ListUserParams, principal *models.Principal) middleware.Responder {
 	ctx := context.Background()
-	res, err := u.user.listUser(ctx)
+	res, err := u.user.ListUser(ctx, params.Tutor)
 	if err != nil {
 		return user.NewListUserInternalServerError().WithPayload(e.Err(500, err))
 	}
@@ -29,7 +29,7 @@ type createUser struct {
 
 func (u *createUser) Handle(params user.CreateUserParams, principal *models.Principal) middleware.Responder {
 	ctx := context.Background()
-	res, err := u.user.createUser(ctx, params.User)
+	res, err := u.user.CreateUser(ctx, params.User)
 	if err != nil {
 		return user.NewCreateUserInternalServerError().WithPayload(e.Err(500, err))
 	}
@@ -41,12 +41,12 @@ type readUser struct {
 }
 
 func (u *readUser) Handle(params user.ReadUserParams, principal *models.Principal) middleware.Responder {
-	ctx := context.Background()
 	id, err := uuid.Parse(params.ID)
 	if err != nil {
 		return user.NewReadUserBadRequest().WithPayload(e.Err(400, err))
 	}
-	res, err := u.user.readUser(ctx, id)
+	ctx := context.Background()
+	res, err := u.user.ReadUser(ctx, id)
 	if err != nil {
 		return user.NewReadUserInternalServerError().WithPayload(e.Err(500, err))
 	}
@@ -58,12 +58,12 @@ type updateUser struct {
 }
 
 func (u *updateUser) Handle(params user.UpdateUserParams, principal *models.Principal) middleware.Responder {
-	ctx := context.Background()
 	id, err := uuid.Parse(params.ID)
 	if err != nil {
 		return user.NewUpdateUserBadRequest().WithPayload(e.Err(400, err))
 	}
-	res, err := u.user.updateUser(ctx, id, params.User)
+	ctx := context.Background()
+	res, err := u.user.UpdateUser(ctx, id, params.User)
 	if err != nil {
 		return user.NewUpdateUserInternalServerError().WithPayload(e.Err(500, err))
 	}
@@ -75,14 +75,27 @@ type deleteUser struct {
 }
 
 func (u *deleteUser) Handle(params user.DeleteUserParams, principal *models.Principal) middleware.Responder {
-	ctx := context.Background()
 	id, err := uuid.Parse(params.ID)
 	if err != nil {
 		return user.NewDeleteUserBadRequest().WithPayload(e.Err(400, err))
 	}
-	err = u.user.deleteUser(ctx, id)
+	ctx := context.Background()
+	err = u.user.DeleteUser(ctx, id)
 	if err != nil {
 		return user.NewDeleteUserInternalServerError().WithPayload(e.Err(500, err))
 	}
 	return user.NewDeleteUserNoContent()
+}
+
+type readMe struct {
+	user *Service
+}
+
+func (u *readMe) Handle(params user.ReadMeParams, principal *models.Principal) middleware.Responder {
+	ctx := context.Background()
+	res, err := u.user.ReadMe(ctx, string(*principal))
+	if err != nil {
+		return user.NewReadMeInternalServerError().WithPayload(e.Err(500, err))
+	}
+	return user.NewReadMeOK().WithPayload(res)
 }

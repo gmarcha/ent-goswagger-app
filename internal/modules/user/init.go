@@ -7,7 +7,7 @@ import (
 
 func Init(api *operations.TutorAPI, db *ent.Client) {
 
-	userService := &Service{User: db.User}
+	userService := &Service{User: db.User, Role: db.Role}
 
 	api.UserListUserHandler = &listUser{user: userService}
 	api.UserCreateUserHandler = &createUser{user: userService}
@@ -18,8 +18,7 @@ func Init(api *operations.TutorAPI, db *ent.Client) {
 	// api.UserSubscribeUserHandler =
 	// api.UserUnsubscribeUserHandler =
 
-	// api.UserReadMeHandler =
-	// api.UserUpdateMeHandler =
+	api.UserReadMeHandler = &readMe{user: userService}
 	// api.UserDeleteMeHandler =
 	// api.UserListMeEventsHandler =
 	// api.UserSubscribeMeHandler =
