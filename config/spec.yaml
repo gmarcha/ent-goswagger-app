@@ -20,9 +20,12 @@ securityDefinitions:
     authorizationUrl: 'https://api.intra.42.fr/oauth/authorize'
     tokenUrl: 'https://api.intra.42.fr/oauth/token'
     scopes:
-      tutor: Tutor scope
-      event: Event scope
-      admin: Admin scope
+      public: Public access
+      event: Read events
+      event:write: Read-write events
+      user: Read users
+      user:subscription: Subscribe to events
+      user:write: Read-write users
 
 paths:
 
@@ -58,13 +61,11 @@ paths:
 
   /auth/token/info:
     get:
-      summary: Send user information
-      description: Send authenticated user information or unauthorized error response.
+      summary: Send token information
+      description: Send token information or unauthorized error response.
       tags:
         - Authentication
       operationId: tokenInfo
-      security:
-        - OAuth2: [tutor]
       responses:
         "200":
           description: OK
@@ -78,12 +79,10 @@ paths:
   /auth/token/refresh:
     get:
       summary: Refresh token
-      description: Refresh access token if refresh token is still valid.
+      description: Refresh expired token.
       tags:
         - Authentication
       operationId: tokenRefresh
-      security:
-        - OAuth2: [tutor]
       responses:
         "200":
           description: OK
@@ -102,7 +101,7 @@ paths:
         - Event
       operationId: listEvent
       security:
-        - OAuth2: [tutor]
+        - OAuth2: [public]
       parameters:
       - in: query
         name: day
@@ -134,7 +133,7 @@ paths:
         - Event
       operationId: createEvent
       security:
-        - OAuth2: [event]
+        - OAuth2: [public, event, event:write]
       parameters:
       - in: body
         name: event
@@ -166,7 +165,7 @@ paths:
         - Event
       operationId: readEvent
       security:
-        - OAuth2: [tutor]
+        - OAuth2: [public, event]
       responses:
         "200":
           description: OK
@@ -185,7 +184,7 @@ paths:
         - Event
       operationId: updateEvent
       security:
-        - OAuth2: [event]
+        - OAuth2: [public, event, event:write]
       parameters:
       - in: body
         name: event
@@ -211,7 +210,7 @@ paths:
         - Event
       operationId: deleteEvent
       security:
-        - OAuth2: [event]
+        - OAuth2: [public, event, event:write]
       responses:
         "204":
           description: No Content
@@ -236,7 +235,7 @@ paths:
         - Event
       operationId: listEventUsers
       security:
-        - OAuth2: [tutor]
+        - OAuth2: [public, event, user]
       responses:
         "200":
           description: OK
@@ -259,11 +258,11 @@ paths:
         - User
       operationId: listUser
       security:
-        - OAuth2: [tutor]
+        - OAuth2: [public]
       parameters:
       - in: query
         name: tutor
-        description: List all tutors.
+        description: Tutor filter.
         type: boolean
       responses:
         "200":
@@ -283,7 +282,7 @@ paths:
         - User
       operationId: createUser
       security:
-        - OAuth2: [admin]
+        - OAuth2: [public, user, user:write]
       parameters:
       - in: body
         name: user
@@ -301,6 +300,100 @@ paths:
         "500":
           $ref: '#/responses/500'
 
+  /users/me:
+    get:
+      summary: Read authenticated user
+      description: Read the authenticated user.
+      tags:
+        - User
+      operationId: readMe
+      security:
+        - OAuth2: [public]
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/User'
+        "500":
+          $ref: '#/responses/500'
+    delete:
+      summary: Delete authenticated user
+      description: Delete the authenticated user.
+      tags:
+        - User
+      operationId: deleteMe
+      security:
+        - OAuth2: [public]
+      responses:
+        "204":
+          description: No Content
+        "500":
+          $ref: '#/responses/500'
+
+  /users/me/events:
+    get:
+      summary: List authenticated user events
+      description: List the authenticated user's subscribed events.
+      tags:
+        - User
+      operationId: listMeEvents
+      security:
+        - OAuth2: [public, user, event]
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Event'
+        "500":
+          $ref: '#/responses/500'
+
+  /users/me/events/{id}:
+    parameters:
+      - in: path
+        name: id
+        required: true
+        description: Event ID.
+        type: string
+    post:
+      summary: Subscribe authenticated user
+      description: Subscribe an authenticated user to an event.
+      tags:
+        - User
+      operationId: subscribeMe
+      security:
+        - OAuth2: [public, user, user:subscription, event]
+      responses:
+        "201":
+          description: OK
+          schema:
+            type: string
+            example: Done
+        "400":
+          $ref: '#/responses/400'
+        "404":
+          $ref: '#/responses/404'
+        "500":
+          $ref: '#/responses/500'
+    delete:
+      summary: Unsubscribe authenticated user
+      description: Unsubscribe an authenticated user to an event.
+      tags:
+        - User
+      operationId: unsubscribeMe
+      security:
+        - OAuth2: [public, user, user:subscription, event]
+      responses:
+        "204":
+          description: No Content
+        "400":
+          $ref: '#/responses/400'
+        "404":
+          $ref: '#/responses/404'
+        "500":
+          $ref: '#/responses/500'
+
   /users/{id}:
     parameters:
       - in: path
@@ -315,7 +408,7 @@ paths:
         - User
       operationId: readUser
       security:
-        - OAuth2: [tutor]
+        - OAuth2: [public, user]
       responses:
         "200":
           description: OK
@@ -334,7 +427,7 @@ paths:
         - User
       operationId: updateUser
       security:
-        - OAuth2: [admin]
+        - OAuth2: [public, user, user:write]
       parameters:
       - in: body
         name: user
@@ -360,7 +453,7 @@ paths:
         - User
       operationId: deleteUser
       security:
-        - OAuth2: [admin]
+        - OAuth2: [public, user, user:write]
       responses:
         "204":
           description: No Content
@@ -368,58 +461,6 @@ paths:
           $ref: '#/responses/400'
         "404":
           $ref: '#/responses/404'
-        "500":
-          $ref: '#/responses/500'
-
-  /users/me:
-    get:
-      summary: Read authenticated user
-      description: Read the authenticated user.
-      tags:
-        - User
-      operationId: readMe
-      security:
-        - OAuth2: [tutor]
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/User'
-        "500":
-          $ref: '#/responses/500'
-    put:
-      summary: Update authenticated user
-      description: Update the authenticated user.
-      tags:
-        - User
-      operationId: updateMe
-      security:
-        - OAuth2: [tutor]
-      parameters:
-      - in: body
-        name: user
-        required: true
-        description: User to update.
-        schema:
-          $ref: '#/definitions/User'
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/User'
-        "500":
-          $ref: '#/responses/500'
-    delete:
-      summary: Delete authenticated user
-      description: Delete the authenticated user.
-      tags:
-        - User
-      operationId: deleteMe
-      security:
-        - OAuth2: [tutor]
-      responses:
-        "204":
-          description: No Content
         "500":
           $ref: '#/responses/500'
 
@@ -437,7 +478,7 @@ paths:
         - User
       operationId: listUserEvents
       security:
-        - OAuth2: [tutor]
+        - OAuth2: [public, user, event]
       responses:
         "200":
           description: OK
@@ -449,25 +490,6 @@ paths:
           $ref: '#/responses/400'
         "404":
           $ref: '#/responses/404'
-        "500":
-          $ref: '#/responses/500'
-
-  /users/me/events:
-    get:
-      summary: List authenticated user events
-      description: List the authenticated user's subscribed events.
-      tags:
-        - User
-      operationId: listMeEvents
-      security:
-        - OAuth2: [tutor]
-      responses:
-        "200":
-          description: OK
-          schema:
-            type: array
-            items:
-              $ref: '#/definitions/Event'
         "500":
           $ref: '#/responses/500'
 
@@ -490,7 +512,7 @@ paths:
         - User
       operationId: subscribeUser
       security:
-        - OAuth2: [admin]
+        - OAuth2: [public, user, user:subscription, user:write, event]
       responses:
         "201":
           description: OK
@@ -510,7 +532,7 @@ paths:
         - User
       operationId: unsubscribeUser
       security:
-        - OAuth2: [admin]
+        - OAuth2: [public, user, user:subscription, user:write, event]
       responses:
         "204":
           description: No Content
@@ -521,21 +543,21 @@ paths:
         "500":
           $ref: '#/responses/500'
 
-  /users/me/events/{id}:
+  /users/{id}/role/tutor:
     parameters:
       - in: path
         name: id
         required: true
-        description: Event ID.
+        description: User ID.
         type: string
     post:
-      summary: Subscribe authenticated user
-      description: Subscribe an authenticated user to an event.
+      summary: Add tutor
+      description: Add tutor role to a user.
       tags:
         - User
-      operationId: subscribeMe
+      operationId: addTutor
       security:
-        - OAuth2: [tutor]
+        - OAuth2: [public, user, user:write]
       responses:
         "201":
           description: OK
@@ -549,13 +571,103 @@ paths:
         "500":
           $ref: '#/responses/500'
     delete:
-      summary: Unsubscribe authenticated user
-      description: Unsubscribe an authenticated user to an event.
+      summary: Remove tutor
+      description: Remove tutor role to a user.
       tags:
         - User
-      operationId: unsubscribeMe
+      operationId: removeTutor
       security:
-        - OAuth2: [tutor]
+        - OAuth2: [public, user, user:write]
+      responses:
+        "204":
+          description: No Content
+        "400":
+          $ref: '#/responses/400'
+        "404":
+          $ref: '#/responses/404'
+        "500":
+          $ref: '#/responses/500'
+
+  /users/{id}/role/calendar:
+    parameters:
+      - in: path
+        name: id
+        required: true
+        description: User ID.
+        type: string
+    post:
+      summary: Add calendar
+      description: Add calendar role to a user.
+      tags:
+        - User
+      operationId: addCalendar
+      security:
+        - OAuth2: [public, user, user:write]
+      responses:
+        "201":
+          description: OK
+          schema:
+            type: string
+            example: Done
+        "400":
+          $ref: '#/responses/400'
+        "404":
+          $ref: '#/responses/404'
+        "500":
+          $ref: '#/responses/500'
+    delete:
+      summary: Remove calendar
+      description: Remove calendar role to a user.
+      tags:
+        - User
+      operationId: removeCalendar
+      security:
+        - OAuth2: [public, user, user:write]
+      responses:
+        "204":
+          description: No Content
+        "400":
+          $ref: '#/responses/400'
+        "404":
+          $ref: '#/responses/404'
+        "500":
+          $ref: '#/responses/500'
+
+  /users/{id}/role/admin:
+    parameters:
+      - in: path
+        name: id
+        required: true
+        description: User ID.
+        type: string
+    post:
+      summary: Add admin
+      description: Add admin role to a user.
+      tags:
+        - User
+      operationId: addAdmin
+      security:
+        - OAuth2: [public, user, user:write]
+      responses:
+        "201":
+          description: OK
+          schema:
+            type: string
+            example: Done
+        "400":
+          $ref: '#/responses/400'
+        "404":
+          $ref: '#/responses/404'
+        "500":
+          $ref: '#/responses/500'
+    delete:
+      summary: Remove admin
+      description: Remove admin role to a user.
+      tags:
+        - User
+      operationId: removeAdmin
+      security:
+        - OAuth2: [public, user, user:write]
       responses:
         "204":
           description: No Content
