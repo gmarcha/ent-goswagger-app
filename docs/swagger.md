@@ -47,9 +47,12 @@ An API for 42 tutors.
 
 Name | Description
 -----|-------------
-tutor | Tutor scope
-event | Event scope
-admin | Admin scope
+user:write | Read-write users
+public | Public access
+event | Read events
+event:write | Read-write events
+user | Read users
+user:subscription | Subscribe to events
 
 ## All endpoints
 
@@ -59,7 +62,7 @@ admin | Admin scope
 |---------|---------|--------|---------|
 | GET | /v2/auth/callback | [callback](#callback) | Receive token |
 | GET | /v2/auth/login | [login](#login) | Login user |
-| GET | /v2/auth/token/info | [token info](#token-info) | Send user information |
+| GET | /v2/auth/token/info | [token info](#token-info) | Send token information |
 | GET | /v2/auth/token/refresh | [token refresh](#token-refresh) | Refresh token |
   
 
@@ -81,6 +84,9 @@ admin | Admin scope
 
 | Method  | URI     | Name   | Summary |
 |---------|---------|--------|---------|
+| POST | /v2/users/{id}/role/admin | [add admin](#add-admin) | Add admin |
+| POST | /v2/users/{id}/role/calendar | [add calendar](#add-calendar) | Add calendar |
+| POST | /v2/users/{id}/role/tutor | [add tutor](#add-tutor) | Add tutor |
 | POST | /v2/users | [create user](#create-user) | Create user |
 | DELETE | /v2/users/me | [delete me](#delete-me) | Delete authenticated user |
 | DELETE | /v2/users/{id} | [delete user](#delete-user) | Delete user |
@@ -89,16 +95,210 @@ admin | Admin scope
 | GET | /v2/users/{id}/events | [list user events](#list-user-events) | List user events |
 | GET | /v2/users/me | [read me](#read-me) | Read authenticated user |
 | GET | /v2/users/{id} | [read user](#read-user) | Read user |
+| DELETE | /v2/users/{id}/role/admin | [remove admin](#remove-admin) | Remove admin |
+| DELETE | /v2/users/{id}/role/calendar | [remove calendar](#remove-calendar) | Remove calendar |
+| DELETE | /v2/users/{id}/role/tutor | [remove tutor](#remove-tutor) | Remove tutor |
 | POST | /v2/users/me/events/{id} | [subscribe me](#subscribe-me) | Subscribe authenticated user |
 | POST | /v2/users/{userId}/events/{eventId} | [subscribe user](#subscribe-user) | Subscribe user |
 | DELETE | /v2/users/me/events/{id} | [unsubscribe me](#unsubscribe-me) | Unsubscribe authenticated user |
 | DELETE | /v2/users/{userId}/events/{eventId} | [unsubscribe user](#unsubscribe-user) | Unsubscribe user |
-| PUT | /v2/users/me | [update me](#update-me) | Update authenticated user |
 | PUT | /v2/users/{id} | [update user](#update-user) | Update user |
   
 
 
 ## Paths
+
+### <span id="add-admin"></span> Add admin (*addAdmin*)
+
+```
+POST /v2/users/{id}/role/admin
+```
+
+Add admin role to a user.
+
+#### Security Requirements
+  * OAuth2: public, user, user:write
+
+#### Parameters
+
+| Name | Source | Type | Go type | Separator | Required | Default | Description |
+|------|--------|------|---------|-----------| :------: |---------|-------------|
+| id | `path` | string | `string` |  | ✓ |  | User ID. |
+
+#### All responses
+| Code | Status | Description | Has headers | Schema |
+|------|--------|-------------|:-----------:|--------|
+| [201](#add-admin-201) | Created | OK |  | [schema](#add-admin-201-schema) |
+| [400](#add-admin-400) | Bad Request | Bad request |  | [schema](#add-admin-400-schema) |
+| [404](#add-admin-404) | Not Found | Not Found |  | [schema](#add-admin-404-schema) |
+| [500](#add-admin-500) | Internal Server Error | Internal Server Error |  | [schema](#add-admin-500-schema) |
+
+#### Responses
+
+
+##### <span id="add-admin-201"></span> 201 - OK
+Status: Created
+
+###### <span id="add-admin-201-schema"></span> Schema
+   
+  
+
+
+
+##### <span id="add-admin-400"></span> 400 - Bad request
+Status: Bad Request
+
+###### <span id="add-admin-400-schema"></span> Schema
+   
+  
+
+[Error](#error)
+
+##### <span id="add-admin-404"></span> 404 - Not Found
+Status: Not Found
+
+###### <span id="add-admin-404-schema"></span> Schema
+   
+  
+
+[Error](#error)
+
+##### <span id="add-admin-500"></span> 500 - Internal Server Error
+Status: Internal Server Error
+
+###### <span id="add-admin-500-schema"></span> Schema
+   
+  
+
+[Error](#error)
+
+### <span id="add-calendar"></span> Add calendar (*addCalendar*)
+
+```
+POST /v2/users/{id}/role/calendar
+```
+
+Add calendar role to a user.
+
+#### Security Requirements
+  * OAuth2: public, user, user:write
+
+#### Parameters
+
+| Name | Source | Type | Go type | Separator | Required | Default | Description |
+|------|--------|------|---------|-----------| :------: |---------|-------------|
+| id | `path` | string | `string` |  | ✓ |  | User ID. |
+
+#### All responses
+| Code | Status | Description | Has headers | Schema |
+|------|--------|-------------|:-----------:|--------|
+| [201](#add-calendar-201) | Created | OK |  | [schema](#add-calendar-201-schema) |
+| [400](#add-calendar-400) | Bad Request | Bad request |  | [schema](#add-calendar-400-schema) |
+| [404](#add-calendar-404) | Not Found | Not Found |  | [schema](#add-calendar-404-schema) |
+| [500](#add-calendar-500) | Internal Server Error | Internal Server Error |  | [schema](#add-calendar-500-schema) |
+
+#### Responses
+
+
+##### <span id="add-calendar-201"></span> 201 - OK
+Status: Created
+
+###### <span id="add-calendar-201-schema"></span> Schema
+   
+  
+
+
+
+##### <span id="add-calendar-400"></span> 400 - Bad request
+Status: Bad Request
+
+###### <span id="add-calendar-400-schema"></span> Schema
+   
+  
+
+[Error](#error)
+
+##### <span id="add-calendar-404"></span> 404 - Not Found
+Status: Not Found
+
+###### <span id="add-calendar-404-schema"></span> Schema
+   
+  
+
+[Error](#error)
+
+##### <span id="add-calendar-500"></span> 500 - Internal Server Error
+Status: Internal Server Error
+
+###### <span id="add-calendar-500-schema"></span> Schema
+   
+  
+
+[Error](#error)
+
+### <span id="add-tutor"></span> Add tutor (*addTutor*)
+
+```
+POST /v2/users/{id}/role/tutor
+```
+
+Add tutor role to a user.
+
+#### Security Requirements
+  * OAuth2: public, user, user:write
+
+#### Parameters
+
+| Name | Source | Type | Go type | Separator | Required | Default | Description |
+|------|--------|------|---------|-----------| :------: |---------|-------------|
+| id | `path` | string | `string` |  | ✓ |  | User ID. |
+
+#### All responses
+| Code | Status | Description | Has headers | Schema |
+|------|--------|-------------|:-----------:|--------|
+| [201](#add-tutor-201) | Created | OK |  | [schema](#add-tutor-201-schema) |
+| [400](#add-tutor-400) | Bad Request | Bad request |  | [schema](#add-tutor-400-schema) |
+| [404](#add-tutor-404) | Not Found | Not Found |  | [schema](#add-tutor-404-schema) |
+| [500](#add-tutor-500) | Internal Server Error | Internal Server Error |  | [schema](#add-tutor-500-schema) |
+
+#### Responses
+
+
+##### <span id="add-tutor-201"></span> 201 - OK
+Status: Created
+
+###### <span id="add-tutor-201-schema"></span> Schema
+   
+  
+
+
+
+##### <span id="add-tutor-400"></span> 400 - Bad request
+Status: Bad Request
+
+###### <span id="add-tutor-400-schema"></span> Schema
+   
+  
+
+[Error](#error)
+
+##### <span id="add-tutor-404"></span> 404 - Not Found
+Status: Not Found
+
+###### <span id="add-tutor-404-schema"></span> Schema
+   
+  
+
+[Error](#error)
+
+##### <span id="add-tutor-500"></span> 500 - Internal Server Error
+Status: Internal Server Error
+
+###### <span id="add-tutor-500-schema"></span> Schema
+   
+  
+
+[Error](#error)
 
 ### <span id="callback"></span> Receive token (*callback*)
 
@@ -154,7 +354,7 @@ POST /v2/events
 Create a new event.
 
 #### Security Requirements
-  * OAuth2: event
+  * OAuth2: event, event:write, public
 
 #### Parameters
 
@@ -208,7 +408,7 @@ POST /v2/users
 Create a new user.
 
 #### Security Requirements
-  * OAuth2: admin
+  * OAuth2: public, user, user:write
 
 #### Parameters
 
@@ -262,7 +462,7 @@ DELETE /v2/events/{id}
 Delete an event by ID.
 
 #### Security Requirements
-  * OAuth2: event
+  * OAuth2: event, event:write, public
 
 #### Parameters
 
@@ -322,7 +522,7 @@ DELETE /v2/users/me
 Delete the authenticated user.
 
 #### Security Requirements
-  * OAuth2: tutor
+  * OAuth2: public
 
 #### All responses
 | Code | Status | Description | Has headers | Schema |
@@ -356,7 +556,7 @@ DELETE /v2/users/{id}
 Delete an user by ID.
 
 #### Security Requirements
-  * OAuth2: admin
+  * OAuth2: public, user, user:write
 
 #### Parameters
 
@@ -416,7 +616,7 @@ GET /v2/events
 List all events.
 
 #### Security Requirements
-  * OAuth2: tutor
+  * OAuth2: public
 
 #### Parameters
 
@@ -472,7 +672,7 @@ GET /v2/events/{id}/users
 List users subscribed to an event.
 
 #### Security Requirements
-  * OAuth2: tutor
+  * OAuth2: event, public, user
 
 #### Parameters
 
@@ -536,7 +736,7 @@ GET /v2/users/me/events
 List the authenticated user's subscribed events.
 
 #### Security Requirements
-  * OAuth2: tutor
+  * OAuth2: event, public, user
 
 #### All responses
 | Code | Status | Description | Has headers | Schema |
@@ -574,13 +774,13 @@ GET /v2/users
 List all users.
 
 #### Security Requirements
-  * OAuth2: tutor
+  * OAuth2: public
 
 #### Parameters
 
 | Name | Source | Type | Go type | Separator | Required | Default | Description |
 |------|--------|------|---------|-----------| :------: |---------|-------------|
-| tutor | `query` | boolean | `bool` |  |  |  | List all tutors. |
+| tutor | `query` | boolean | `bool` |  |  |  | Tutor filter. |
 
 #### All responses
 | Code | Status | Description | Has headers | Schema |
@@ -628,7 +828,7 @@ GET /v2/users/{id}/events
 List user's subscribed events.
 
 #### Security Requirements
-  * OAuth2: tutor
+  * OAuth2: event, public, user
 
 #### Parameters
 
@@ -723,7 +923,7 @@ GET /v2/events/{id}
 Read an event by ID.
 
 #### Security Requirements
-  * OAuth2: tutor
+  * OAuth2: event, public
 
 #### Parameters
 
@@ -787,7 +987,7 @@ GET /v2/users/me
 Read the authenticated user.
 
 #### Security Requirements
-  * OAuth2: tutor
+  * OAuth2: public
 
 #### All responses
 | Code | Status | Description | Has headers | Schema |
@@ -825,7 +1025,7 @@ GET /v2/users/{id}
 Read an user by ID.
 
 #### Security Requirements
-  * OAuth2: tutor
+  * OAuth2: public, user
 
 #### Parameters
 
@@ -880,6 +1080,186 @@ Status: Internal Server Error
 
 [Error](#error)
 
+### <span id="remove-admin"></span> Remove admin (*removeAdmin*)
+
+```
+DELETE /v2/users/{id}/role/admin
+```
+
+Remove admin role to a user.
+
+#### Security Requirements
+  * OAuth2: public, user, user:write
+
+#### Parameters
+
+| Name | Source | Type | Go type | Separator | Required | Default | Description |
+|------|--------|------|---------|-----------| :------: |---------|-------------|
+| id | `path` | string | `string` |  | ✓ |  | User ID. |
+
+#### All responses
+| Code | Status | Description | Has headers | Schema |
+|------|--------|-------------|:-----------:|--------|
+| [204](#remove-admin-204) | No Content | No Content |  | [schema](#remove-admin-204-schema) |
+| [400](#remove-admin-400) | Bad Request | Bad request |  | [schema](#remove-admin-400-schema) |
+| [404](#remove-admin-404) | Not Found | Not Found |  | [schema](#remove-admin-404-schema) |
+| [500](#remove-admin-500) | Internal Server Error | Internal Server Error |  | [schema](#remove-admin-500-schema) |
+
+#### Responses
+
+
+##### <span id="remove-admin-204"></span> 204 - No Content
+Status: No Content
+
+###### <span id="remove-admin-204-schema"></span> Schema
+
+##### <span id="remove-admin-400"></span> 400 - Bad request
+Status: Bad Request
+
+###### <span id="remove-admin-400-schema"></span> Schema
+   
+  
+
+[Error](#error)
+
+##### <span id="remove-admin-404"></span> 404 - Not Found
+Status: Not Found
+
+###### <span id="remove-admin-404-schema"></span> Schema
+   
+  
+
+[Error](#error)
+
+##### <span id="remove-admin-500"></span> 500 - Internal Server Error
+Status: Internal Server Error
+
+###### <span id="remove-admin-500-schema"></span> Schema
+   
+  
+
+[Error](#error)
+
+### <span id="remove-calendar"></span> Remove calendar (*removeCalendar*)
+
+```
+DELETE /v2/users/{id}/role/calendar
+```
+
+Remove calendar role to a user.
+
+#### Security Requirements
+  * OAuth2: public, user, user:write
+
+#### Parameters
+
+| Name | Source | Type | Go type | Separator | Required | Default | Description |
+|------|--------|------|---------|-----------| :------: |---------|-------------|
+| id | `path` | string | `string` |  | ✓ |  | User ID. |
+
+#### All responses
+| Code | Status | Description | Has headers | Schema |
+|------|--------|-------------|:-----------:|--------|
+| [204](#remove-calendar-204) | No Content | No Content |  | [schema](#remove-calendar-204-schema) |
+| [400](#remove-calendar-400) | Bad Request | Bad request |  | [schema](#remove-calendar-400-schema) |
+| [404](#remove-calendar-404) | Not Found | Not Found |  | [schema](#remove-calendar-404-schema) |
+| [500](#remove-calendar-500) | Internal Server Error | Internal Server Error |  | [schema](#remove-calendar-500-schema) |
+
+#### Responses
+
+
+##### <span id="remove-calendar-204"></span> 204 - No Content
+Status: No Content
+
+###### <span id="remove-calendar-204-schema"></span> Schema
+
+##### <span id="remove-calendar-400"></span> 400 - Bad request
+Status: Bad Request
+
+###### <span id="remove-calendar-400-schema"></span> Schema
+   
+  
+
+[Error](#error)
+
+##### <span id="remove-calendar-404"></span> 404 - Not Found
+Status: Not Found
+
+###### <span id="remove-calendar-404-schema"></span> Schema
+   
+  
+
+[Error](#error)
+
+##### <span id="remove-calendar-500"></span> 500 - Internal Server Error
+Status: Internal Server Error
+
+###### <span id="remove-calendar-500-schema"></span> Schema
+   
+  
+
+[Error](#error)
+
+### <span id="remove-tutor"></span> Remove tutor (*removeTutor*)
+
+```
+DELETE /v2/users/{id}/role/tutor
+```
+
+Remove tutor role to a user.
+
+#### Security Requirements
+  * OAuth2: public, user, user:write
+
+#### Parameters
+
+| Name | Source | Type | Go type | Separator | Required | Default | Description |
+|------|--------|------|---------|-----------| :------: |---------|-------------|
+| id | `path` | string | `string` |  | ✓ |  | User ID. |
+
+#### All responses
+| Code | Status | Description | Has headers | Schema |
+|------|--------|-------------|:-----------:|--------|
+| [204](#remove-tutor-204) | No Content | No Content |  | [schema](#remove-tutor-204-schema) |
+| [400](#remove-tutor-400) | Bad Request | Bad request |  | [schema](#remove-tutor-400-schema) |
+| [404](#remove-tutor-404) | Not Found | Not Found |  | [schema](#remove-tutor-404-schema) |
+| [500](#remove-tutor-500) | Internal Server Error | Internal Server Error |  | [schema](#remove-tutor-500-schema) |
+
+#### Responses
+
+
+##### <span id="remove-tutor-204"></span> 204 - No Content
+Status: No Content
+
+###### <span id="remove-tutor-204-schema"></span> Schema
+
+##### <span id="remove-tutor-400"></span> 400 - Bad request
+Status: Bad Request
+
+###### <span id="remove-tutor-400-schema"></span> Schema
+   
+  
+
+[Error](#error)
+
+##### <span id="remove-tutor-404"></span> 404 - Not Found
+Status: Not Found
+
+###### <span id="remove-tutor-404-schema"></span> Schema
+   
+  
+
+[Error](#error)
+
+##### <span id="remove-tutor-500"></span> 500 - Internal Server Error
+Status: Internal Server Error
+
+###### <span id="remove-tutor-500-schema"></span> Schema
+   
+  
+
+[Error](#error)
+
 ### <span id="subscribe-me"></span> Subscribe authenticated user (*subscribeMe*)
 
 ```
@@ -889,7 +1269,7 @@ POST /v2/users/me/events/{id}
 Subscribe an authenticated user to an event.
 
 #### Security Requirements
-  * OAuth2: tutor
+  * OAuth2: event, public, user, user:subscription
 
 #### Parameters
 
@@ -953,7 +1333,7 @@ POST /v2/users/{userId}/events/{eventId}
 Subscribe a user to an event.
 
 #### Security Requirements
-  * OAuth2: admin
+  * OAuth2: event, public, user, user:subscription, user:write
 
 #### Parameters
 
@@ -1009,16 +1389,13 @@ Status: Internal Server Error
 
 [Error](#error)
 
-### <span id="token-info"></span> Send user information (*tokenInfo*)
+### <span id="token-info"></span> Send token information (*tokenInfo*)
 
 ```
 GET /v2/auth/token/info
 ```
 
-Send authenticated user information or unauthorized error response.
-
-#### Security Requirements
-  * OAuth2: tutor
+Send token information or unauthorized error response.
 
 #### All responses
 | Code | Status | Description | Has headers | Schema |
@@ -1063,10 +1440,7 @@ Status: Internal Server Error
 GET /v2/auth/token/refresh
 ```
 
-Refresh access token if refresh token is still valid.
-
-#### Security Requirements
-  * OAuth2: tutor
+Refresh expired token.
 
 #### All responses
 | Code | Status | Description | Has headers | Schema |
@@ -1114,7 +1488,7 @@ DELETE /v2/users/me/events/{id}
 Unsubscribe an authenticated user to an event.
 
 #### Security Requirements
-  * OAuth2: tutor
+  * OAuth2: event, public, user, user:subscription
 
 #### Parameters
 
@@ -1174,7 +1548,7 @@ DELETE /v2/users/{userId}/events/{eventId}
 Unsubscribe a user to an event.
 
 #### Security Requirements
-  * OAuth2: admin
+  * OAuth2: event, public, user, user:subscription, user:write
 
 #### Parameters
 
@@ -1235,7 +1609,7 @@ PUT /v2/events/{id}
 Update an event by ID.
 
 #### Security Requirements
-  * OAuth2: event
+  * OAuth2: event, event:write, public
 
 #### Parameters
 
@@ -1291,50 +1665,6 @@ Status: Internal Server Error
 
 [Error](#error)
 
-### <span id="update-me"></span> Update authenticated user (*updateMe*)
-
-```
-PUT /v2/users/me
-```
-
-Update the authenticated user.
-
-#### Security Requirements
-  * OAuth2: tutor
-
-#### Parameters
-
-| Name | Source | Type | Go type | Separator | Required | Default | Description |
-|------|--------|------|---------|-----------| :------: |---------|-------------|
-| user | `body` | [User](#user) | `ent.User` | | ✓ | | User to update. |
-
-#### All responses
-| Code | Status | Description | Has headers | Schema |
-|------|--------|-------------|:-----------:|--------|
-| [200](#update-me-200) | OK | OK |  | [schema](#update-me-200-schema) |
-| [500](#update-me-500) | Internal Server Error | Internal Server Error |  | [schema](#update-me-500-schema) |
-
-#### Responses
-
-
-##### <span id="update-me-200"></span> 200 - OK
-Status: OK
-
-###### <span id="update-me-200-schema"></span> Schema
-   
-  
-
-[User](#user)
-
-##### <span id="update-me-500"></span> 500 - Internal Server Error
-Status: Internal Server Error
-
-###### <span id="update-me-500-schema"></span> Schema
-   
-  
-
-[Error](#error)
-
 ### <span id="update-user"></span> Update user (*updateUser*)
 
 ```
@@ -1344,7 +1674,7 @@ PUT /v2/users/{id}
 Update an user by ID.
 
 #### Security Requirements
-  * OAuth2: admin
+  * OAuth2: public, user, user:write
 
 #### Parameters
 
