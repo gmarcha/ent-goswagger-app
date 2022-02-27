@@ -92,7 +92,7 @@ Continuous integration (with Github Actions) allows to run code validation, code
 
 - **OAuth 2.0**\
   An authorization delegation protocol. Authentication in application depends on this authorization.\
-  *Links to [documentation](https://oauth.net/2/) and how to use it to implement [user authentication](https://oauth.net/articles/authentication/).*
+  *Links to [documentation](https://oauth.net/2/), how to use OAuth to implement [user authentication](https://oauth.net/articles/authentication/) and how to define [scopes](https://curity.io/resources/learn/scope-best-practices/) in the API.*
 
 ---
 
