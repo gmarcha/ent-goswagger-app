@@ -9,21 +9,19 @@ import (
 	"net/http"
 
 	"github.com/go-openapi/runtime/middleware"
-
-	"github.com/gmarcha/ent-goswagger-app/internal/goswagger/models"
 )
 
 // TokenRefreshHandlerFunc turns a function with the right signature into a token refresh handler
-type TokenRefreshHandlerFunc func(TokenRefreshParams, *models.Principal) middleware.Responder
+type TokenRefreshHandlerFunc func(TokenRefreshParams) middleware.Responder
 
 // Handle executing the request and returning a response
-func (fn TokenRefreshHandlerFunc) Handle(params TokenRefreshParams, principal *models.Principal) middleware.Responder {
-	return fn(params, principal)
+func (fn TokenRefreshHandlerFunc) Handle(params TokenRefreshParams) middleware.Responder {
+	return fn(params)
 }
 
 // TokenRefreshHandler interface for that can handle valid token refresh params
 type TokenRefreshHandler interface {
-	Handle(TokenRefreshParams, *models.Principal) middleware.Responder
+	Handle(TokenRefreshParams) middleware.Responder
 }
 
 // NewTokenRefresh creates a new http.Handler for the token refresh operation
@@ -35,7 +33,7 @@ func NewTokenRefresh(ctx *middleware.Context, handler TokenRefreshHandler) *Toke
 
 Refresh token
 
-Refresh access token if refresh token is still valid.
+Refresh expired token.
 
 */
 type TokenRefresh struct {
@@ -49,25 +47,12 @@ func (o *TokenRefresh) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
 		*r = *rCtx
 	}
 	var Params = NewTokenRefreshParams()
-	uprinc, aCtx, err := o.Context.Authorize(r, route)
-	if err != nil {
-		o.Context.Respond(rw, r, route.Produces, route, err)
-		return
-	}
-	if aCtx != nil {
-		*r = *aCtx
-	}
-	var principal *models.Principal
-	if uprinc != nil {
-		principal = uprinc.(*models.Principal) // this is really a models.Principal, I promise
-	}
-
 	if err := o.Context.BindValidRequest(r, route, &Params); err != nil { // bind params
 		o.Context.Respond(rw, r, route.Produces, route, err)
 		return
 	}
 
-	res := o.Handler.Handle(Params, principal) // actually handle the request
+	res := o.Handler.Handle(Params) // actually handle the request
 	o.Context.Respond(rw, r, route.Produces, route, res)
 
 }

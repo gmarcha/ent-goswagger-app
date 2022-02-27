@@ -32,7 +32,7 @@ type ListUserParams struct {
 	// HTTP Request Object
 	HTTPRequest *http.Request `json:"-"`
 
-	/*List all tutors.
+	/*Tutor filter.
 	  In: query
 	*/
 	Tutor *bool

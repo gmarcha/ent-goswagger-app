@@ -77,18 +77,11 @@ func init() {
     },
     "/auth/token/info": {
       "get": {
-        "security": [
-          {
-            "OAuth2": [
-              "tutor"
-            ]
-          }
-        ],
-        "description": "Send authenticated user information or unauthorized error response.",
+        "description": "Send token information or unauthorized error response.",
         "tags": [
           "Authentication"
         ],
-        "summary": "Send user information",
+        "summary": "Send token information",
         "operationId": "tokenInfo",
         "responses": {
           "200": {
@@ -108,14 +101,7 @@ func init() {
     },
     "/auth/token/refresh": {
       "get": {
-        "security": [
-          {
-            "OAuth2": [
-              "tutor"
-            ]
-          }
-        ],
-        "description": "Refresh access token if refresh token is still valid.",
+        "description": "Refresh expired token.",
         "tags": [
           "Authentication"
         ],
@@ -142,7 +128,7 @@ func init() {
         "security": [
           {
             "OAuth2": [
-              "tutor"
+              "public"
             ]
           }
         ],
@@ -194,7 +180,9 @@ func init() {
         "security": [
           {
             "OAuth2": [
-              "event"
+              "public",
+              "event",
+              "event:write"
             ]
           }
         ],
@@ -236,7 +224,8 @@ func init() {
         "security": [
           {
             "OAuth2": [
-              "tutor"
+              "public",
+              "event"
             ]
           }
         ],
@@ -268,7 +257,9 @@ func init() {
         "security": [
           {
             "OAuth2": [
-              "event"
+              "public",
+              "event",
+              "event:write"
             ]
           }
         ],
@@ -311,7 +302,9 @@ func init() {
         "security": [
           {
             "OAuth2": [
-              "event"
+              "public",
+              "event",
+              "event:write"
             ]
           }
         ],
@@ -351,7 +344,9 @@ func init() {
         "security": [
           {
             "OAuth2": [
-              "tutor"
+              "public",
+              "event",
+              "user"
             ]
           }
         ],
@@ -397,7 +392,7 @@ func init() {
         "security": [
           {
             "OAuth2": [
-              "tutor"
+              "public"
             ]
           }
         ],
@@ -410,7 +405,7 @@ func init() {
         "parameters": [
           {
             "type": "boolean",
-            "description": "List all tutors.",
+            "description": "Tutor filter.",
             "name": "tutor",
             "in": "query"
           }
@@ -437,7 +432,9 @@ func init() {
         "security": [
           {
             "OAuth2": [
-              "admin"
+              "public",
+              "user",
+              "user:write"
             ]
           }
         ],
@@ -479,7 +476,7 @@ func init() {
         "security": [
           {
             "OAuth2": [
-              "tutor"
+              "public"
             ]
           }
         ],
@@ -501,48 +498,11 @@ func init() {
           }
         }
       },
-      "put": {
-        "security": [
-          {
-            "OAuth2": [
-              "tutor"
-            ]
-          }
-        ],
-        "description": "Update the authenticated user.",
-        "tags": [
-          "User"
-        ],
-        "summary": "Update authenticated user",
-        "operationId": "updateMe",
-        "parameters": [
-          {
-            "description": "User to update.",
-            "name": "user",
-            "in": "body",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/User"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "schema": {
-              "$ref": "#/definitions/User"
-            }
-          },
-          "500": {
-            "$ref": "#/responses/500"
-          }
-        }
-      },
       "delete": {
         "security": [
           {
             "OAuth2": [
-              "tutor"
+              "public"
             ]
           }
         ],
@@ -567,7 +527,9 @@ func init() {
         "security": [
           {
             "OAuth2": [
-              "tutor"
+              "public",
+              "user",
+              "event"
             ]
           }
         ],
@@ -598,7 +560,10 @@ func init() {
         "security": [
           {
             "OAuth2": [
-              "tutor"
+              "public",
+              "user",
+              "user:subscription",
+              "event"
             ]
           }
         ],
@@ -631,7 +596,10 @@ func init() {
         "security": [
           {
             "OAuth2": [
-              "tutor"
+              "public",
+              "user",
+              "user:subscription",
+              "event"
             ]
           }
         ],
@@ -671,7 +639,8 @@ func init() {
         "security": [
           {
             "OAuth2": [
-              "tutor"
+              "public",
+              "user"
             ]
           }
         ],
@@ -703,7 +672,9 @@ func init() {
         "security": [
           {
             "OAuth2": [
-              "admin"
+              "public",
+              "user",
+              "user:write"
             ]
           }
         ],
@@ -746,7 +717,9 @@ func init() {
         "security": [
           {
             "OAuth2": [
-              "admin"
+              "public",
+              "user",
+              "user:write"
             ]
           }
         ],
@@ -786,7 +759,9 @@ func init() {
         "security": [
           {
             "OAuth2": [
-              "tutor"
+              "public",
+              "user",
+              "event"
             ]
           }
         ],
@@ -827,12 +802,247 @@ func init() {
         }
       ]
     },
+    "/users/{id}/role/admin": {
+      "post": {
+        "security": [
+          {
+            "OAuth2": [
+              "public",
+              "user",
+              "user:write"
+            ]
+          }
+        ],
+        "description": "Add admin role to a user.",
+        "tags": [
+          "User"
+        ],
+        "summary": "Add admin",
+        "operationId": "addAdmin",
+        "responses": {
+          "201": {
+            "description": "OK",
+            "schema": {
+              "type": "string",
+              "example": "Done"
+            }
+          },
+          "400": {
+            "$ref": "#/responses/400"
+          },
+          "404": {
+            "$ref": "#/responses/404"
+          },
+          "500": {
+            "$ref": "#/responses/500"
+          }
+        }
+      },
+      "delete": {
+        "security": [
+          {
+            "OAuth2": [
+              "public",
+              "user",
+              "user:write"
+            ]
+          }
+        ],
+        "description": "Remove admin role to a user.",
+        "tags": [
+          "User"
+        ],
+        "summary": "Remove admin",
+        "operationId": "removeAdmin",
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "400": {
+            "$ref": "#/responses/400"
+          },
+          "404": {
+            "$ref": "#/responses/404"
+          },
+          "500": {
+            "$ref": "#/responses/500"
+          }
+        }
+      },
+      "parameters": [
+        {
+          "type": "string",
+          "description": "User ID.",
+          "name": "id",
+          "in": "path",
+          "required": true
+        }
+      ]
+    },
+    "/users/{id}/role/calendar": {
+      "post": {
+        "security": [
+          {
+            "OAuth2": [
+              "public",
+              "user",
+              "user:write"
+            ]
+          }
+        ],
+        "description": "Add calendar role to a user.",
+        "tags": [
+          "User"
+        ],
+        "summary": "Add calendar",
+        "operationId": "addCalendar",
+        "responses": {
+          "201": {
+            "description": "OK",
+            "schema": {
+              "type": "string",
+              "example": "Done"
+            }
+          },
+          "400": {
+            "$ref": "#/responses/400"
+          },
+          "404": {
+            "$ref": "#/responses/404"
+          },
+          "500": {
+            "$ref": "#/responses/500"
+          }
+        }
+      },
+      "delete": {
+        "security": [
+          {
+            "OAuth2": [
+              "public",
+              "user",
+              "user:write"
+            ]
+          }
+        ],
+        "description": "Remove calendar role to a user.",
+        "tags": [
+          "User"
+        ],
+        "summary": "Remove calendar",
+        "operationId": "removeCalendar",
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "400": {
+            "$ref": "#/responses/400"
+          },
+          "404": {
+            "$ref": "#/responses/404"
+          },
+          "500": {
+            "$ref": "#/responses/500"
+          }
+        }
+      },
+      "parameters": [
+        {
+          "type": "string",
+          "description": "User ID.",
+          "name": "id",
+          "in": "path",
+          "required": true
+        }
+      ]
+    },
+    "/users/{id}/role/tutor": {
+      "post": {
+        "security": [
+          {
+            "OAuth2": [
+              "public",
+              "user",
+              "user:write"
+            ]
+          }
+        ],
+        "description": "Add tutor role to a user.",
+        "tags": [
+          "User"
+        ],
+        "summary": "Add tutor",
+        "operationId": "addTutor",
+        "responses": {
+          "201": {
+            "description": "OK",
+            "schema": {
+              "type": "string",
+              "example": "Done"
+            }
+          },
+          "400": {
+            "$ref": "#/responses/400"
+          },
+          "404": {
+            "$ref": "#/responses/404"
+          },
+          "500": {
+            "$ref": "#/responses/500"
+          }
+        }
+      },
+      "delete": {
+        "security": [
+          {
+            "OAuth2": [
+              "public",
+              "user",
+              "user:write"
+            ]
+          }
+        ],
+        "description": "Remove tutor role to a user.",
+        "tags": [
+          "User"
+        ],
+        "summary": "Remove tutor",
+        "operationId": "removeTutor",
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "400": {
+            "$ref": "#/responses/400"
+          },
+          "404": {
+            "$ref": "#/responses/404"
+          },
+          "500": {
+            "$ref": "#/responses/500"
+          }
+        }
+      },
+      "parameters": [
+        {
+          "type": "string",
+          "description": "User ID.",
+          "name": "id",
+          "in": "path",
+          "required": true
+        }
+      ]
+    },
     "/users/{userId}/events/{eventId}": {
       "post": {
         "security": [
           {
             "OAuth2": [
-              "admin"
+              "public",
+              "user",
+              "user:subscription",
+              "user:write",
+              "event"
             ]
           }
         ],
@@ -865,7 +1075,11 @@ func init() {
         "security": [
           {
             "OAuth2": [
-              "admin"
+              "public",
+              "user",
+              "user:subscription",
+              "user:write",
+              "event"
             ]
           }
         ],
@@ -988,20 +1202,63 @@ func init() {
         "type": "Event"
       }
     },
+    "Role": {
+      "type": "object",
+      "required": [
+        "event",
+        "event_write",
+        "id",
+        "name",
+        "user",
+        "user_subscription",
+        "user_write"
+      ],
+      "properties": {
+        "event": {
+          "type": "boolean"
+        },
+        "event_write": {
+          "type": "boolean"
+        },
+        "id": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "name": {
+          "type": "string"
+        },
+        "user": {
+          "type": "boolean"
+        },
+        "user_subscription": {
+          "type": "boolean"
+        },
+        "user_write": {
+          "type": "boolean"
+        },
+        "users": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/User"
+          }
+        }
+      },
+      "x-go-type": {
+        "import": {
+          "package": "github.com/gmarcha/ent-goswagger-app/internal/ent"
+        },
+        "type": "Role"
+      }
+    },
     "User": {
       "type": "object",
       "required": [
-        "adminScope",
-        "calendarScope",
         "id",
         "login"
       ],
       "properties": {
-        "adminScope": {
-          "type": "boolean"
-        },
-        "calendarScope": {
-          "type": "boolean"
+        "displayName": {
+          "type": "string"
         },
         "events": {
           "type": "array",
@@ -1023,6 +1280,12 @@ func init() {
         },
         "login": {
           "type": "string"
+        },
+        "roles": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Role"
+          }
         }
       },
       "x-go-type": {
@@ -1075,9 +1338,12 @@ func init() {
       "authorizationUrl": "https://api.intra.42.fr/oauth/authorize",
       "tokenUrl": "https://api.intra.42.fr/oauth/token",
       "scopes": {
-        "admin": "Admin scope",
-        "event": "Event scope",
-        "tutor": "Tutor scope"
+        "event": "Read events",
+        "event:write": "Read-write events",
+        "public": "Public access",
+        "user": "Read users",
+        "user:subscription": "Subscribe to events",
+        "user:write": "Read-write users"
       }
     }
   }
@@ -1151,18 +1417,11 @@ func init() {
     },
     "/auth/token/info": {
       "get": {
-        "security": [
-          {
-            "OAuth2": [
-              "tutor"
-            ]
-          }
-        ],
-        "description": "Send authenticated user information or unauthorized error response.",
+        "description": "Send token information or unauthorized error response.",
         "tags": [
           "Authentication"
         ],
-        "summary": "Send user information",
+        "summary": "Send token information",
         "operationId": "tokenInfo",
         "responses": {
           "200": {
@@ -1188,14 +1447,7 @@ func init() {
     },
     "/auth/token/refresh": {
       "get": {
-        "security": [
-          {
-            "OAuth2": [
-              "tutor"
-            ]
-          }
-        ],
-        "description": "Refresh access token if refresh token is still valid.",
+        "description": "Refresh expired token.",
         "tags": [
           "Authentication"
         ],
@@ -1228,7 +1480,7 @@ func init() {
         "security": [
           {
             "OAuth2": [
-              "tutor"
+              "public"
             ]
           }
         ],
@@ -1286,7 +1538,9 @@ func init() {
         "security": [
           {
             "OAuth2": [
-              "event"
+              "event",
+              "event:write",
+              "public"
             ]
           }
         ],
@@ -1334,7 +1588,8 @@ func init() {
         "security": [
           {
             "OAuth2": [
-              "tutor"
+              "event",
+              "public"
             ]
           }
         ],
@@ -1375,7 +1630,9 @@ func init() {
         "security": [
           {
             "OAuth2": [
-              "event"
+              "event",
+              "event:write",
+              "public"
             ]
           }
         ],
@@ -1427,7 +1684,9 @@ func init() {
         "security": [
           {
             "OAuth2": [
-              "event"
+              "event",
+              "event:write",
+              "public"
             ]
           }
         ],
@@ -1476,7 +1735,9 @@ func init() {
         "security": [
           {
             "OAuth2": [
-              "tutor"
+              "event",
+              "public",
+              "user"
             ]
           }
         ],
@@ -1531,7 +1792,7 @@ func init() {
         "security": [
           {
             "OAuth2": [
-              "tutor"
+              "public"
             ]
           }
         ],
@@ -1544,7 +1805,7 @@ func init() {
         "parameters": [
           {
             "type": "boolean",
-            "description": "List all tutors.",
+            "description": "Tutor filter.",
             "name": "tutor",
             "in": "query"
           }
@@ -1577,7 +1838,9 @@ func init() {
         "security": [
           {
             "OAuth2": [
-              "admin"
+              "public",
+              "user",
+              "user:write"
             ]
           }
         ],
@@ -1625,7 +1888,7 @@ func init() {
         "security": [
           {
             "OAuth2": [
-              "tutor"
+              "public"
             ]
           }
         ],
@@ -1650,51 +1913,11 @@ func init() {
           }
         }
       },
-      "put": {
-        "security": [
-          {
-            "OAuth2": [
-              "tutor"
-            ]
-          }
-        ],
-        "description": "Update the authenticated user.",
-        "tags": [
-          "User"
-        ],
-        "summary": "Update authenticated user",
-        "operationId": "updateMe",
-        "parameters": [
-          {
-            "description": "User to update.",
-            "name": "user",
-            "in": "body",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/User"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "schema": {
-              "$ref": "#/definitions/User"
-            }
-          },
-          "500": {
-            "description": "Internal Server Error",
-            "schema": {
-              "$ref": "#/definitions/Error"
-            }
-          }
-        }
-      },
       "delete": {
         "security": [
           {
             "OAuth2": [
-              "tutor"
+              "public"
             ]
           }
         ],
@@ -1722,7 +1945,9 @@ func init() {
         "security": [
           {
             "OAuth2": [
-              "tutor"
+              "event",
+              "public",
+              "user"
             ]
           }
         ],
@@ -1756,7 +1981,10 @@ func init() {
         "security": [
           {
             "OAuth2": [
-              "tutor"
+              "event",
+              "public",
+              "user",
+              "user:subscription"
             ]
           }
         ],
@@ -1798,7 +2026,10 @@ func init() {
         "security": [
           {
             "OAuth2": [
-              "tutor"
+              "event",
+              "public",
+              "user",
+              "user:subscription"
             ]
           }
         ],
@@ -1847,7 +2078,8 @@ func init() {
         "security": [
           {
             "OAuth2": [
-              "tutor"
+              "public",
+              "user"
             ]
           }
         ],
@@ -1888,7 +2120,9 @@ func init() {
         "security": [
           {
             "OAuth2": [
-              "admin"
+              "public",
+              "user",
+              "user:write"
             ]
           }
         ],
@@ -1940,7 +2174,9 @@ func init() {
         "security": [
           {
             "OAuth2": [
-              "admin"
+              "public",
+              "user",
+              "user:write"
             ]
           }
         ],
@@ -1989,7 +2225,9 @@ func init() {
         "security": [
           {
             "OAuth2": [
-              "tutor"
+              "event",
+              "public",
+              "user"
             ]
           }
         ],
@@ -2039,12 +2277,301 @@ func init() {
         }
       ]
     },
+    "/users/{id}/role/admin": {
+      "post": {
+        "security": [
+          {
+            "OAuth2": [
+              "public",
+              "user",
+              "user:write"
+            ]
+          }
+        ],
+        "description": "Add admin role to a user.",
+        "tags": [
+          "User"
+        ],
+        "summary": "Add admin",
+        "operationId": "addAdmin",
+        "responses": {
+          "201": {
+            "description": "OK",
+            "schema": {
+              "type": "string",
+              "example": "Done"
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      },
+      "delete": {
+        "security": [
+          {
+            "OAuth2": [
+              "public",
+              "user",
+              "user:write"
+            ]
+          }
+        ],
+        "description": "Remove admin role to a user.",
+        "tags": [
+          "User"
+        ],
+        "summary": "Remove admin",
+        "operationId": "removeAdmin",
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "400": {
+            "description": "Bad request",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      },
+      "parameters": [
+        {
+          "type": "string",
+          "description": "User ID.",
+          "name": "id",
+          "in": "path",
+          "required": true
+        }
+      ]
+    },
+    "/users/{id}/role/calendar": {
+      "post": {
+        "security": [
+          {
+            "OAuth2": [
+              "public",
+              "user",
+              "user:write"
+            ]
+          }
+        ],
+        "description": "Add calendar role to a user.",
+        "tags": [
+          "User"
+        ],
+        "summary": "Add calendar",
+        "operationId": "addCalendar",
+        "responses": {
+          "201": {
+            "description": "OK",
+            "schema": {
+              "type": "string",
+              "example": "Done"
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      },
+      "delete": {
+        "security": [
+          {
+            "OAuth2": [
+              "public",
+              "user",
+              "user:write"
+            ]
+          }
+        ],
+        "description": "Remove calendar role to a user.",
+        "tags": [
+          "User"
+        ],
+        "summary": "Remove calendar",
+        "operationId": "removeCalendar",
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "400": {
+            "description": "Bad request",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      },
+      "parameters": [
+        {
+          "type": "string",
+          "description": "User ID.",
+          "name": "id",
+          "in": "path",
+          "required": true
+        }
+      ]
+    },
+    "/users/{id}/role/tutor": {
+      "post": {
+        "security": [
+          {
+            "OAuth2": [
+              "public",
+              "user",
+              "user:write"
+            ]
+          }
+        ],
+        "description": "Add tutor role to a user.",
+        "tags": [
+          "User"
+        ],
+        "summary": "Add tutor",
+        "operationId": "addTutor",
+        "responses": {
+          "201": {
+            "description": "OK",
+            "schema": {
+              "type": "string",
+              "example": "Done"
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      },
+      "delete": {
+        "security": [
+          {
+            "OAuth2": [
+              "public",
+              "user",
+              "user:write"
+            ]
+          }
+        ],
+        "description": "Remove tutor role to a user.",
+        "tags": [
+          "User"
+        ],
+        "summary": "Remove tutor",
+        "operationId": "removeTutor",
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "400": {
+            "description": "Bad request",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      },
+      "parameters": [
+        {
+          "type": "string",
+          "description": "User ID.",
+          "name": "id",
+          "in": "path",
+          "required": true
+        }
+      ]
+    },
     "/users/{userId}/events/{eventId}": {
       "post": {
         "security": [
           {
             "OAuth2": [
-              "admin"
+              "event",
+              "public",
+              "user",
+              "user:subscription",
+              "user:write"
             ]
           }
         ],
@@ -2086,7 +2613,11 @@ func init() {
         "security": [
           {
             "OAuth2": [
-              "admin"
+              "event",
+              "public",
+              "user",
+              "user:subscription",
+              "user:write"
             ]
           }
         ],
@@ -2218,20 +2749,63 @@ func init() {
         "type": "Event"
       }
     },
+    "Role": {
+      "type": "object",
+      "required": [
+        "event",
+        "event_write",
+        "id",
+        "name",
+        "user",
+        "user_subscription",
+        "user_write"
+      ],
+      "properties": {
+        "event": {
+          "type": "boolean"
+        },
+        "event_write": {
+          "type": "boolean"
+        },
+        "id": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "name": {
+          "type": "string"
+        },
+        "user": {
+          "type": "boolean"
+        },
+        "user_subscription": {
+          "type": "boolean"
+        },
+        "user_write": {
+          "type": "boolean"
+        },
+        "users": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/User"
+          }
+        }
+      },
+      "x-go-type": {
+        "import": {
+          "package": "github.com/gmarcha/ent-goswagger-app/internal/ent"
+        },
+        "type": "Role"
+      }
+    },
     "User": {
       "type": "object",
       "required": [
-        "adminScope",
-        "calendarScope",
         "id",
         "login"
       ],
       "properties": {
-        "adminScope": {
-          "type": "boolean"
-        },
-        "calendarScope": {
-          "type": "boolean"
+        "displayName": {
+          "type": "string"
         },
         "events": {
           "type": "array",
@@ -2253,6 +2827,12 @@ func init() {
         },
         "login": {
           "type": "string"
+        },
+        "roles": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Role"
+          }
         }
       },
       "x-go-type": {
@@ -2305,9 +2885,12 @@ func init() {
       "authorizationUrl": "https://api.intra.42.fr/oauth/authorize",
       "tokenUrl": "https://api.intra.42.fr/oauth/token",
       "scopes": {
-        "admin": "Admin scope",
-        "event": "Event scope",
-        "tutor": "Tutor scope"
+        "event": "Read events",
+        "event:write": "Read-write events",
+        "public": "Public access",
+        "user": "Read users",
+        "user:subscription": "Subscribe to events",
+        "user:write": "Read-write users"
       }
     }
   }
