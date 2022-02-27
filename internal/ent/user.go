@@ -24,12 +24,10 @@ type User struct {
 	FirstName string `json:"firstName,omitempty"`
 	// LastName holds the value of the "lastName" field.
 	LastName string `json:"lastName,omitempty"`
+	// DisplayName holds the value of the "displayName" field.
+	DisplayName string `json:"displayName,omitempty"`
 	// ImagePath holds the value of the "imagePath" field.
 	ImagePath string `json:"imagePath,omitempty"`
-	// CalendarScope holds the value of the "calendarScope" field.
-	CalendarScope bool `json:"calendarScope,omitempty"`
-	// AdminScope holds the value of the "adminScope" field.
-	AdminScope bool `json:"adminScope,omitempty"`
 	// Edges holds the relations/edges for other nodes in the graph.
 	// The values are being populated by the UserQuery when eager-loading is set.
 	Edges UserEdges `json:"edges"`
@@ -37,17 +35,28 @@ type User struct {
 
 // UserEdges holds the relations/edges for other nodes in the graph.
 type UserEdges struct {
+	// Roles holds the value of the roles edge.
+	Roles []*Role `json:"roles,omitempty"`
 	// Events holds the value of the events edge.
 	Events []*Event `json:"events,omitempty"`
 	// loadedTypes holds the information for reporting if a
 	// type was loaded (or requested) in eager-loading or not.
-	loadedTypes [1]bool
+	loadedTypes [2]bool
+}
+
+// RolesOrErr returns the Roles value or an error if the edge
+// was not loaded in eager-loading.
+func (e UserEdges) RolesOrErr() ([]*Role, error) {
+	if e.loadedTypes[0] {
+		return e.Roles, nil
+	}
+	return nil, &NotLoadedError{edge: "roles"}
 }
 
 // EventsOrErr returns the Events value or an error if the edge
 // was not loaded in eager-loading.
 func (e UserEdges) EventsOrErr() ([]*Event, error) {
-	if e.loadedTypes[0] {
+	if e.loadedTypes[1] {
 		return e.Events, nil
 	}
 	return nil, &NotLoadedError{edge: "events"}
@@ -58,9 +67,7 @@ func (*User) scanValues(columns []string) ([]interface{}, error) {
 	values := make([]interface{}, len(columns))
 	for i := range columns {
 		switch columns[i] {
-		case user.FieldCalendarScope, user.FieldAdminScope:
-			values[i] = new(sql.NullBool)
-		case user.FieldLogin, user.FieldFirstName, user.FieldLastName, user.FieldImagePath:
+		case user.FieldLogin, user.FieldFirstName, user.FieldLastName, user.FieldDisplayName, user.FieldImagePath:
 			values[i] = new(sql.NullString)
 		case user.FieldID:
 			values[i] = new(uuid.UUID)
@@ -103,27 +110,26 @@ func (u *User) assignValues(columns []string, values []interface{}) error {
 			} else if value.Valid {
 				u.LastName = value.String
 			}
+		case user.FieldDisplayName:
+			if value, ok := values[i].(*sql.NullString); !ok {
+				return fmt.Errorf("unexpected type %T for field displayName", values[i])
+			} else if value.Valid {
+				u.DisplayName = value.String
+			}
 		case user.FieldImagePath:
 			if value, ok := values[i].(*sql.NullString); !ok {
 				return fmt.Errorf("unexpected type %T for field imagePath", values[i])
 			} else if value.Valid {
 				u.ImagePath = value.String
 			}
-		case user.FieldCalendarScope:
-			if value, ok := values[i].(*sql.NullBool); !ok {
-				return fmt.Errorf("unexpected type %T for field calendarScope", values[i])
-			} else if value.Valid {
-				u.CalendarScope = value.Bool
-			}
-		case user.FieldAdminScope:
-			if value, ok := values[i].(*sql.NullBool); !ok {
-				return fmt.Errorf("unexpected type %T for field adminScope", values[i])
-			} else if value.Valid {
-				u.AdminScope = value.Bool
-			}
 		}
 	}
 	return nil
+}
+
+// QueryRoles queries the "roles" edge of the User entity.
+func (u *User) QueryRoles() *RoleQuery {
+	return (&UserClient{config: u.config}).QueryRoles(u)
 }
 
 // QueryEvents queries the "events" edge of the User entity.
@@ -160,12 +166,10 @@ func (u *User) String() string {
 	builder.WriteString(u.FirstName)
 	builder.WriteString(", lastName=")
 	builder.WriteString(u.LastName)
+	builder.WriteString(", displayName=")
+	builder.WriteString(u.DisplayName)
 	builder.WriteString(", imagePath=")
 	builder.WriteString(u.ImagePath)
-	builder.WriteString(", calendarScope=")
-	builder.WriteString(fmt.Sprintf("%v", u.CalendarScope))
-	builder.WriteString(", adminScope=")
-	builder.WriteString(fmt.Sprintf("%v", u.AdminScope))
 	builder.WriteByte(')')
 	return builder.String()
 }

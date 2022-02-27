@@ -113,24 +113,17 @@ func LastName(v string) predicate.User {
 	})
 }
 
+// DisplayName applies equality check predicate on the "displayName" field. It's identical to DisplayNameEQ.
+func DisplayName(v string) predicate.User {
+	return predicate.User(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldDisplayName), v))
+	})
+}
+
 // ImagePath applies equality check predicate on the "imagePath" field. It's identical to ImagePathEQ.
 func ImagePath(v string) predicate.User {
 	return predicate.User(func(s *sql.Selector) {
 		s.Where(sql.EQ(s.C(FieldImagePath), v))
-	})
-}
-
-// CalendarScope applies equality check predicate on the "calendarScope" field. It's identical to CalendarScopeEQ.
-func CalendarScope(v bool) predicate.User {
-	return predicate.User(func(s *sql.Selector) {
-		s.Where(sql.EQ(s.C(FieldCalendarScope), v))
-	})
-}
-
-// AdminScope applies equality check predicate on the "adminScope" field. It's identical to AdminScopeEQ.
-func AdminScope(v bool) predicate.User {
-	return predicate.User(func(s *sql.Selector) {
-		s.Where(sql.EQ(s.C(FieldAdminScope), v))
 	})
 }
 
@@ -495,6 +488,131 @@ func LastNameContainsFold(v string) predicate.User {
 	})
 }
 
+// DisplayNameEQ applies the EQ predicate on the "displayName" field.
+func DisplayNameEQ(v string) predicate.User {
+	return predicate.User(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldDisplayName), v))
+	})
+}
+
+// DisplayNameNEQ applies the NEQ predicate on the "displayName" field.
+func DisplayNameNEQ(v string) predicate.User {
+	return predicate.User(func(s *sql.Selector) {
+		s.Where(sql.NEQ(s.C(FieldDisplayName), v))
+	})
+}
+
+// DisplayNameIn applies the In predicate on the "displayName" field.
+func DisplayNameIn(vs ...string) predicate.User {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.User(func(s *sql.Selector) {
+		// if not arguments were provided, append the FALSE constants,
+		// since we can't apply "IN ()". This will make this predicate falsy.
+		if len(v) == 0 {
+			s.Where(sql.False())
+			return
+		}
+		s.Where(sql.In(s.C(FieldDisplayName), v...))
+	})
+}
+
+// DisplayNameNotIn applies the NotIn predicate on the "displayName" field.
+func DisplayNameNotIn(vs ...string) predicate.User {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.User(func(s *sql.Selector) {
+		// if not arguments were provided, append the FALSE constants,
+		// since we can't apply "IN ()". This will make this predicate falsy.
+		if len(v) == 0 {
+			s.Where(sql.False())
+			return
+		}
+		s.Where(sql.NotIn(s.C(FieldDisplayName), v...))
+	})
+}
+
+// DisplayNameGT applies the GT predicate on the "displayName" field.
+func DisplayNameGT(v string) predicate.User {
+	return predicate.User(func(s *sql.Selector) {
+		s.Where(sql.GT(s.C(FieldDisplayName), v))
+	})
+}
+
+// DisplayNameGTE applies the GTE predicate on the "displayName" field.
+func DisplayNameGTE(v string) predicate.User {
+	return predicate.User(func(s *sql.Selector) {
+		s.Where(sql.GTE(s.C(FieldDisplayName), v))
+	})
+}
+
+// DisplayNameLT applies the LT predicate on the "displayName" field.
+func DisplayNameLT(v string) predicate.User {
+	return predicate.User(func(s *sql.Selector) {
+		s.Where(sql.LT(s.C(FieldDisplayName), v))
+	})
+}
+
+// DisplayNameLTE applies the LTE predicate on the "displayName" field.
+func DisplayNameLTE(v string) predicate.User {
+	return predicate.User(func(s *sql.Selector) {
+		s.Where(sql.LTE(s.C(FieldDisplayName), v))
+	})
+}
+
+// DisplayNameContains applies the Contains predicate on the "displayName" field.
+func DisplayNameContains(v string) predicate.User {
+	return predicate.User(func(s *sql.Selector) {
+		s.Where(sql.Contains(s.C(FieldDisplayName), v))
+	})
+}
+
+// DisplayNameHasPrefix applies the HasPrefix predicate on the "displayName" field.
+func DisplayNameHasPrefix(v string) predicate.User {
+	return predicate.User(func(s *sql.Selector) {
+		s.Where(sql.HasPrefix(s.C(FieldDisplayName), v))
+	})
+}
+
+// DisplayNameHasSuffix applies the HasSuffix predicate on the "displayName" field.
+func DisplayNameHasSuffix(v string) predicate.User {
+	return predicate.User(func(s *sql.Selector) {
+		s.Where(sql.HasSuffix(s.C(FieldDisplayName), v))
+	})
+}
+
+// DisplayNameIsNil applies the IsNil predicate on the "displayName" field.
+func DisplayNameIsNil() predicate.User {
+	return predicate.User(func(s *sql.Selector) {
+		s.Where(sql.IsNull(s.C(FieldDisplayName)))
+	})
+}
+
+// DisplayNameNotNil applies the NotNil predicate on the "displayName" field.
+func DisplayNameNotNil() predicate.User {
+	return predicate.User(func(s *sql.Selector) {
+		s.Where(sql.NotNull(s.C(FieldDisplayName)))
+	})
+}
+
+// DisplayNameEqualFold applies the EqualFold predicate on the "displayName" field.
+func DisplayNameEqualFold(v string) predicate.User {
+	return predicate.User(func(s *sql.Selector) {
+		s.Where(sql.EqualFold(s.C(FieldDisplayName), v))
+	})
+}
+
+// DisplayNameContainsFold applies the ContainsFold predicate on the "displayName" field.
+func DisplayNameContainsFold(v string) predicate.User {
+	return predicate.User(func(s *sql.Selector) {
+		s.Where(sql.ContainsFold(s.C(FieldDisplayName), v))
+	})
+}
+
 // ImagePathEQ applies the EQ predicate on the "imagePath" field.
 func ImagePathEQ(v string) predicate.User {
 	return predicate.User(func(s *sql.Selector) {
@@ -620,31 +738,31 @@ func ImagePathContainsFold(v string) predicate.User {
 	})
 }
 
-// CalendarScopeEQ applies the EQ predicate on the "calendarScope" field.
-func CalendarScopeEQ(v bool) predicate.User {
+// HasRoles applies the HasEdge predicate on the "roles" edge.
+func HasRoles() predicate.User {
 	return predicate.User(func(s *sql.Selector) {
-		s.Where(sql.EQ(s.C(FieldCalendarScope), v))
+		step := sqlgraph.NewStep(
+			sqlgraph.From(Table, FieldID),
+			sqlgraph.To(RolesTable, FieldID),
+			sqlgraph.Edge(sqlgraph.M2M, true, RolesTable, RolesPrimaryKey...),
+		)
+		sqlgraph.HasNeighbors(s, step)
 	})
 }
 
-// CalendarScopeNEQ applies the NEQ predicate on the "calendarScope" field.
-func CalendarScopeNEQ(v bool) predicate.User {
+// HasRolesWith applies the HasEdge predicate on the "roles" edge with a given conditions (other predicates).
+func HasRolesWith(preds ...predicate.Role) predicate.User {
 	return predicate.User(func(s *sql.Selector) {
-		s.Where(sql.NEQ(s.C(FieldCalendarScope), v))
-	})
-}
-
-// AdminScopeEQ applies the EQ predicate on the "adminScope" field.
-func AdminScopeEQ(v bool) predicate.User {
-	return predicate.User(func(s *sql.Selector) {
-		s.Where(sql.EQ(s.C(FieldAdminScope), v))
-	})
-}
-
-// AdminScopeNEQ applies the NEQ predicate on the "adminScope" field.
-func AdminScopeNEQ(v bool) predicate.User {
-	return predicate.User(func(s *sql.Selector) {
-		s.Where(sql.NEQ(s.C(FieldAdminScope), v))
+		step := sqlgraph.NewStep(
+			sqlgraph.From(Table, FieldID),
+			sqlgraph.To(RolesInverseTable, FieldID),
+			sqlgraph.Edge(sqlgraph.M2M, true, RolesTable, RolesPrimaryKey...),
+		)
+		sqlgraph.HasNeighborsWith(s, step, func(s *sql.Selector) {
+			for _, p := range preds {
+				p(s)
+			}
+		})
 	})
 }
 

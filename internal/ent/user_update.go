@@ -12,6 +12,7 @@ import (
 	"entgo.io/ent/schema/field"
 	"github.com/gmarcha/ent-goswagger-app/internal/ent/event"
 	"github.com/gmarcha/ent-goswagger-app/internal/ent/predicate"
+	"github.com/gmarcha/ent-goswagger-app/internal/ent/role"
 	"github.com/gmarcha/ent-goswagger-app/internal/ent/user"
 	"github.com/google/uuid"
 )
@@ -75,6 +76,26 @@ func (uu *UserUpdate) ClearLastName() *UserUpdate {
 	return uu
 }
 
+// SetDisplayName sets the "displayName" field.
+func (uu *UserUpdate) SetDisplayName(s string) *UserUpdate {
+	uu.mutation.SetDisplayName(s)
+	return uu
+}
+
+// SetNillableDisplayName sets the "displayName" field if the given value is not nil.
+func (uu *UserUpdate) SetNillableDisplayName(s *string) *UserUpdate {
+	if s != nil {
+		uu.SetDisplayName(*s)
+	}
+	return uu
+}
+
+// ClearDisplayName clears the value of the "displayName" field.
+func (uu *UserUpdate) ClearDisplayName() *UserUpdate {
+	uu.mutation.ClearDisplayName()
+	return uu
+}
+
 // SetImagePath sets the "imagePath" field.
 func (uu *UserUpdate) SetImagePath(s string) *UserUpdate {
 	uu.mutation.SetImagePath(s)
@@ -95,32 +116,19 @@ func (uu *UserUpdate) ClearImagePath() *UserUpdate {
 	return uu
 }
 
-// SetCalendarScope sets the "calendarScope" field.
-func (uu *UserUpdate) SetCalendarScope(b bool) *UserUpdate {
-	uu.mutation.SetCalendarScope(b)
+// AddRoleIDs adds the "roles" edge to the Role entity by IDs.
+func (uu *UserUpdate) AddRoleIDs(ids ...int) *UserUpdate {
+	uu.mutation.AddRoleIDs(ids...)
 	return uu
 }
 
-// SetNillableCalendarScope sets the "calendarScope" field if the given value is not nil.
-func (uu *UserUpdate) SetNillableCalendarScope(b *bool) *UserUpdate {
-	if b != nil {
-		uu.SetCalendarScope(*b)
+// AddRoles adds the "roles" edges to the Role entity.
+func (uu *UserUpdate) AddRoles(r ...*Role) *UserUpdate {
+	ids := make([]int, len(r))
+	for i := range r {
+		ids[i] = r[i].ID
 	}
-	return uu
-}
-
-// SetAdminScope sets the "adminScope" field.
-func (uu *UserUpdate) SetAdminScope(b bool) *UserUpdate {
-	uu.mutation.SetAdminScope(b)
-	return uu
-}
-
-// SetNillableAdminScope sets the "adminScope" field if the given value is not nil.
-func (uu *UserUpdate) SetNillableAdminScope(b *bool) *UserUpdate {
-	if b != nil {
-		uu.SetAdminScope(*b)
-	}
-	return uu
+	return uu.AddRoleIDs(ids...)
 }
 
 // AddEventIDs adds the "events" edge to the Event entity by IDs.
@@ -141,6 +149,27 @@ func (uu *UserUpdate) AddEvents(e ...*Event) *UserUpdate {
 // Mutation returns the UserMutation object of the builder.
 func (uu *UserUpdate) Mutation() *UserMutation {
 	return uu.mutation
+}
+
+// ClearRoles clears all "roles" edges to the Role entity.
+func (uu *UserUpdate) ClearRoles() *UserUpdate {
+	uu.mutation.ClearRoles()
+	return uu
+}
+
+// RemoveRoleIDs removes the "roles" edge to Role entities by IDs.
+func (uu *UserUpdate) RemoveRoleIDs(ids ...int) *UserUpdate {
+	uu.mutation.RemoveRoleIDs(ids...)
+	return uu
+}
+
+// RemoveRoles removes "roles" edges to Role entities.
+func (uu *UserUpdate) RemoveRoles(r ...*Role) *UserUpdate {
+	ids := make([]int, len(r))
+	for i := range r {
+		ids[i] = r[i].ID
+	}
+	return uu.RemoveRoleIDs(ids...)
 }
 
 // ClearEvents clears all "events" edges to the Event entity.
@@ -231,16 +260,6 @@ func (uu *UserUpdate) check() error {
 			return &ValidationError{Name: "login", err: fmt.Errorf(`ent: validator failed for field "User.login": %w`, err)}
 		}
 	}
-	if v, ok := uu.mutation.FirstName(); ok {
-		if err := user.FirstNameValidator(v); err != nil {
-			return &ValidationError{Name: "firstName", err: fmt.Errorf(`ent: validator failed for field "User.firstName": %w`, err)}
-		}
-	}
-	if v, ok := uu.mutation.LastName(); ok {
-		if err := user.LastNameValidator(v); err != nil {
-			return &ValidationError{Name: "lastName", err: fmt.Errorf(`ent: validator failed for field "User.lastName": %w`, err)}
-		}
-	}
 	return nil
 }
 
@@ -295,6 +314,19 @@ func (uu *UserUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Column: user.FieldLastName,
 		})
 	}
+	if value, ok := uu.mutation.DisplayName(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: user.FieldDisplayName,
+		})
+	}
+	if uu.mutation.DisplayNameCleared() {
+		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Column: user.FieldDisplayName,
+		})
+	}
 	if value, ok := uu.mutation.ImagePath(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
@@ -308,19 +340,59 @@ func (uu *UserUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Column: user.FieldImagePath,
 		})
 	}
-	if value, ok := uu.mutation.CalendarScope(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeBool,
-			Value:  value,
-			Column: user.FieldCalendarScope,
-		})
+	if uu.mutation.RolesCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2M,
+			Inverse: true,
+			Table:   user.RolesTable,
+			Columns: user.RolesPrimaryKey,
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: role.FieldID,
+				},
+			},
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
 	}
-	if value, ok := uu.mutation.AdminScope(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeBool,
-			Value:  value,
-			Column: user.FieldAdminScope,
-		})
+	if nodes := uu.mutation.RemovedRolesIDs(); len(nodes) > 0 && !uu.mutation.RolesCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2M,
+			Inverse: true,
+			Table:   user.RolesTable,
+			Columns: user.RolesPrimaryKey,
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: role.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := uu.mutation.RolesIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2M,
+			Inverse: true,
+			Table:   user.RolesTable,
+			Columns: user.RolesPrimaryKey,
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: role.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
 	if uu.mutation.EventsCleared() {
 		edge := &sqlgraph.EdgeSpec{
@@ -441,6 +513,26 @@ func (uuo *UserUpdateOne) ClearLastName() *UserUpdateOne {
 	return uuo
 }
 
+// SetDisplayName sets the "displayName" field.
+func (uuo *UserUpdateOne) SetDisplayName(s string) *UserUpdateOne {
+	uuo.mutation.SetDisplayName(s)
+	return uuo
+}
+
+// SetNillableDisplayName sets the "displayName" field if the given value is not nil.
+func (uuo *UserUpdateOne) SetNillableDisplayName(s *string) *UserUpdateOne {
+	if s != nil {
+		uuo.SetDisplayName(*s)
+	}
+	return uuo
+}
+
+// ClearDisplayName clears the value of the "displayName" field.
+func (uuo *UserUpdateOne) ClearDisplayName() *UserUpdateOne {
+	uuo.mutation.ClearDisplayName()
+	return uuo
+}
+
 // SetImagePath sets the "imagePath" field.
 func (uuo *UserUpdateOne) SetImagePath(s string) *UserUpdateOne {
 	uuo.mutation.SetImagePath(s)
@@ -461,32 +553,19 @@ func (uuo *UserUpdateOne) ClearImagePath() *UserUpdateOne {
 	return uuo
 }
 
-// SetCalendarScope sets the "calendarScope" field.
-func (uuo *UserUpdateOne) SetCalendarScope(b bool) *UserUpdateOne {
-	uuo.mutation.SetCalendarScope(b)
+// AddRoleIDs adds the "roles" edge to the Role entity by IDs.
+func (uuo *UserUpdateOne) AddRoleIDs(ids ...int) *UserUpdateOne {
+	uuo.mutation.AddRoleIDs(ids...)
 	return uuo
 }
 
-// SetNillableCalendarScope sets the "calendarScope" field if the given value is not nil.
-func (uuo *UserUpdateOne) SetNillableCalendarScope(b *bool) *UserUpdateOne {
-	if b != nil {
-		uuo.SetCalendarScope(*b)
+// AddRoles adds the "roles" edges to the Role entity.
+func (uuo *UserUpdateOne) AddRoles(r ...*Role) *UserUpdateOne {
+	ids := make([]int, len(r))
+	for i := range r {
+		ids[i] = r[i].ID
 	}
-	return uuo
-}
-
-// SetAdminScope sets the "adminScope" field.
-func (uuo *UserUpdateOne) SetAdminScope(b bool) *UserUpdateOne {
-	uuo.mutation.SetAdminScope(b)
-	return uuo
-}
-
-// SetNillableAdminScope sets the "adminScope" field if the given value is not nil.
-func (uuo *UserUpdateOne) SetNillableAdminScope(b *bool) *UserUpdateOne {
-	if b != nil {
-		uuo.SetAdminScope(*b)
-	}
-	return uuo
+	return uuo.AddRoleIDs(ids...)
 }
 
 // AddEventIDs adds the "events" edge to the Event entity by IDs.
@@ -507,6 +586,27 @@ func (uuo *UserUpdateOne) AddEvents(e ...*Event) *UserUpdateOne {
 // Mutation returns the UserMutation object of the builder.
 func (uuo *UserUpdateOne) Mutation() *UserMutation {
 	return uuo.mutation
+}
+
+// ClearRoles clears all "roles" edges to the Role entity.
+func (uuo *UserUpdateOne) ClearRoles() *UserUpdateOne {
+	uuo.mutation.ClearRoles()
+	return uuo
+}
+
+// RemoveRoleIDs removes the "roles" edge to Role entities by IDs.
+func (uuo *UserUpdateOne) RemoveRoleIDs(ids ...int) *UserUpdateOne {
+	uuo.mutation.RemoveRoleIDs(ids...)
+	return uuo
+}
+
+// RemoveRoles removes "roles" edges to Role entities.
+func (uuo *UserUpdateOne) RemoveRoles(r ...*Role) *UserUpdateOne {
+	ids := make([]int, len(r))
+	for i := range r {
+		ids[i] = r[i].ID
+	}
+	return uuo.RemoveRoleIDs(ids...)
 }
 
 // ClearEvents clears all "events" edges to the Event entity.
@@ -604,16 +704,6 @@ func (uuo *UserUpdateOne) check() error {
 			return &ValidationError{Name: "login", err: fmt.Errorf(`ent: validator failed for field "User.login": %w`, err)}
 		}
 	}
-	if v, ok := uuo.mutation.FirstName(); ok {
-		if err := user.FirstNameValidator(v); err != nil {
-			return &ValidationError{Name: "firstName", err: fmt.Errorf(`ent: validator failed for field "User.firstName": %w`, err)}
-		}
-	}
-	if v, ok := uuo.mutation.LastName(); ok {
-		if err := user.LastNameValidator(v); err != nil {
-			return &ValidationError{Name: "lastName", err: fmt.Errorf(`ent: validator failed for field "User.lastName": %w`, err)}
-		}
-	}
 	return nil
 }
 
@@ -685,6 +775,19 @@ func (uuo *UserUpdateOne) sqlSave(ctx context.Context) (_node *User, err error) 
 			Column: user.FieldLastName,
 		})
 	}
+	if value, ok := uuo.mutation.DisplayName(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: user.FieldDisplayName,
+		})
+	}
+	if uuo.mutation.DisplayNameCleared() {
+		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Column: user.FieldDisplayName,
+		})
+	}
 	if value, ok := uuo.mutation.ImagePath(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
@@ -698,19 +801,59 @@ func (uuo *UserUpdateOne) sqlSave(ctx context.Context) (_node *User, err error) 
 			Column: user.FieldImagePath,
 		})
 	}
-	if value, ok := uuo.mutation.CalendarScope(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeBool,
-			Value:  value,
-			Column: user.FieldCalendarScope,
-		})
+	if uuo.mutation.RolesCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2M,
+			Inverse: true,
+			Table:   user.RolesTable,
+			Columns: user.RolesPrimaryKey,
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: role.FieldID,
+				},
+			},
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
 	}
-	if value, ok := uuo.mutation.AdminScope(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeBool,
-			Value:  value,
-			Column: user.FieldAdminScope,
-		})
+	if nodes := uuo.mutation.RemovedRolesIDs(); len(nodes) > 0 && !uuo.mutation.RolesCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2M,
+			Inverse: true,
+			Table:   user.RolesTable,
+			Columns: user.RolesPrimaryKey,
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: role.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := uuo.mutation.RolesIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2M,
+			Inverse: true,
+			Table:   user.RolesTable,
+			Columns: user.RolesPrimaryKey,
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: role.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
 	if uuo.mutation.EventsCleared() {
 		edge := &sqlgraph.EdgeSpec{

@@ -69,20 +69,63 @@
           }
         }
       },
+      "Role": {
+        "type": "object",
+        "required": [
+          "event",
+          "event_write",
+          "id",
+          "name",
+          "user",
+          "user_subscription",
+          "user_write"
+        ],
+        "properties": {
+          "event": {
+            "type": "boolean"
+          },
+          "event_write": {
+            "type": "boolean"
+          },
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "name": {
+            "type": "string"
+          },
+          "user": {
+            "type": "boolean"
+          },
+          "user_subscription": {
+            "type": "boolean"
+          },
+          "user_write": {
+            "type": "boolean"
+          },
+          "users": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/User"
+            }
+          }
+        },
+        "x-go-type": {
+          "type": "Role",
+          "import": {
+            "package": "github.com/gmarcha/ent-goswagger-app/internal/ent"
+          }
+        }
+      },
       "User": {
         "type": "object",
         "required": [
-          "adminScope",
-          "calendarScope",
           "id",
           "login"
         ],
         "properties": {
-          "adminScope": {
-            "type": "boolean"
-          },
-          "calendarScope": {
-            "type": "boolean"
+          "displayName": {
+            "type": "string"
           },
           "events": {
             "type": "array",
@@ -104,6 +147,12 @@
           },
           "login": {
             "type": "string"
+          },
+          "roles": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Role"
+            }
           }
         },
         "x-go-type": {

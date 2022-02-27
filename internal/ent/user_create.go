@@ -10,6 +10,7 @@ import (
 	"entgo.io/ent/dialect/sql/sqlgraph"
 	"entgo.io/ent/schema/field"
 	"github.com/gmarcha/ent-goswagger-app/internal/ent/event"
+	"github.com/gmarcha/ent-goswagger-app/internal/ent/role"
 	"github.com/gmarcha/ent-goswagger-app/internal/ent/user"
 	"github.com/google/uuid"
 )
@@ -55,6 +56,20 @@ func (uc *UserCreate) SetNillableLastName(s *string) *UserCreate {
 	return uc
 }
 
+// SetDisplayName sets the "displayName" field.
+func (uc *UserCreate) SetDisplayName(s string) *UserCreate {
+	uc.mutation.SetDisplayName(s)
+	return uc
+}
+
+// SetNillableDisplayName sets the "displayName" field if the given value is not nil.
+func (uc *UserCreate) SetNillableDisplayName(s *string) *UserCreate {
+	if s != nil {
+		uc.SetDisplayName(*s)
+	}
+	return uc
+}
+
 // SetImagePath sets the "imagePath" field.
 func (uc *UserCreate) SetImagePath(s string) *UserCreate {
 	uc.mutation.SetImagePath(s)
@@ -65,34 +80,6 @@ func (uc *UserCreate) SetImagePath(s string) *UserCreate {
 func (uc *UserCreate) SetNillableImagePath(s *string) *UserCreate {
 	if s != nil {
 		uc.SetImagePath(*s)
-	}
-	return uc
-}
-
-// SetCalendarScope sets the "calendarScope" field.
-func (uc *UserCreate) SetCalendarScope(b bool) *UserCreate {
-	uc.mutation.SetCalendarScope(b)
-	return uc
-}
-
-// SetNillableCalendarScope sets the "calendarScope" field if the given value is not nil.
-func (uc *UserCreate) SetNillableCalendarScope(b *bool) *UserCreate {
-	if b != nil {
-		uc.SetCalendarScope(*b)
-	}
-	return uc
-}
-
-// SetAdminScope sets the "adminScope" field.
-func (uc *UserCreate) SetAdminScope(b bool) *UserCreate {
-	uc.mutation.SetAdminScope(b)
-	return uc
-}
-
-// SetNillableAdminScope sets the "adminScope" field if the given value is not nil.
-func (uc *UserCreate) SetNillableAdminScope(b *bool) *UserCreate {
-	if b != nil {
-		uc.SetAdminScope(*b)
 	}
 	return uc
 }
@@ -109,6 +96,21 @@ func (uc *UserCreate) SetNillableID(u *uuid.UUID) *UserCreate {
 		uc.SetID(*u)
 	}
 	return uc
+}
+
+// AddRoleIDs adds the "roles" edge to the Role entity by IDs.
+func (uc *UserCreate) AddRoleIDs(ids ...int) *UserCreate {
+	uc.mutation.AddRoleIDs(ids...)
+	return uc
+}
+
+// AddRoles adds the "roles" edges to the Role entity.
+func (uc *UserCreate) AddRoles(r ...*Role) *UserCreate {
+	ids := make([]int, len(r))
+	for i := range r {
+		ids[i] = r[i].ID
+	}
+	return uc.AddRoleIDs(ids...)
 }
 
 // AddEventIDs adds the "events" edge to the Event entity by IDs.
@@ -197,14 +199,6 @@ func (uc *UserCreate) ExecX(ctx context.Context) {
 
 // defaults sets the default values of the builder before save.
 func (uc *UserCreate) defaults() {
-	if _, ok := uc.mutation.CalendarScope(); !ok {
-		v := user.DefaultCalendarScope
-		uc.mutation.SetCalendarScope(v)
-	}
-	if _, ok := uc.mutation.AdminScope(); !ok {
-		v := user.DefaultAdminScope
-		uc.mutation.SetAdminScope(v)
-	}
 	if _, ok := uc.mutation.ID(); !ok {
 		v := user.DefaultID()
 		uc.mutation.SetID(v)
@@ -220,22 +214,6 @@ func (uc *UserCreate) check() error {
 		if err := user.LoginValidator(v); err != nil {
 			return &ValidationError{Name: "login", err: fmt.Errorf(`ent: validator failed for field "User.login": %w`, err)}
 		}
-	}
-	if v, ok := uc.mutation.FirstName(); ok {
-		if err := user.FirstNameValidator(v); err != nil {
-			return &ValidationError{Name: "firstName", err: fmt.Errorf(`ent: validator failed for field "User.firstName": %w`, err)}
-		}
-	}
-	if v, ok := uc.mutation.LastName(); ok {
-		if err := user.LastNameValidator(v); err != nil {
-			return &ValidationError{Name: "lastName", err: fmt.Errorf(`ent: validator failed for field "User.lastName": %w`, err)}
-		}
-	}
-	if _, ok := uc.mutation.CalendarScope(); !ok {
-		return &ValidationError{Name: "calendarScope", err: errors.New(`ent: missing required field "User.calendarScope"`)}
-	}
-	if _, ok := uc.mutation.AdminScope(); !ok {
-		return &ValidationError{Name: "adminScope", err: errors.New(`ent: missing required field "User.adminScope"`)}
 	}
 	return nil
 }
@@ -297,6 +275,14 @@ func (uc *UserCreate) createSpec() (*User, *sqlgraph.CreateSpec) {
 		})
 		_node.LastName = value
 	}
+	if value, ok := uc.mutation.DisplayName(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: user.FieldDisplayName,
+		})
+		_node.DisplayName = value
+	}
 	if value, ok := uc.mutation.ImagePath(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
@@ -305,21 +291,24 @@ func (uc *UserCreate) createSpec() (*User, *sqlgraph.CreateSpec) {
 		})
 		_node.ImagePath = value
 	}
-	if value, ok := uc.mutation.CalendarScope(); ok {
-		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
-			Type:   field.TypeBool,
-			Value:  value,
-			Column: user.FieldCalendarScope,
-		})
-		_node.CalendarScope = value
-	}
-	if value, ok := uc.mutation.AdminScope(); ok {
-		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
-			Type:   field.TypeBool,
-			Value:  value,
-			Column: user.FieldAdminScope,
-		})
-		_node.AdminScope = value
+	if nodes := uc.mutation.RolesIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2M,
+			Inverse: true,
+			Table:   user.RolesTable,
+			Columns: user.RolesPrimaryKey,
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: role.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges = append(_spec.Edges, edge)
 	}
 	if nodes := uc.mutation.EventsIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{

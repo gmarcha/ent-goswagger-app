@@ -26,15 +26,30 @@ var (
 		Columns:    EventsColumns,
 		PrimaryKey: []*schema.Column{EventsColumns[0]},
 	}
+	// RolesColumns holds the columns for the "roles" table.
+	RolesColumns = []*schema.Column{
+		{Name: "id", Type: field.TypeInt, Increment: true},
+		{Name: "name", Type: field.TypeString, Unique: true},
+		{Name: "event", Type: field.TypeBool, Default: false},
+		{Name: "event_write", Type: field.TypeBool, Default: false},
+		{Name: "user", Type: field.TypeBool, Default: false},
+		{Name: "user_subscription", Type: field.TypeBool, Default: false},
+		{Name: "user_write", Type: field.TypeBool, Default: false},
+	}
+	// RolesTable holds the schema information for the "roles" table.
+	RolesTable = &schema.Table{
+		Name:       "roles",
+		Columns:    RolesColumns,
+		PrimaryKey: []*schema.Column{RolesColumns[0]},
+	}
 	// UsersColumns holds the columns for the "users" table.
 	UsersColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeUUID},
 		{Name: "login", Type: field.TypeString, Unique: true},
 		{Name: "first_name", Type: field.TypeString, Nullable: true},
 		{Name: "last_name", Type: field.TypeString, Nullable: true},
+		{Name: "display_name", Type: field.TypeString, Nullable: true},
 		{Name: "image_path", Type: field.TypeString, Nullable: true},
-		{Name: "calendar_scope", Type: field.TypeBool, Default: false},
-		{Name: "admin_scope", Type: field.TypeBool, Default: false},
 	}
 	// UsersTable holds the schema information for the "users" table.
 	UsersTable = &schema.Table{
@@ -67,15 +82,44 @@ var (
 			},
 		},
 	}
+	// RoleUsersColumns holds the columns for the "role_users" table.
+	RoleUsersColumns = []*schema.Column{
+		{Name: "role_id", Type: field.TypeInt},
+		{Name: "user_id", Type: field.TypeUUID},
+	}
+	// RoleUsersTable holds the schema information for the "role_users" table.
+	RoleUsersTable = &schema.Table{
+		Name:       "role_users",
+		Columns:    RoleUsersColumns,
+		PrimaryKey: []*schema.Column{RoleUsersColumns[0], RoleUsersColumns[1]},
+		ForeignKeys: []*schema.ForeignKey{
+			{
+				Symbol:     "role_users_role_id",
+				Columns:    []*schema.Column{RoleUsersColumns[0]},
+				RefColumns: []*schema.Column{RolesColumns[0]},
+				OnDelete:   schema.Cascade,
+			},
+			{
+				Symbol:     "role_users_user_id",
+				Columns:    []*schema.Column{RoleUsersColumns[1]},
+				RefColumns: []*schema.Column{UsersColumns[0]},
+				OnDelete:   schema.Cascade,
+			},
+		},
+	}
 	// Tables holds all the tables in the schema.
 	Tables = []*schema.Table{
 		EventsTable,
+		RolesTable,
 		UsersTable,
 		EventUsersTable,
+		RoleUsersTable,
 	}
 )
 
 func init() {
 	EventUsersTable.ForeignKeys[0].RefTable = EventsTable
 	EventUsersTable.ForeignKeys[1].RefTable = UsersTable
+	RoleUsersTable.ForeignKeys[0].RefTable = RolesTable
+	RoleUsersTable.ForeignKeys[1].RefTable = UsersTable
 }

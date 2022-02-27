@@ -6,6 +6,7 @@ import (
 	"time"
 
 	"github.com/gmarcha/ent-goswagger-app/internal/ent/event"
+	"github.com/gmarcha/ent-goswagger-app/internal/ent/role"
 	"github.com/gmarcha/ent-goswagger-app/internal/ent/schema"
 	"github.com/gmarcha/ent-goswagger-app/internal/ent/user"
 	"github.com/google/uuid"
@@ -37,28 +38,34 @@ func init() {
 	eventDescID := eventFields[0].Descriptor()
 	// event.DefaultID holds the default value on creation for the id field.
 	event.DefaultID = eventDescID.Default.(func() uuid.UUID)
+	roleFields := schema.Role{}.Fields()
+	_ = roleFields
+	// roleDescEvent is the schema descriptor for event field.
+	roleDescEvent := roleFields[1].Descriptor()
+	// role.DefaultEvent holds the default value on creation for the event field.
+	role.DefaultEvent = roleDescEvent.Default.(bool)
+	// roleDescEventWrite is the schema descriptor for event_write field.
+	roleDescEventWrite := roleFields[2].Descriptor()
+	// role.DefaultEventWrite holds the default value on creation for the event_write field.
+	role.DefaultEventWrite = roleDescEventWrite.Default.(bool)
+	// roleDescUser is the schema descriptor for user field.
+	roleDescUser := roleFields[3].Descriptor()
+	// role.DefaultUser holds the default value on creation for the user field.
+	role.DefaultUser = roleDescUser.Default.(bool)
+	// roleDescUserSubscription is the schema descriptor for user_subscription field.
+	roleDescUserSubscription := roleFields[4].Descriptor()
+	// role.DefaultUserSubscription holds the default value on creation for the user_subscription field.
+	role.DefaultUserSubscription = roleDescUserSubscription.Default.(bool)
+	// roleDescUserWrite is the schema descriptor for user_write field.
+	roleDescUserWrite := roleFields[5].Descriptor()
+	// role.DefaultUserWrite holds the default value on creation for the user_write field.
+	role.DefaultUserWrite = roleDescUserWrite.Default.(bool)
 	userFields := schema.User{}.Fields()
 	_ = userFields
 	// userDescLogin is the schema descriptor for login field.
 	userDescLogin := userFields[1].Descriptor()
 	// user.LoginValidator is a validator for the "login" field. It is called by the builders before save.
 	user.LoginValidator = userDescLogin.Validators[0].(func(string) error)
-	// userDescFirstName is the schema descriptor for firstName field.
-	userDescFirstName := userFields[2].Descriptor()
-	// user.FirstNameValidator is a validator for the "firstName" field. It is called by the builders before save.
-	user.FirstNameValidator = userDescFirstName.Validators[0].(func(string) error)
-	// userDescLastName is the schema descriptor for lastName field.
-	userDescLastName := userFields[3].Descriptor()
-	// user.LastNameValidator is a validator for the "lastName" field. It is called by the builders before save.
-	user.LastNameValidator = userDescLastName.Validators[0].(func(string) error)
-	// userDescCalendarScope is the schema descriptor for calendarScope field.
-	userDescCalendarScope := userFields[5].Descriptor()
-	// user.DefaultCalendarScope holds the default value on creation for the calendarScope field.
-	user.DefaultCalendarScope = userDescCalendarScope.Default.(bool)
-	// userDescAdminScope is the schema descriptor for adminScope field.
-	userDescAdminScope := userFields[6].Descriptor()
-	// user.DefaultAdminScope holds the default value on creation for the adminScope field.
-	user.DefaultAdminScope = userDescAdminScope.Default.(bool)
 	// userDescID is the schema descriptor for id field.
 	userDescID := userFields[0].Descriptor()
 	// user.DefaultID holds the default value on creation for the id field.
