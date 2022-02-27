@@ -6,8 +6,7 @@ ARG PORT
 
 RUN apk add make
 
-WORKDIR /app
-COPY . .
+WORKDIR /go/src/github.com/gmarcha/ent-goswagger-app
 
 CMD [ "make", "run" ]
 

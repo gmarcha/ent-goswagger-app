@@ -2,12 +2,14 @@ version: "3.9"
 
 services:
   postgres:
+    restart: "unless-stopped"
     image: postgres:alpine
     env_file:
       - .env
     volumes:
       - postgres-volume:/var/lib/postgresql/data/
   pgadmin:
+    restart: "unless-stopped"
     image: dpage/pgadmin4
     depends_on:
       - postgres
@@ -24,13 +26,26 @@ services:
       chmod 600 /tmp/pgpass;
       /entrypoint.sh
       "
+  redis:
+    restart: "unless-stopped"
+    image: redis:alpine
+    command: redis-server --save 60 1 --loglevel warning --requirepass $${REDIS_PASSWORD}
+    env_file:
+      - .env
+    sysctls:
+      net.core.somaxconn: 1024
+    volumes:
+      - redis-volume:/data
+      - ./redis/sysctl.conf:/etc/sysctl.conf
   goswagger:
+    restart: "unless-stopped"
     build:
       context: ../
       dockerfile: ./config/Dockerfile
     image: goswagger
     depends_on:
       - postgres
+      - redis
     ports:
       - "${PORT}:${PORT}"
     env_file:
@@ -38,10 +53,12 @@ services:
     volumes:
       - module-volume:/go/pkg/mod/cache/download
       - build-volume:/root/.cache/go-build
+      - ..:/go/src/github.com/gmarcha/ent-goswagger-app
 
 volumes:
   postgres-volume:
   pgadmin-volume:
+  redis-volume:
   module-volume:
   build-volume:
     # https://pkg.go.dev/cmd/go#hdr-Build_and_test_caching
