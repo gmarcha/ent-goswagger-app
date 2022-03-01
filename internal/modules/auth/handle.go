@@ -2,140 +2,179 @@ package auth
 
 import (
 	"context"
-	"encoding/json"
 	"fmt"
 	"net/http"
-	"os"
+	"time"
 
 	oidc "github.com/coreos/go-oidc"
-	"github.com/gmarcha/ent-goswagger-app/internal/ent"
+	"github.com/gmarcha/ent-goswagger-app/internal/goswagger/models"
 	"github.com/gmarcha/ent-goswagger-app/internal/goswagger/restapi/operations/authentication"
 	"github.com/gmarcha/ent-goswagger-app/internal/modules/user"
+	e "github.com/gmarcha/ent-goswagger-app/internal/utils"
 	"github.com/go-openapi/runtime"
 	"github.com/go-openapi/runtime/middleware"
+	"github.com/go-openapi/strfmt"
+	"github.com/go-redis/redis/v8"
 	"golang.org/x/oauth2"
 )
 
 type login struct {
-	state  string
-	config *oauth2.Config
+	oauthState  string
+	oauthConfig *oauth2.Config
 }
 
 func (l *login) Handle(params authentication.LoginParams) middleware.Responder {
 	return middleware.ResponderFunc(
 		func(w http.ResponseWriter, pr runtime.Producer) {
-			http.Redirect(w, params.HTTPRequest, l.config.AuthCodeURL(l.state), http.StatusFound)
+			http.Redirect(w, params.HTTPRequest, l.oauthConfig.AuthCodeURL(l.oauthState), http.StatusFound)
 		})
 }
 
 type callback struct {
-	state  string
-	config *oauth2.Config
-	user   *user.Service
+	userInfoUrl          string
+	accessTokenDuration  time.Duration
+	refreshTokenDuration time.Duration
+	accessTokenState     string
+	refreshTokenState    string
+	oauthState           string
+	oauthConfig          *oauth2.Config
+	user                 *user.Service
+	rdb                  *redis.Client
 }
 
 func (c *callback) Handle(params authentication.CallbackParams) middleware.Responder {
 
-	r := params.HTTPRequest
-
-	// Read parameters in query.
-	if r.URL.Query().Get("state") != c.state {
-		return middleware.Error(401, fmt.Sprintln("invalid state"))
+	// Retrieve state and authorization code from query parameters;
+	// if state differs, return an error.
+	if params.HTTPRequest.URL.Query().Get("state") != c.oauthState {
+		return authentication.NewCallbackUnprocessableEntity().WithPayload(e.Err(422, fmt.Errorf("invalid state")))
 	}
-	authCode := r.URL.Query().Get("code")
+	authCode := params.HTTPRequest.URL.Query().Get("code")
 
 	ctx := context.Background()
 	client := &http.Client{}
 
-	// Proceed to OAuth 2.0 handshake (sending authorisation code and receiving token).
+	// Retrieve an OAuth token from 42 API.
 	clientCtx := oidc.ClientContext(ctx, client)
-	token, err := c.config.Exchange(clientCtx, authCode)
+	token, err := c.oauthConfig.Exchange(clientCtx, authCode)
 	if err != nil {
-		return middleware.Error(500, fmt.Sprintln("failed to fetch token"))
+		return authentication.NewCallbackInternalServerError().WithPayload(e.Err(500, err))
 	}
 
-	fmt.Println(token.AccessToken)
-	fmt.Println(token.RefreshToken)
-	fmt.Println(token.TokenType)
-	fmt.Println(token.Expiry)
-
-	userInfoUrl := os.Getenv("API_USERINFO_URL")
-	req, err := http.NewRequest("GET", userInfoUrl, nil)
+	// Fetch user informations in 42 API with access token.
+	userInfo, err := fetchUserInfo(client, c.userInfoUrl, token.AccessToken)
 	if err != nil {
-		return middleware.Error(500, fmt.Sprintln("failed to create request"))
+		return authentication.NewCallbackInternalServerError().WithPayload(e.Err(500, err))
 	}
-	req.Header.Add("Authorization", "Bearer "+token.AccessToken)
 
-	resp, err := client.Do(req)
+	// Create or update user informations in database.
+	user, err := c.user.SetUserOnLogin(ctx, userInfo)
 	if err != nil {
-		return middleware.Error(500, fmt.Sprintln("failed to fetch user info"))
-	}
-	defer resp.Body.Close()
-
-	if resp.StatusCode != 200 {
-		return middleware.Error(401, fmt.Sprintln("invalid token"))
+		return authentication.NewCallbackInternalServerError().WithPayload(e.Err(500, err))
 	}
 
-	var info struct {
-		Login     string `json:"login"`
-		FirstName string `json:"first_name"`
-		LastName  string `json:"last_name"`
-		Image     string `json:"image_url"`
-		Staff     bool   `json:"staff?"`
-		Groups    []struct {
-			Tutor string `json:"name"` // field value: TUTEUR
-		} `json:"groups"`
-	}
-
-	err = json.NewDecoder(resp.Body).Decode(&info)
+	err = saveOauthTokenInStore(c.rdb, user.Login, token)
 	if err != nil {
-		return middleware.Error(500, fmt.Sprintln("failed to parse user info"))
+		return authentication.NewCallbackInternalServerError().WithPayload(e.Err(500, err))
 	}
 
-	userInfo := &ent.User{
-		Login:     info.Login,
-		FirstName: info.FirstName,
-		LastName:  info.LastName,
-		ImagePath: info.Image,
-	}
-
-	u, err := c.user.ReadMe(ctx, userInfo.Login)
+	// Create and return a JSON web token to authenticate API consumers.
+	accessToken, err := createToken(ctx, c.user, c.accessTokenState, user.Login, c.accessTokenDuration)
 	if err != nil {
-		if !ent.IsNotFound(err) {
-			return middleware.Error(500, fmt.Sprintln("failed to fetch internal user info"))
-		}
-		_, err = c.user.CreateUser(ctx, userInfo)
-		if err != nil {
-			return middleware.Error(500, fmt.Sprintln("failed to create user"))
-		}
-	} else {
-		_, err = u.Update().
-			SetFirstName(userInfo.FirstName).
-			SetLastName(userInfo.LastName).
-			SetImagePath(userInfo.ImagePath).
-			Save(ctx)
-		if err != nil {
-			return middleware.Error(500, fmt.Sprintln("failed to update user"))
-		}
+		return authentication.NewCallbackInternalServerError().WithPayload(e.Err(500, err))
 	}
 
-	return authentication.NewCallbackOK().WithPayload(token.AccessToken)
+	refreshToken, err := createToken(ctx, c.user, c.refreshTokenState, user.Login, c.refreshTokenDuration)
+	if err != nil {
+		return authentication.NewCallbackInternalServerError().WithPayload(e.Err(500, err))
+	}
+
+	return authentication.NewCallbackOK().WithPayload(&models.Token{
+		AccessToken:  accessToken,
+		RefreshToken: refreshToken,
+	})
 }
 
 type tokenInfo struct {
-	user *user.Service
+	accessTokenState string
+	rdb              *redis.Client
 }
 
 func (t *tokenInfo) Handle(params authentication.TokenInfoParams) middleware.Responder {
 
-	return authentication.NewTokenInfoOK().WithPayload(&ent.User{})
+	token, err := readAndParseToken(t.rdb, t.accessTokenState, params.Authorization)
+	if err != nil || !token.Valid {
+		return authentication.NewTokenInfoUnauthorized().WithPayload(e.Err(401, err))
+	}
+
+	claims := token.Claims.(*userClaims)
+
+	return authentication.NewTokenInfoOK().WithPayload(&authentication.TokenInfoOKBody{
+		ExpiresAt: strfmt.DateTime(claims.ExpiresAt.Time),
+		Login:     claims.Issuer,
+	})
 }
 
 type tokenRefresh struct {
-	user *user.Service
+	userInfoUrl          string
+	accessTokenDuration  time.Duration
+	refreshTokenDuration time.Duration
+	accessTokenState     string
+	refreshTokenState    string
+	oauthConfig          *oauth2.Config
+	user                 *user.Service
+	rdb                  *redis.Client
 }
 
 func (t *tokenRefresh) Handle(params authentication.TokenRefreshParams) middleware.Responder {
 
-	return authentication.NewTokenRefreshOK().WithPayload("newToken")
+	token, err := readAndParseToken(t.rdb, t.refreshTokenState, params.Authorization)
+	if err != nil || !token.Valid {
+		return authentication.NewTokenInfoUnauthorized().WithPayload(e.Err(401, err))
+	}
+	if validateRefreshToken(t.rdb, token) == nil {
+		return authentication.NewTokenRefreshInternalServerError().WithPayload(e.Err(401, fmt.Errorf("invalid token")))
+	}
+	if blacklistRefreshToken(t.rdb, token) != nil {
+		return authentication.NewTokenRefreshInternalServerError().WithPayload(e.Err(500, err))
+	}
+
+	claims := token.Claims.(*userClaims)
+
+	oauthToken, err := retrieveOauthTokenFromStore(t.rdb, claims.Issuer)
+	if err != nil {
+		return authentication.NewTokenRefreshInternalServerError().WithPayload(e.Err(500, err))
+	}
+
+	ctx := context.Background()
+	client := t.oauthConfig.Client(ctx, oauthToken)
+	res, err := client.Get(t.userInfoUrl)
+	if err != nil {
+		return authentication.NewTokenRefreshInternalServerError().WithPayload(e.Err(500, err))
+	}
+
+	if res.StatusCode != 200 {
+		return authentication.NewTokenRefreshUnauthorized().WithPayload(e.Err(401, fmt.Errorf("invalid token")))
+	}
+
+	err = saveOauthTokenInStore(t.rdb, claims.Issuer, oauthToken)
+	if err != nil {
+		return authentication.NewTokenRefreshInternalServerError().WithPayload(e.Err(500, err))
+	}
+
+	// Create and return a JSON web token to authenticate API consumers.
+	accessToken, err := createToken(ctx, t.user, t.accessTokenState, claims.Issuer, t.accessTokenDuration)
+	if err != nil {
+		return authentication.NewTokenRefreshInternalServerError().WithPayload(e.Err(500, err))
+	}
+
+	refreshToken, err := createToken(ctx, t.user, t.refreshTokenState, claims.Issuer, t.refreshTokenDuration)
+	if err != nil {
+		return authentication.NewTokenRefreshInternalServerError().WithPayload(e.Err(500, err))
+	}
+
+	return authentication.NewTokenRefreshOK().WithPayload(&models.Token{
+		AccessToken:  accessToken,
+		RefreshToken: refreshToken,
+	})
 }
