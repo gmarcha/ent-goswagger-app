@@ -10,6 +10,8 @@
 │   ├── docker-compose.yaml
 │   ├── pgadmin
 │   │   └── servers.json.sample
+│   ├── redis
+│   │   └── sysctl.conf
 │   └── spec.yaml
 ├── docs
 │   ├── swagger.md
@@ -51,11 +53,20 @@
 │   │   ├── openapi.json
 │   │   ├── predicate
 │   │   │   └── predicate.go
+│   │   ├── role
+│   │   │   ├── role.go
+│   │   │   └── where.go
+│   │   ├── role.go
+│   │   ├── role_create.go
+│   │   ├── role_delete.go
+│   │   ├── role_query.go
+│   │   ├── role_update.go
 │   │   ├── runtime
 │   │   │   └── runtime.go
 │   │   ├── runtime.go
 │   │   ├── schema
 │   │   │   ├── event.go
+│   │   │   ├── role.go
 │   │   │   └── user.go
 │   │   ├── template
 │   │   │   └── validate.tmpl
@@ -121,6 +132,22 @@
 │   │       │   │   └── update_event_urlbuilder.go
 │   │       │   ├── tutor_api.go
 │   │       │   └── user
+│   │       │       ├── add_admin.go
+│   │       │       ├── add_admin_parameters.go
+│   │       │       ├── add_admin_responses.go
+│   │       │       ├── add_admin_urlbuilder.go
+│   │       │       ├── add_calendar.go
+│   │       │       ├── add_calendar_parameters.go
+│   │       │       ├── add_calendar_responses.go
+│   │       │       ├── add_calendar_urlbuilder.go
+│   │       │       ├── add_role.go
+│   │       │       ├── add_role_parameters.go
+│   │       │       ├── add_role_responses.go
+│   │       │       ├── add_role_urlbuilder.go
+│   │       │       ├── add_tutor.go
+│   │       │       ├── add_tutor_parameters.go
+│   │       │       ├── add_tutor_responses.go
+│   │       │       ├── add_tutor_urlbuilder.go
 │   │       │       ├── create_user.go
 │   │       │       ├── create_user_parameters.go
 │   │       │       ├── create_user_responses.go
@@ -153,6 +180,22 @@
 │   │       │       ├── read_user_parameters.go
 │   │       │       ├── read_user_responses.go
 │   │       │       ├── read_user_urlbuilder.go
+│   │       │       ├── remove_admin.go
+│   │       │       ├── remove_admin_parameters.go
+│   │       │       ├── remove_admin_responses.go
+│   │       │       ├── remove_admin_urlbuilder.go
+│   │       │       ├── remove_calendar.go
+│   │       │       ├── remove_calendar_parameters.go
+│   │       │       ├── remove_calendar_responses.go
+│   │       │       ├── remove_calendar_urlbuilder.go
+│   │       │       ├── remove_role.go
+│   │       │       ├── remove_role_parameters.go
+│   │       │       ├── remove_role_responses.go
+│   │       │       ├── remove_role_urlbuilder.go
+│   │       │       ├── remove_tutor.go
+│   │       │       ├── remove_tutor_parameters.go
+│   │       │       ├── remove_tutor_responses.go
+│   │       │       ├── remove_tutor_urlbuilder.go
 │   │       │       ├── subscribe_me.go
 │   │       │       ├── subscribe_me_parameters.go
 │   │       │       ├── subscribe_me_responses.go
@@ -205,4 +248,4 @@
         ├── json.json
         └── yaml.json
 
-35 directories, 170 files
+37 directories, 211 files
