@@ -12,29 +12,49 @@ var (
 	EventsColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeUUID},
 		{Name: "name", Type: field.TypeString},
-		{Name: "category", Type: field.TypeEnum, Nullable: true, Enums: []string{"exam", "rush", "meeting", "events"}},
 		{Name: "description", Type: field.TypeString, Nullable: true},
 		{Name: "tutors_required", Type: field.TypeInt64, Nullable: true},
 		{Name: "wallets_reward", Type: field.TypeInt64, Nullable: true},
 		{Name: "created_at", Type: field.TypeTime},
 		{Name: "start_at", Type: field.TypeTime},
 		{Name: "end_at", Type: field.TypeTime},
+		{Name: "event_type_events", Type: field.TypeUUID, Nullable: true},
 	}
 	// EventsTable holds the schema information for the "events" table.
 	EventsTable = &schema.Table{
 		Name:       "events",
 		Columns:    EventsColumns,
 		PrimaryKey: []*schema.Column{EventsColumns[0]},
+		ForeignKeys: []*schema.ForeignKey{
+			{
+				Symbol:     "events_event_types_events",
+				Columns:    []*schema.Column{EventsColumns[8]},
+				RefColumns: []*schema.Column{EventTypesColumns[0]},
+				OnDelete:   schema.SetNull,
+			},
+		},
+	}
+	// EventTypesColumns holds the columns for the "event_types" table.
+	EventTypesColumns = []*schema.Column{
+		{Name: "id", Type: field.TypeUUID},
+		{Name: "name", Type: field.TypeString, Unique: true},
+		{Name: "color", Type: field.TypeString},
+	}
+	// EventTypesTable holds the schema information for the "event_types" table.
+	EventTypesTable = &schema.Table{
+		Name:       "event_types",
+		Columns:    EventTypesColumns,
+		PrimaryKey: []*schema.Column{EventTypesColumns[0]},
 	}
 	// RolesColumns holds the columns for the "roles" table.
 	RolesColumns = []*schema.Column{
-		{Name: "id", Type: field.TypeInt, Increment: true},
+		{Name: "id", Type: field.TypeUUID},
 		{Name: "name", Type: field.TypeString, Unique: true},
-		{Name: "event", Type: field.TypeBool, Default: false},
-		{Name: "event_write", Type: field.TypeBool, Default: false},
-		{Name: "user", Type: field.TypeBool, Default: false},
-		{Name: "user_subscription", Type: field.TypeBool, Default: false},
-		{Name: "user_write", Type: field.TypeBool, Default: false},
+		{Name: "event", Type: field.TypeString, Default: "false"},
+		{Name: "event_write", Type: field.TypeString, Default: "false"},
+		{Name: "user", Type: field.TypeString, Default: "false"},
+		{Name: "user_subscription", Type: field.TypeString, Default: "false"},
+		{Name: "user_write", Type: field.TypeString, Default: "false"},
 	}
 	// RolesTable holds the schema information for the "roles" table.
 	RolesTable = &schema.Table{
@@ -84,7 +104,7 @@ var (
 	}
 	// RoleUsersColumns holds the columns for the "role_users" table.
 	RoleUsersColumns = []*schema.Column{
-		{Name: "role_id", Type: field.TypeInt},
+		{Name: "role_id", Type: field.TypeUUID},
 		{Name: "user_id", Type: field.TypeUUID},
 	}
 	// RoleUsersTable holds the schema information for the "role_users" table.
@@ -110,6 +130,7 @@ var (
 	// Tables holds all the tables in the schema.
 	Tables = []*schema.Table{
 		EventsTable,
+		EventTypesTable,
 		RolesTable,
 		UsersTable,
 		EventUsersTable,
@@ -118,6 +139,7 @@ var (
 )
 
 func init() {
+	EventsTable.ForeignKeys[0].RefTable = EventTypesTable
 	EventUsersTable.ForeignKeys[0].RefTable = EventsTable
 	EventUsersTable.ForeignKeys[1].RefTable = UsersTable
 	RoleUsersTable.ForeignKeys[0].RefTable = RolesTable

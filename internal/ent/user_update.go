@@ -117,14 +117,14 @@ func (uu *UserUpdate) ClearImagePath() *UserUpdate {
 }
 
 // AddRoleIDs adds the "roles" edge to the Role entity by IDs.
-func (uu *UserUpdate) AddRoleIDs(ids ...int) *UserUpdate {
+func (uu *UserUpdate) AddRoleIDs(ids ...uuid.UUID) *UserUpdate {
 	uu.mutation.AddRoleIDs(ids...)
 	return uu
 }
 
 // AddRoles adds the "roles" edges to the Role entity.
 func (uu *UserUpdate) AddRoles(r ...*Role) *UserUpdate {
-	ids := make([]int, len(r))
+	ids := make([]uuid.UUID, len(r))
 	for i := range r {
 		ids[i] = r[i].ID
 	}
@@ -158,14 +158,14 @@ func (uu *UserUpdate) ClearRoles() *UserUpdate {
 }
 
 // RemoveRoleIDs removes the "roles" edge to Role entities by IDs.
-func (uu *UserUpdate) RemoveRoleIDs(ids ...int) *UserUpdate {
+func (uu *UserUpdate) RemoveRoleIDs(ids ...uuid.UUID) *UserUpdate {
 	uu.mutation.RemoveRoleIDs(ids...)
 	return uu
 }
 
 // RemoveRoles removes "roles" edges to Role entities.
 func (uu *UserUpdate) RemoveRoles(r ...*Role) *UserUpdate {
-	ids := make([]int, len(r))
+	ids := make([]uuid.UUID, len(r))
 	for i := range r {
 		ids[i] = r[i].ID
 	}
@@ -349,7 +349,7 @@ func (uu *UserUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: &sqlgraph.FieldSpec{
-					Type:   field.TypeInt,
+					Type:   field.TypeUUID,
 					Column: role.FieldID,
 				},
 			},
@@ -365,7 +365,7 @@ func (uu *UserUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: &sqlgraph.FieldSpec{
-					Type:   field.TypeInt,
+					Type:   field.TypeUUID,
 					Column: role.FieldID,
 				},
 			},
@@ -384,7 +384,7 @@ func (uu *UserUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: &sqlgraph.FieldSpec{
-					Type:   field.TypeInt,
+					Type:   field.TypeUUID,
 					Column: role.FieldID,
 				},
 			},
@@ -554,14 +554,14 @@ func (uuo *UserUpdateOne) ClearImagePath() *UserUpdateOne {
 }
 
 // AddRoleIDs adds the "roles" edge to the Role entity by IDs.
-func (uuo *UserUpdateOne) AddRoleIDs(ids ...int) *UserUpdateOne {
+func (uuo *UserUpdateOne) AddRoleIDs(ids ...uuid.UUID) *UserUpdateOne {
 	uuo.mutation.AddRoleIDs(ids...)
 	return uuo
 }
 
 // AddRoles adds the "roles" edges to the Role entity.
 func (uuo *UserUpdateOne) AddRoles(r ...*Role) *UserUpdateOne {
-	ids := make([]int, len(r))
+	ids := make([]uuid.UUID, len(r))
 	for i := range r {
 		ids[i] = r[i].ID
 	}
@@ -595,14 +595,14 @@ func (uuo *UserUpdateOne) ClearRoles() *UserUpdateOne {
 }
 
 // RemoveRoleIDs removes the "roles" edge to Role entities by IDs.
-func (uuo *UserUpdateOne) RemoveRoleIDs(ids ...int) *UserUpdateOne {
+func (uuo *UserUpdateOne) RemoveRoleIDs(ids ...uuid.UUID) *UserUpdateOne {
 	uuo.mutation.RemoveRoleIDs(ids...)
 	return uuo
 }
 
 // RemoveRoles removes "roles" edges to Role entities.
 func (uuo *UserUpdateOne) RemoveRoles(r ...*Role) *UserUpdateOne {
-	ids := make([]int, len(r))
+	ids := make([]uuid.UUID, len(r))
 	for i := range r {
 		ids[i] = r[i].ID
 	}
@@ -810,7 +810,7 @@ func (uuo *UserUpdateOne) sqlSave(ctx context.Context) (_node *User, err error) 
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: &sqlgraph.FieldSpec{
-					Type:   field.TypeInt,
+					Type:   field.TypeUUID,
 					Column: role.FieldID,
 				},
 			},
@@ -826,7 +826,7 @@ func (uuo *UserUpdateOne) sqlSave(ctx context.Context) (_node *User, err error) 
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: &sqlgraph.FieldSpec{
-					Type:   field.TypeInt,
+					Type:   field.TypeUUID,
 					Column: role.FieldID,
 				},
 			},
@@ -845,7 +845,7 @@ func (uuo *UserUpdateOne) sqlSave(ctx context.Context) (_node *User, err error) 
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: &sqlgraph.FieldSpec{
-					Type:   field.TypeInt,
+					Type:   field.TypeUUID,
 					Column: role.FieldID,
 				},
 			},

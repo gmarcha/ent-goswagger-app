@@ -22,9 +22,6 @@ func (Event) Fields() []ent.Field {
 			Default(uuid.New),
 		field.String("name").
 			MinLen(1),
-		field.Enum("category").
-			Values("exam", "rush", "meeting", "events").
-			Optional(),
 		field.String("description").
 			Optional(),
 		field.Int64("tutorsRequired").
@@ -47,5 +44,8 @@ func (Event) Fields() []ent.Field {
 func (Event) Edges() []ent.Edge {
 	return []ent.Edge{
 		edge.To("users", User.Type),
+		edge.From("category", EventType.Type).
+			Unique().
+			Ref("events"),
 	}
 }

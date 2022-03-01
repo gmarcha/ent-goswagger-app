@@ -11,6 +11,7 @@ import (
 	"github.com/google/uuid"
 
 	"github.com/gmarcha/ent-goswagger-app/internal/ent/event"
+	"github.com/gmarcha/ent-goswagger-app/internal/ent/eventtype"
 	"github.com/gmarcha/ent-goswagger-app/internal/ent/role"
 	"github.com/gmarcha/ent-goswagger-app/internal/ent/user"
 
@@ -26,6 +27,8 @@ type Client struct {
 	Schema *migrate.Schema
 	// Event is the client for interacting with the Event builders.
 	Event *EventClient
+	// EventType is the client for interacting with the EventType builders.
+	EventType *EventTypeClient
 	// Role is the client for interacting with the Role builders.
 	Role *RoleClient
 	// User is the client for interacting with the User builders.
@@ -44,6 +47,7 @@ func NewClient(opts ...Option) *Client {
 func (c *Client) init() {
 	c.Schema = migrate.NewSchema(c.driver)
 	c.Event = NewEventClient(c.config)
+	c.EventType = NewEventTypeClient(c.config)
 	c.Role = NewRoleClient(c.config)
 	c.User = NewUserClient(c.config)
 }
@@ -77,11 +81,12 @@ func (c *Client) Tx(ctx context.Context) (*Tx, error) {
 	cfg := c.config
 	cfg.driver = tx
 	return &Tx{
-		ctx:    ctx,
-		config: cfg,
-		Event:  NewEventClient(cfg),
-		Role:   NewRoleClient(cfg),
-		User:   NewUserClient(cfg),
+		ctx:       ctx,
+		config:    cfg,
+		Event:     NewEventClient(cfg),
+		EventType: NewEventTypeClient(cfg),
+		Role:      NewRoleClient(cfg),
+		User:      NewUserClient(cfg),
 	}, nil
 }
 
@@ -99,11 +104,12 @@ func (c *Client) BeginTx(ctx context.Context, opts *sql.TxOptions) (*Tx, error) 
 	cfg := c.config
 	cfg.driver = &txDriver{tx: tx, drv: c.driver}
 	return &Tx{
-		ctx:    ctx,
-		config: cfg,
-		Event:  NewEventClient(cfg),
-		Role:   NewRoleClient(cfg),
-		User:   NewUserClient(cfg),
+		ctx:       ctx,
+		config:    cfg,
+		Event:     NewEventClient(cfg),
+		EventType: NewEventTypeClient(cfg),
+		Role:      NewRoleClient(cfg),
+		User:      NewUserClient(cfg),
 	}, nil
 }
 
@@ -134,6 +140,7 @@ func (c *Client) Close() error {
 // In order to add hooks to a specific client, call: `client.Node.Use(...)`.
 func (c *Client) Use(hooks ...Hook) {
 	c.Event.Use(hooks...)
+	c.EventType.Use(hooks...)
 	c.Role.Use(hooks...)
 	c.User.Use(hooks...)
 }
@@ -239,9 +246,131 @@ func (c *EventClient) QueryUsers(e *Event) *UserQuery {
 	return query
 }
 
+// QueryCategory queries the category edge of a Event.
+func (c *EventClient) QueryCategory(e *Event) *EventTypeQuery {
+	query := &EventTypeQuery{config: c.config}
+	query.path = func(ctx context.Context) (fromV *sql.Selector, _ error) {
+		id := e.ID
+		step := sqlgraph.NewStep(
+			sqlgraph.From(event.Table, event.FieldID, id),
+			sqlgraph.To(eventtype.Table, eventtype.FieldID),
+			sqlgraph.Edge(sqlgraph.M2O, true, event.CategoryTable, event.CategoryColumn),
+		)
+		fromV = sqlgraph.Neighbors(e.driver.Dialect(), step)
+		return fromV, nil
+	}
+	return query
+}
+
 // Hooks returns the client hooks.
 func (c *EventClient) Hooks() []Hook {
 	return c.hooks.Event
+}
+
+// EventTypeClient is a client for the EventType schema.
+type EventTypeClient struct {
+	config
+}
+
+// NewEventTypeClient returns a client for the EventType from the given config.
+func NewEventTypeClient(c config) *EventTypeClient {
+	return &EventTypeClient{config: c}
+}
+
+// Use adds a list of mutation hooks to the hooks stack.
+// A call to `Use(f, g, h)` equals to `eventtype.Hooks(f(g(h())))`.
+func (c *EventTypeClient) Use(hooks ...Hook) {
+	c.hooks.EventType = append(c.hooks.EventType, hooks...)
+}
+
+// Create returns a create builder for EventType.
+func (c *EventTypeClient) Create() *EventTypeCreate {
+	mutation := newEventTypeMutation(c.config, OpCreate)
+	return &EventTypeCreate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// CreateBulk returns a builder for creating a bulk of EventType entities.
+func (c *EventTypeClient) CreateBulk(builders ...*EventTypeCreate) *EventTypeCreateBulk {
+	return &EventTypeCreateBulk{config: c.config, builders: builders}
+}
+
+// Update returns an update builder for EventType.
+func (c *EventTypeClient) Update() *EventTypeUpdate {
+	mutation := newEventTypeMutation(c.config, OpUpdate)
+	return &EventTypeUpdate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOne returns an update builder for the given entity.
+func (c *EventTypeClient) UpdateOne(et *EventType) *EventTypeUpdateOne {
+	mutation := newEventTypeMutation(c.config, OpUpdateOne, withEventType(et))
+	return &EventTypeUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOneID returns an update builder for the given id.
+func (c *EventTypeClient) UpdateOneID(id uuid.UUID) *EventTypeUpdateOne {
+	mutation := newEventTypeMutation(c.config, OpUpdateOne, withEventTypeID(id))
+	return &EventTypeUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// Delete returns a delete builder for EventType.
+func (c *EventTypeClient) Delete() *EventTypeDelete {
+	mutation := newEventTypeMutation(c.config, OpDelete)
+	return &EventTypeDelete{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// DeleteOne returns a delete builder for the given entity.
+func (c *EventTypeClient) DeleteOne(et *EventType) *EventTypeDeleteOne {
+	return c.DeleteOneID(et.ID)
+}
+
+// DeleteOneID returns a delete builder for the given id.
+func (c *EventTypeClient) DeleteOneID(id uuid.UUID) *EventTypeDeleteOne {
+	builder := c.Delete().Where(eventtype.ID(id))
+	builder.mutation.id = &id
+	builder.mutation.op = OpDeleteOne
+	return &EventTypeDeleteOne{builder}
+}
+
+// Query returns a query builder for EventType.
+func (c *EventTypeClient) Query() *EventTypeQuery {
+	return &EventTypeQuery{
+		config: c.config,
+	}
+}
+
+// Get returns a EventType entity by its id.
+func (c *EventTypeClient) Get(ctx context.Context, id uuid.UUID) (*EventType, error) {
+	return c.Query().Where(eventtype.ID(id)).Only(ctx)
+}
+
+// GetX is like Get, but panics if an error occurs.
+func (c *EventTypeClient) GetX(ctx context.Context, id uuid.UUID) *EventType {
+	obj, err := c.Get(ctx, id)
+	if err != nil {
+		panic(err)
+	}
+	return obj
+}
+
+// QueryEvents queries the events edge of a EventType.
+func (c *EventTypeClient) QueryEvents(et *EventType) *EventQuery {
+	query := &EventQuery{config: c.config}
+	query.path = func(ctx context.Context) (fromV *sql.Selector, _ error) {
+		id := et.ID
+		step := sqlgraph.NewStep(
+			sqlgraph.From(eventtype.Table, eventtype.FieldID, id),
+			sqlgraph.To(event.Table, event.FieldID),
+			sqlgraph.Edge(sqlgraph.O2M, false, eventtype.EventsTable, eventtype.EventsColumn),
+		)
+		fromV = sqlgraph.Neighbors(et.driver.Dialect(), step)
+		return fromV, nil
+	}
+	return query
+}
+
+// Hooks returns the client hooks.
+func (c *EventTypeClient) Hooks() []Hook {
+	return c.hooks.EventType
 }
 
 // RoleClient is a client for the Role schema.
@@ -284,7 +413,7 @@ func (c *RoleClient) UpdateOne(r *Role) *RoleUpdateOne {
 }
 
 // UpdateOneID returns an update builder for the given id.
-func (c *RoleClient) UpdateOneID(id int) *RoleUpdateOne {
+func (c *RoleClient) UpdateOneID(id uuid.UUID) *RoleUpdateOne {
 	mutation := newRoleMutation(c.config, OpUpdateOne, withRoleID(id))
 	return &RoleUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
 }
@@ -301,7 +430,7 @@ func (c *RoleClient) DeleteOne(r *Role) *RoleDeleteOne {
 }
 
 // DeleteOneID returns a delete builder for the given id.
-func (c *RoleClient) DeleteOneID(id int) *RoleDeleteOne {
+func (c *RoleClient) DeleteOneID(id uuid.UUID) *RoleDeleteOne {
 	builder := c.Delete().Where(role.ID(id))
 	builder.mutation.id = &id
 	builder.mutation.op = OpDeleteOne
@@ -316,12 +445,12 @@ func (c *RoleClient) Query() *RoleQuery {
 }
 
 // Get returns a Role entity by its id.
-func (c *RoleClient) Get(ctx context.Context, id int) (*Role, error) {
+func (c *RoleClient) Get(ctx context.Context, id uuid.UUID) (*Role, error) {
 	return c.Query().Where(role.ID(id)).Only(ctx)
 }
 
 // GetX is like Get, but panics if an error occurs.
-func (c *RoleClient) GetX(ctx context.Context, id int) *Role {
+func (c *RoleClient) GetX(ctx context.Context, id uuid.UUID) *Role {
 	obj, err := c.Get(ctx, id)
 	if err != nil {
 		panic(err)

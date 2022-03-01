@@ -9,6 +9,7 @@ import (
 	"entgo.io/ent"
 	"entgo.io/ent/dialect/sql"
 	"github.com/gmarcha/ent-goswagger-app/internal/ent/event"
+	"github.com/gmarcha/ent-goswagger-app/internal/ent/eventtype"
 	"github.com/gmarcha/ent-goswagger-app/internal/ent/role"
 	"github.com/gmarcha/ent-goswagger-app/internal/ent/user"
 )
@@ -31,9 +32,10 @@ type OrderFunc func(*sql.Selector)
 // columnChecker returns a function indicates if the column exists in the given column.
 func columnChecker(table string) func(string) error {
 	checks := map[string]func(string) bool{
-		event.Table: event.ValidColumn,
-		role.Table:  role.ValidColumn,
-		user.Table:  user.ValidColumn,
+		event.Table:     event.ValidColumn,
+		eventtype.Table: eventtype.ValidColumn,
+		role.Table:      role.ValidColumn,
+		user.Table:      user.ValidColumn,
 	}
 	check, ok := checks[table]
 	if !ok {

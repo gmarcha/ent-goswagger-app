@@ -11,6 +11,7 @@ import (
 	"entgo.io/ent/dialect/sql/sqlgraph"
 	"entgo.io/ent/schema/field"
 	"github.com/gmarcha/ent-goswagger-app/internal/ent/event"
+	"github.com/gmarcha/ent-goswagger-app/internal/ent/eventtype"
 	"github.com/gmarcha/ent-goswagger-app/internal/ent/user"
 	"github.com/google/uuid"
 )
@@ -25,20 +26,6 @@ type EventCreate struct {
 // SetName sets the "name" field.
 func (ec *EventCreate) SetName(s string) *EventCreate {
 	ec.mutation.SetName(s)
-	return ec
-}
-
-// SetCategory sets the "category" field.
-func (ec *EventCreate) SetCategory(e event.Category) *EventCreate {
-	ec.mutation.SetCategory(e)
-	return ec
-}
-
-// SetNillableCategory sets the "category" field if the given value is not nil.
-func (ec *EventCreate) SetNillableCategory(e *event.Category) *EventCreate {
-	if e != nil {
-		ec.SetCategory(*e)
-	}
 	return ec
 }
 
@@ -139,6 +126,25 @@ func (ec *EventCreate) AddUsers(u ...*User) *EventCreate {
 	return ec.AddUserIDs(ids...)
 }
 
+// SetCategoryID sets the "category" edge to the EventType entity by ID.
+func (ec *EventCreate) SetCategoryID(id uuid.UUID) *EventCreate {
+	ec.mutation.SetCategoryID(id)
+	return ec
+}
+
+// SetNillableCategoryID sets the "category" edge to the EventType entity by ID if the given value is not nil.
+func (ec *EventCreate) SetNillableCategoryID(id *uuid.UUID) *EventCreate {
+	if id != nil {
+		ec = ec.SetCategoryID(*id)
+	}
+	return ec
+}
+
+// SetCategory sets the "category" edge to the EventType entity.
+func (ec *EventCreate) SetCategory(e *EventType) *EventCreate {
+	return ec.SetCategoryID(e.ID)
+}
+
 // Mutation returns the EventMutation object of the builder.
 func (ec *EventCreate) Mutation() *EventMutation {
 	return ec.mutation
@@ -230,11 +236,6 @@ func (ec *EventCreate) check() error {
 			return &ValidationError{Name: "name", err: fmt.Errorf(`ent: validator failed for field "Event.name": %w`, err)}
 		}
 	}
-	if v, ok := ec.mutation.Category(); ok {
-		if err := event.CategoryValidator(v); err != nil {
-			return &ValidationError{Name: "category", err: fmt.Errorf(`ent: validator failed for field "Event.category": %w`, err)}
-		}
-	}
 	if v, ok := ec.mutation.TutorsRequired(); ok {
 		if err := event.TutorsRequiredValidator(v); err != nil {
 			return &ValidationError{Name: "tutorsRequired", err: fmt.Errorf(`ent: validator failed for field "Event.tutorsRequired": %w`, err)}
@@ -297,14 +298,6 @@ func (ec *EventCreate) createSpec() (*Event, *sqlgraph.CreateSpec) {
 			Column: event.FieldName,
 		})
 		_node.Name = value
-	}
-	if value, ok := ec.mutation.Category(); ok {
-		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
-			Type:   field.TypeEnum,
-			Value:  value,
-			Column: event.FieldCategory,
-		})
-		_node.Category = value
 	}
 	if value, ok := ec.mutation.Description(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
@@ -371,6 +364,26 @@ func (ec *EventCreate) createSpec() (*Event, *sqlgraph.CreateSpec) {
 		for _, k := range nodes {
 			edge.Target.Nodes = append(edge.Target.Nodes, k)
 		}
+		_spec.Edges = append(_spec.Edges, edge)
+	}
+	if nodes := ec.mutation.CategoryIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
+			Table:   event.CategoryTable,
+			Columns: []string{event.CategoryColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeUUID,
+					Column: eventtype.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_node.event_type_events = &nodes[0]
 		_spec.Edges = append(_spec.Edges, edge)
 	}
 	return _node, _spec

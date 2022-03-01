@@ -12,6 +12,7 @@ import (
 	"entgo.io/ent/dialect/sql/sqlgraph"
 	"entgo.io/ent/schema/field"
 	"github.com/gmarcha/ent-goswagger-app/internal/ent/event"
+	"github.com/gmarcha/ent-goswagger-app/internal/ent/eventtype"
 	"github.com/gmarcha/ent-goswagger-app/internal/ent/predicate"
 	"github.com/gmarcha/ent-goswagger-app/internal/ent/user"
 	"github.com/google/uuid"
@@ -33,26 +34,6 @@ func (eu *EventUpdate) Where(ps ...predicate.Event) *EventUpdate {
 // SetName sets the "name" field.
 func (eu *EventUpdate) SetName(s string) *EventUpdate {
 	eu.mutation.SetName(s)
-	return eu
-}
-
-// SetCategory sets the "category" field.
-func (eu *EventUpdate) SetCategory(e event.Category) *EventUpdate {
-	eu.mutation.SetCategory(e)
-	return eu
-}
-
-// SetNillableCategory sets the "category" field if the given value is not nil.
-func (eu *EventUpdate) SetNillableCategory(e *event.Category) *EventUpdate {
-	if e != nil {
-		eu.SetCategory(*e)
-	}
-	return eu
-}
-
-// ClearCategory clears the value of the "category" field.
-func (eu *EventUpdate) ClearCategory() *EventUpdate {
-	eu.mutation.ClearCategory()
 	return eu
 }
 
@@ -157,6 +138,25 @@ func (eu *EventUpdate) AddUsers(u ...*User) *EventUpdate {
 	return eu.AddUserIDs(ids...)
 }
 
+// SetCategoryID sets the "category" edge to the EventType entity by ID.
+func (eu *EventUpdate) SetCategoryID(id uuid.UUID) *EventUpdate {
+	eu.mutation.SetCategoryID(id)
+	return eu
+}
+
+// SetNillableCategoryID sets the "category" edge to the EventType entity by ID if the given value is not nil.
+func (eu *EventUpdate) SetNillableCategoryID(id *uuid.UUID) *EventUpdate {
+	if id != nil {
+		eu = eu.SetCategoryID(*id)
+	}
+	return eu
+}
+
+// SetCategory sets the "category" edge to the EventType entity.
+func (eu *EventUpdate) SetCategory(e *EventType) *EventUpdate {
+	return eu.SetCategoryID(e.ID)
+}
+
 // Mutation returns the EventMutation object of the builder.
 func (eu *EventUpdate) Mutation() *EventMutation {
 	return eu.mutation
@@ -181,6 +181,12 @@ func (eu *EventUpdate) RemoveUsers(u ...*User) *EventUpdate {
 		ids[i] = u[i].ID
 	}
 	return eu.RemoveUserIDs(ids...)
+}
+
+// ClearCategory clears the "category" edge to the EventType entity.
+func (eu *EventUpdate) ClearCategory() *EventUpdate {
+	eu.mutation.ClearCategory()
+	return eu
 }
 
 // Save executes the query and returns the number of nodes affected by the update operation.
@@ -250,11 +256,6 @@ func (eu *EventUpdate) check() error {
 			return &ValidationError{Name: "name", err: fmt.Errorf(`ent: validator failed for field "Event.name": %w`, err)}
 		}
 	}
-	if v, ok := eu.mutation.Category(); ok {
-		if err := event.CategoryValidator(v); err != nil {
-			return &ValidationError{Name: "category", err: fmt.Errorf(`ent: validator failed for field "Event.category": %w`, err)}
-		}
-	}
 	if v, ok := eu.mutation.TutorsRequired(); ok {
 		if err := event.TutorsRequiredValidator(v); err != nil {
 			return &ValidationError{Name: "tutorsRequired", err: fmt.Errorf(`ent: validator failed for field "Event.tutorsRequired": %w`, err)}
@@ -291,19 +292,6 @@ func (eu *EventUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Type:   field.TypeString,
 			Value:  value,
 			Column: event.FieldName,
-		})
-	}
-	if value, ok := eu.mutation.Category(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeEnum,
-			Value:  value,
-			Column: event.FieldCategory,
-		})
-	}
-	if eu.mutation.CategoryCleared() {
-		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
-			Type:   field.TypeEnum,
-			Column: event.FieldCategory,
 		})
 	}
 	if value, ok := eu.mutation.Description(); ok {
@@ -427,6 +415,41 @@ func (eu *EventUpdate) sqlSave(ctx context.Context) (n int, err error) {
 		}
 		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
+	if eu.mutation.CategoryCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
+			Table:   event.CategoryTable,
+			Columns: []string{event.CategoryColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeUUID,
+					Column: eventtype.FieldID,
+				},
+			},
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := eu.mutation.CategoryIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
+			Table:   event.CategoryTable,
+			Columns: []string{event.CategoryColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeUUID,
+					Column: eventtype.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
+	}
 	if n, err = sqlgraph.UpdateNodes(ctx, eu.driver, _spec); err != nil {
 		if _, ok := err.(*sqlgraph.NotFoundError); ok {
 			err = &NotFoundError{event.Label}
@@ -449,26 +472,6 @@ type EventUpdateOne struct {
 // SetName sets the "name" field.
 func (euo *EventUpdateOne) SetName(s string) *EventUpdateOne {
 	euo.mutation.SetName(s)
-	return euo
-}
-
-// SetCategory sets the "category" field.
-func (euo *EventUpdateOne) SetCategory(e event.Category) *EventUpdateOne {
-	euo.mutation.SetCategory(e)
-	return euo
-}
-
-// SetNillableCategory sets the "category" field if the given value is not nil.
-func (euo *EventUpdateOne) SetNillableCategory(e *event.Category) *EventUpdateOne {
-	if e != nil {
-		euo.SetCategory(*e)
-	}
-	return euo
-}
-
-// ClearCategory clears the value of the "category" field.
-func (euo *EventUpdateOne) ClearCategory() *EventUpdateOne {
-	euo.mutation.ClearCategory()
 	return euo
 }
 
@@ -573,6 +576,25 @@ func (euo *EventUpdateOne) AddUsers(u ...*User) *EventUpdateOne {
 	return euo.AddUserIDs(ids...)
 }
 
+// SetCategoryID sets the "category" edge to the EventType entity by ID.
+func (euo *EventUpdateOne) SetCategoryID(id uuid.UUID) *EventUpdateOne {
+	euo.mutation.SetCategoryID(id)
+	return euo
+}
+
+// SetNillableCategoryID sets the "category" edge to the EventType entity by ID if the given value is not nil.
+func (euo *EventUpdateOne) SetNillableCategoryID(id *uuid.UUID) *EventUpdateOne {
+	if id != nil {
+		euo = euo.SetCategoryID(*id)
+	}
+	return euo
+}
+
+// SetCategory sets the "category" edge to the EventType entity.
+func (euo *EventUpdateOne) SetCategory(e *EventType) *EventUpdateOne {
+	return euo.SetCategoryID(e.ID)
+}
+
 // Mutation returns the EventMutation object of the builder.
 func (euo *EventUpdateOne) Mutation() *EventMutation {
 	return euo.mutation
@@ -597,6 +619,12 @@ func (euo *EventUpdateOne) RemoveUsers(u ...*User) *EventUpdateOne {
 		ids[i] = u[i].ID
 	}
 	return euo.RemoveUserIDs(ids...)
+}
+
+// ClearCategory clears the "category" edge to the EventType entity.
+func (euo *EventUpdateOne) ClearCategory() *EventUpdateOne {
+	euo.mutation.ClearCategory()
+	return euo
 }
 
 // Select allows selecting one or more fields (columns) of the returned entity.
@@ -673,11 +701,6 @@ func (euo *EventUpdateOne) check() error {
 			return &ValidationError{Name: "name", err: fmt.Errorf(`ent: validator failed for field "Event.name": %w`, err)}
 		}
 	}
-	if v, ok := euo.mutation.Category(); ok {
-		if err := event.CategoryValidator(v); err != nil {
-			return &ValidationError{Name: "category", err: fmt.Errorf(`ent: validator failed for field "Event.category": %w`, err)}
-		}
-	}
 	if v, ok := euo.mutation.TutorsRequired(); ok {
 		if err := event.TutorsRequiredValidator(v); err != nil {
 			return &ValidationError{Name: "tutorsRequired", err: fmt.Errorf(`ent: validator failed for field "Event.tutorsRequired": %w`, err)}
@@ -731,19 +754,6 @@ func (euo *EventUpdateOne) sqlSave(ctx context.Context) (_node *Event, err error
 			Type:   field.TypeString,
 			Value:  value,
 			Column: event.FieldName,
-		})
-	}
-	if value, ok := euo.mutation.Category(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeEnum,
-			Value:  value,
-			Column: event.FieldCategory,
-		})
-	}
-	if euo.mutation.CategoryCleared() {
-		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
-			Type:   field.TypeEnum,
-			Column: event.FieldCategory,
 		})
 	}
 	if value, ok := euo.mutation.Description(); ok {
@@ -859,6 +869,41 @@ func (euo *EventUpdateOne) sqlSave(ctx context.Context) (_node *Event, err error
 				IDSpec: &sqlgraph.FieldSpec{
 					Type:   field.TypeUUID,
 					Column: user.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
+	}
+	if euo.mutation.CategoryCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
+			Table:   event.CategoryTable,
+			Columns: []string{event.CategoryColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeUUID,
+					Column: eventtype.FieldID,
+				},
+			},
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := euo.mutation.CategoryIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
+			Table:   event.CategoryTable,
+			Columns: []string{event.CategoryColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeUUID,
+					Column: eventtype.FieldID,
 				},
 			},
 		}

@@ -14,6 +14,8 @@ type Tx struct {
 	config
 	// Event is the client for interacting with the Event builders.
 	Event *EventClient
+	// EventType is the client for interacting with the EventType builders.
+	EventType *EventTypeClient
 	// Role is the client for interacting with the Role builders.
 	Role *RoleClient
 	// User is the client for interacting with the User builders.
@@ -154,6 +156,7 @@ func (tx *Tx) Client() *Client {
 
 func (tx *Tx) init() {
 	tx.Event = NewEventClient(tx.config)
+	tx.EventType = NewEventTypeClient(tx.config)
 	tx.Role = NewRoleClient(tx.config)
 	tx.User = NewUserClient(tx.config)
 }

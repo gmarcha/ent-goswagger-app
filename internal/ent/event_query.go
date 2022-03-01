@@ -13,6 +13,7 @@ import (
 	"entgo.io/ent/dialect/sql/sqlgraph"
 	"entgo.io/ent/schema/field"
 	"github.com/gmarcha/ent-goswagger-app/internal/ent/event"
+	"github.com/gmarcha/ent-goswagger-app/internal/ent/eventtype"
 	"github.com/gmarcha/ent-goswagger-app/internal/ent/predicate"
 	"github.com/gmarcha/ent-goswagger-app/internal/ent/user"
 	"github.com/google/uuid"
@@ -28,7 +29,9 @@ type EventQuery struct {
 	fields     []string
 	predicates []predicate.Event
 	// eager-loading edges.
-	withUsers *UserQuery
+	withUsers    *UserQuery
+	withCategory *EventTypeQuery
+	withFKs      bool
 	// intermediate query (i.e. traversal path).
 	sql  *sql.Selector
 	path func(context.Context) (*sql.Selector, error)
@@ -80,6 +83,28 @@ func (eq *EventQuery) QueryUsers() *UserQuery {
 			sqlgraph.From(event.Table, event.FieldID, selector),
 			sqlgraph.To(user.Table, user.FieldID),
 			sqlgraph.Edge(sqlgraph.M2M, false, event.UsersTable, event.UsersPrimaryKey...),
+		)
+		fromU = sqlgraph.SetNeighbors(eq.driver.Dialect(), step)
+		return fromU, nil
+	}
+	return query
+}
+
+// QueryCategory chains the current query on the "category" edge.
+func (eq *EventQuery) QueryCategory() *EventTypeQuery {
+	query := &EventTypeQuery{config: eq.config}
+	query.path = func(ctx context.Context) (fromU *sql.Selector, err error) {
+		if err := eq.prepareQuery(ctx); err != nil {
+			return nil, err
+		}
+		selector := eq.sqlQuery(ctx)
+		if err := selector.Err(); err != nil {
+			return nil, err
+		}
+		step := sqlgraph.NewStep(
+			sqlgraph.From(event.Table, event.FieldID, selector),
+			sqlgraph.To(eventtype.Table, eventtype.FieldID),
+			sqlgraph.Edge(sqlgraph.M2O, true, event.CategoryTable, event.CategoryColumn),
 		)
 		fromU = sqlgraph.SetNeighbors(eq.driver.Dialect(), step)
 		return fromU, nil
@@ -263,12 +288,13 @@ func (eq *EventQuery) Clone() *EventQuery {
 		return nil
 	}
 	return &EventQuery{
-		config:     eq.config,
-		limit:      eq.limit,
-		offset:     eq.offset,
-		order:      append([]OrderFunc{}, eq.order...),
-		predicates: append([]predicate.Event{}, eq.predicates...),
-		withUsers:  eq.withUsers.Clone(),
+		config:       eq.config,
+		limit:        eq.limit,
+		offset:       eq.offset,
+		order:        append([]OrderFunc{}, eq.order...),
+		predicates:   append([]predicate.Event{}, eq.predicates...),
+		withUsers:    eq.withUsers.Clone(),
+		withCategory: eq.withCategory.Clone(),
 		// clone intermediate query.
 		sql:  eq.sql.Clone(),
 		path: eq.path,
@@ -283,6 +309,17 @@ func (eq *EventQuery) WithUsers(opts ...func(*UserQuery)) *EventQuery {
 		opt(query)
 	}
 	eq.withUsers = query
+	return eq
+}
+
+// WithCategory tells the query-builder to eager-load the nodes that are connected to
+// the "category" edge. The optional arguments are used to configure the query builder of the edge.
+func (eq *EventQuery) WithCategory(opts ...func(*EventTypeQuery)) *EventQuery {
+	query := &EventTypeQuery{config: eq.config}
+	for _, opt := range opts {
+		opt(query)
+	}
+	eq.withCategory = query
 	return eq
 }
 
@@ -350,11 +387,19 @@ func (eq *EventQuery) prepareQuery(ctx context.Context) error {
 func (eq *EventQuery) sqlAll(ctx context.Context) ([]*Event, error) {
 	var (
 		nodes       = []*Event{}
+		withFKs     = eq.withFKs
 		_spec       = eq.querySpec()
-		loadedTypes = [1]bool{
+		loadedTypes = [2]bool{
 			eq.withUsers != nil,
+			eq.withCategory != nil,
 		}
 	)
+	if eq.withCategory != nil {
+		withFKs = true
+	}
+	if withFKs {
+		_spec.Node.Columns = append(_spec.Node.Columns, event.ForeignKeys...)
+	}
 	_spec.ScanValues = func(columns []string) ([]interface{}, error) {
 		node := &Event{config: eq.config}
 		nodes = append(nodes, node)
@@ -436,6 +481,35 @@ func (eq *EventQuery) sqlAll(ctx context.Context) ([]*Event, error) {
 			}
 			for i := range nodes {
 				nodes[i].Edges.Users = append(nodes[i].Edges.Users, n)
+			}
+		}
+	}
+
+	if query := eq.withCategory; query != nil {
+		ids := make([]uuid.UUID, 0, len(nodes))
+		nodeids := make(map[uuid.UUID][]*Event)
+		for i := range nodes {
+			if nodes[i].event_type_events == nil {
+				continue
+			}
+			fk := *nodes[i].event_type_events
+			if _, ok := nodeids[fk]; !ok {
+				ids = append(ids, fk)
+			}
+			nodeids[fk] = append(nodeids[fk], nodes[i])
+		}
+		query.Where(eventtype.IDIn(ids...))
+		neighbors, err := query.All(ctx)
+		if err != nil {
+			return nil, err
+		}
+		for _, n := range neighbors {
+			nodes, ok := nodeids[n.ID]
+			if !ok {
+				return nil, fmt.Errorf(`unexpected foreign-key "event_type_events" returned %v`, n.ID)
+			}
+			for i := range nodes {
+				nodes[i].Edges.Category = n
 			}
 		}
 	}

@@ -24,9 +24,10 @@ type config struct {
 
 // hooks per client, for fast access.
 type hooks struct {
-	Event []ent.Hook
-	Role  []ent.Hook
-	User  []ent.Hook
+	Event     []ent.Hook
+	EventType []ent.Hook
+	Role      []ent.Hook
+	User      []ent.Hook
 }
 
 // Options applies the options on the config object.

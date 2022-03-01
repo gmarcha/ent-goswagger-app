@@ -28,71 +28,85 @@ func (rc *RoleCreate) SetName(s string) *RoleCreate {
 }
 
 // SetEvent sets the "event" field.
-func (rc *RoleCreate) SetEvent(b bool) *RoleCreate {
-	rc.mutation.SetEvent(b)
+func (rc *RoleCreate) SetEvent(s string) *RoleCreate {
+	rc.mutation.SetEvent(s)
 	return rc
 }
 
 // SetNillableEvent sets the "event" field if the given value is not nil.
-func (rc *RoleCreate) SetNillableEvent(b *bool) *RoleCreate {
-	if b != nil {
-		rc.SetEvent(*b)
+func (rc *RoleCreate) SetNillableEvent(s *string) *RoleCreate {
+	if s != nil {
+		rc.SetEvent(*s)
 	}
 	return rc
 }
 
 // SetEventWrite sets the "event_write" field.
-func (rc *RoleCreate) SetEventWrite(b bool) *RoleCreate {
-	rc.mutation.SetEventWrite(b)
+func (rc *RoleCreate) SetEventWrite(s string) *RoleCreate {
+	rc.mutation.SetEventWrite(s)
 	return rc
 }
 
 // SetNillableEventWrite sets the "event_write" field if the given value is not nil.
-func (rc *RoleCreate) SetNillableEventWrite(b *bool) *RoleCreate {
-	if b != nil {
-		rc.SetEventWrite(*b)
+func (rc *RoleCreate) SetNillableEventWrite(s *string) *RoleCreate {
+	if s != nil {
+		rc.SetEventWrite(*s)
 	}
 	return rc
 }
 
 // SetUser sets the "user" field.
-func (rc *RoleCreate) SetUser(b bool) *RoleCreate {
-	rc.mutation.SetUser(b)
+func (rc *RoleCreate) SetUser(s string) *RoleCreate {
+	rc.mutation.SetUser(s)
 	return rc
 }
 
 // SetNillableUser sets the "user" field if the given value is not nil.
-func (rc *RoleCreate) SetNillableUser(b *bool) *RoleCreate {
-	if b != nil {
-		rc.SetUser(*b)
+func (rc *RoleCreate) SetNillableUser(s *string) *RoleCreate {
+	if s != nil {
+		rc.SetUser(*s)
 	}
 	return rc
 }
 
 // SetUserSubscription sets the "user_subscription" field.
-func (rc *RoleCreate) SetUserSubscription(b bool) *RoleCreate {
-	rc.mutation.SetUserSubscription(b)
+func (rc *RoleCreate) SetUserSubscription(s string) *RoleCreate {
+	rc.mutation.SetUserSubscription(s)
 	return rc
 }
 
 // SetNillableUserSubscription sets the "user_subscription" field if the given value is not nil.
-func (rc *RoleCreate) SetNillableUserSubscription(b *bool) *RoleCreate {
-	if b != nil {
-		rc.SetUserSubscription(*b)
+func (rc *RoleCreate) SetNillableUserSubscription(s *string) *RoleCreate {
+	if s != nil {
+		rc.SetUserSubscription(*s)
 	}
 	return rc
 }
 
 // SetUserWrite sets the "user_write" field.
-func (rc *RoleCreate) SetUserWrite(b bool) *RoleCreate {
-	rc.mutation.SetUserWrite(b)
+func (rc *RoleCreate) SetUserWrite(s string) *RoleCreate {
+	rc.mutation.SetUserWrite(s)
 	return rc
 }
 
 // SetNillableUserWrite sets the "user_write" field if the given value is not nil.
-func (rc *RoleCreate) SetNillableUserWrite(b *bool) *RoleCreate {
-	if b != nil {
-		rc.SetUserWrite(*b)
+func (rc *RoleCreate) SetNillableUserWrite(s *string) *RoleCreate {
+	if s != nil {
+		rc.SetUserWrite(*s)
+	}
+	return rc
+}
+
+// SetID sets the "id" field.
+func (rc *RoleCreate) SetID(u uuid.UUID) *RoleCreate {
+	rc.mutation.SetID(u)
+	return rc
+}
+
+// SetNillableID sets the "id" field if the given value is not nil.
+func (rc *RoleCreate) SetNillableID(u *uuid.UUID) *RoleCreate {
+	if u != nil {
+		rc.SetID(*u)
 	}
 	return rc
 }
@@ -203,6 +217,10 @@ func (rc *RoleCreate) defaults() {
 		v := role.DefaultUserWrite
 		rc.mutation.SetUserWrite(v)
 	}
+	if _, ok := rc.mutation.ID(); !ok {
+		v := role.DefaultID()
+		rc.mutation.SetID(v)
+	}
 }
 
 // check runs all checks and user-defined validators on the builder.
@@ -236,8 +254,13 @@ func (rc *RoleCreate) sqlSave(ctx context.Context) (*Role, error) {
 		}
 		return nil, err
 	}
-	id := _spec.ID.Value.(int64)
-	_node.ID = int(id)
+	if _spec.ID.Value != nil {
+		if id, ok := _spec.ID.Value.(*uuid.UUID); ok {
+			_node.ID = *id
+		} else if err := _node.ID.Scan(_spec.ID.Value); err != nil {
+			return nil, err
+		}
+	}
 	return _node, nil
 }
 
@@ -247,11 +270,15 @@ func (rc *RoleCreate) createSpec() (*Role, *sqlgraph.CreateSpec) {
 		_spec = &sqlgraph.CreateSpec{
 			Table: role.Table,
 			ID: &sqlgraph.FieldSpec{
-				Type:   field.TypeInt,
+				Type:   field.TypeUUID,
 				Column: role.FieldID,
 			},
 		}
 	)
+	if id, ok := rc.mutation.ID(); ok {
+		_node.ID = id
+		_spec.ID.Value = &id
+	}
 	if value, ok := rc.mutation.Name(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
@@ -262,7 +289,7 @@ func (rc *RoleCreate) createSpec() (*Role, *sqlgraph.CreateSpec) {
 	}
 	if value, ok := rc.mutation.Event(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
-			Type:   field.TypeBool,
+			Type:   field.TypeString,
 			Value:  value,
 			Column: role.FieldEvent,
 		})
@@ -270,7 +297,7 @@ func (rc *RoleCreate) createSpec() (*Role, *sqlgraph.CreateSpec) {
 	}
 	if value, ok := rc.mutation.EventWrite(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
-			Type:   field.TypeBool,
+			Type:   field.TypeString,
 			Value:  value,
 			Column: role.FieldEventWrite,
 		})
@@ -278,7 +305,7 @@ func (rc *RoleCreate) createSpec() (*Role, *sqlgraph.CreateSpec) {
 	}
 	if value, ok := rc.mutation.User(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
-			Type:   field.TypeBool,
+			Type:   field.TypeString,
 			Value:  value,
 			Column: role.FieldUser,
 		})
@@ -286,7 +313,7 @@ func (rc *RoleCreate) createSpec() (*Role, *sqlgraph.CreateSpec) {
 	}
 	if value, ok := rc.mutation.UserSubscription(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
-			Type:   field.TypeBool,
+			Type:   field.TypeString,
 			Value:  value,
 			Column: role.FieldUserSubscription,
 		})
@@ -294,7 +321,7 @@ func (rc *RoleCreate) createSpec() (*Role, *sqlgraph.CreateSpec) {
 	}
 	if value, ok := rc.mutation.UserWrite(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
-			Type:   field.TypeBool,
+			Type:   field.TypeString,
 			Value:  value,
 			Column: role.FieldUserWrite,
 		})
@@ -364,10 +391,6 @@ func (rcb *RoleCreateBulk) Save(ctx context.Context) ([]*Role, error) {
 				}
 				mutation.id = &nodes[i].ID
 				mutation.done = true
-				if specs[i].ID.Value != nil {
-					id := specs[i].ID.Value.(int64)
-					nodes[i].ID = int(id)
-				}
 				return nodes[i], nil
 			})
 			for i := len(builder.hooks) - 1; i >= 0; i-- {

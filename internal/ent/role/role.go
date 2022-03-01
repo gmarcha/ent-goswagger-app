@@ -2,6 +2,10 @@
 
 package role
 
+import (
+	"github.com/google/uuid"
+)
+
 const (
 	// Label holds the string label denoting the role type in the database.
 	Label = "role"
@@ -59,13 +63,15 @@ func ValidColumn(column string) bool {
 
 var (
 	// DefaultEvent holds the default value on creation for the "event" field.
-	DefaultEvent bool
+	DefaultEvent string
 	// DefaultEventWrite holds the default value on creation for the "event_write" field.
-	DefaultEventWrite bool
+	DefaultEventWrite string
 	// DefaultUser holds the default value on creation for the "user" field.
-	DefaultUser bool
+	DefaultUser string
 	// DefaultUserSubscription holds the default value on creation for the "user_subscription" field.
-	DefaultUserSubscription bool
+	DefaultUserSubscription string
 	// DefaultUserWrite holds the default value on creation for the "user_write" field.
-	DefaultUserWrite bool
+	DefaultUserWrite string
+	// DefaultID holds the default value on creation for the "id" field.
+	DefaultID func() uuid.UUID
 )

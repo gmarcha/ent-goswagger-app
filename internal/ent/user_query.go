@@ -421,8 +421,8 @@ func (uq *UserQuery) sqlAll(ctx context.Context) ([]*User, error) {
 			node.Edges.Roles = []*Role{}
 		}
 		var (
-			edgeids []int
-			edges   = make(map[int][]*User)
+			edgeids []uuid.UUID
+			edges   = make(map[uuid.UUID][]*User)
 		)
 		_spec := &sqlgraph.EdgeQuerySpec{
 			Edge: &sqlgraph.EdgeSpec{
@@ -434,19 +434,19 @@ func (uq *UserQuery) sqlAll(ctx context.Context) ([]*User, error) {
 				s.Where(sql.InValues(user.RolesPrimaryKey[1], fks...))
 			},
 			ScanValues: func() [2]interface{} {
-				return [2]interface{}{new(uuid.UUID), new(sql.NullInt64)}
+				return [2]interface{}{new(uuid.UUID), new(uuid.UUID)}
 			},
 			Assign: func(out, in interface{}) error {
 				eout, ok := out.(*uuid.UUID)
 				if !ok || eout == nil {
 					return fmt.Errorf("unexpected id value for edge-out")
 				}
-				ein, ok := in.(*sql.NullInt64)
+				ein, ok := in.(*uuid.UUID)
 				if !ok || ein == nil {
 					return fmt.Errorf("unexpected id value for edge-in")
 				}
 				outValue := *eout
-				inValue := int(ein.Int64)
+				inValue := *ein
 				node, ok := ids[outValue]
 				if !ok {
 					return fmt.Errorf("unexpected node id in edges: %v", outValue)

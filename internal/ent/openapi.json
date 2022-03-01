@@ -23,8 +23,7 @@
         ],
         "properties": {
           "category": {
-            "type": "string",
-            "example": "exam"
+            "$ref": "#/components/schemas/EventType"
           },
           "createdAt": {
             "type": "string",
@@ -69,6 +68,37 @@
           }
         }
       },
+      "EventType": {
+        "type": "object",
+        "required": [
+          "color",
+          "id",
+          "name"
+        ],
+        "properties": {
+          "color": {
+            "type": "string"
+          },
+          "events": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Event"
+            }
+          },
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          }
+        },
+        "x-go-type": {
+          "type": "EventType",
+          "import": {
+            "package": "github.com/gmarcha/ent-goswagger-app/internal/ent"
+          }
+        }
+      },
       "Role": {
         "type": "object",
         "required": [
@@ -82,26 +112,25 @@
         ],
         "properties": {
           "event": {
-            "type": "boolean"
+            "type": "string"
           },
           "event_write": {
-            "type": "boolean"
+            "type": "string"
           },
           "id": {
-            "type": "integer",
-            "format": "int32"
+            "type": "string"
           },
           "name": {
             "type": "string"
           },
           "user": {
-            "type": "boolean"
+            "type": "string"
           },
           "user_subscription": {
-            "type": "boolean"
+            "type": "string"
           },
           "user_write": {
-            "type": "boolean"
+            "type": "string"
           },
           "users": {
             "type": "array",

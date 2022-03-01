@@ -10,6 +10,7 @@ import (
 
 	"entgo.io/ent/dialect/sql"
 	"github.com/gmarcha/ent-goswagger-app/internal/ent/event"
+	"github.com/gmarcha/ent-goswagger-app/internal/ent/eventtype"
 	"github.com/go-openapi/strfmt"
 	"github.com/google/uuid"
 )
@@ -21,8 +22,6 @@ type Event struct {
 	ID uuid.UUID `json:"id,omitempty"`
 	// Name holds the value of the "name" field.
 	Name string `json:"name,omitempty"`
-	// Category holds the value of the "category" field.
-	Category event.Category `json:"category,omitempty"`
 	// Description holds the value of the "description" field.
 	Description string `json:"description,omitempty"`
 	// TutorsRequired holds the value of the "tutorsRequired" field.
@@ -37,16 +36,19 @@ type Event struct {
 	EndAt time.Time `json:"endAt,omitempty"`
 	// Edges holds the relations/edges for other nodes in the graph.
 	// The values are being populated by the EventQuery when eager-loading is set.
-	Edges EventEdges `json:"edges"`
+	Edges             EventEdges `json:"edges"`
+	event_type_events *uuid.UUID
 }
 
 // EventEdges holds the relations/edges for other nodes in the graph.
 type EventEdges struct {
 	// Users holds the value of the users edge.
 	Users []*User `json:"users,omitempty"`
+	// Category holds the value of the category edge.
+	Category *EventType `json:"category,omitempty"`
 	// loadedTypes holds the information for reporting if a
 	// type was loaded (or requested) in eager-loading or not.
-	loadedTypes [1]bool
+	loadedTypes [2]bool
 }
 
 // UsersOrErr returns the Users value or an error if the edge
@@ -58,6 +60,20 @@ func (e EventEdges) UsersOrErr() ([]*User, error) {
 	return nil, &NotLoadedError{edge: "users"}
 }
 
+// CategoryOrErr returns the Category value or an error if the edge
+// was not loaded in eager-loading, or loaded but was not found.
+func (e EventEdges) CategoryOrErr() (*EventType, error) {
+	if e.loadedTypes[1] {
+		if e.Category == nil {
+			// The edge category was loaded in eager-loading,
+			// but was not found.
+			return nil, &NotFoundError{label: eventtype.Label}
+		}
+		return e.Category, nil
+	}
+	return nil, &NotLoadedError{edge: "category"}
+}
+
 // scanValues returns the types for scanning values from sql.Rows.
 func (*Event) scanValues(columns []string) ([]interface{}, error) {
 	values := make([]interface{}, len(columns))
@@ -65,12 +81,14 @@ func (*Event) scanValues(columns []string) ([]interface{}, error) {
 		switch columns[i] {
 		case event.FieldTutorsRequired, event.FieldWalletsReward:
 			values[i] = new(sql.NullInt64)
-		case event.FieldName, event.FieldCategory, event.FieldDescription:
+		case event.FieldName, event.FieldDescription:
 			values[i] = new(sql.NullString)
 		case event.FieldCreatedAt, event.FieldStartAt, event.FieldEndAt:
 			values[i] = new(sql.NullTime)
 		case event.FieldID:
 			values[i] = new(uuid.UUID)
+		case event.ForeignKeys[0]: // event_type_events
+			values[i] = &sql.NullScanner{S: new(uuid.UUID)}
 		default:
 			return nil, fmt.Errorf("unexpected column %q for type Event", columns[i])
 		}
@@ -97,12 +115,6 @@ func (e *Event) assignValues(columns []string, values []interface{}) error {
 				return fmt.Errorf("unexpected type %T for field name", values[i])
 			} else if value.Valid {
 				e.Name = value.String
-			}
-		case event.FieldCategory:
-			if value, ok := values[i].(*sql.NullString); !ok {
-				return fmt.Errorf("unexpected type %T for field category", values[i])
-			} else if value.Valid {
-				e.Category = event.Category(value.String)
 			}
 		case event.FieldDescription:
 			if value, ok := values[i].(*sql.NullString); !ok {
@@ -142,6 +154,13 @@ func (e *Event) assignValues(columns []string, values []interface{}) error {
 			} else if value.Valid {
 				e.EndAt = value.Time
 			}
+		case event.ForeignKeys[0]:
+			if value, ok := values[i].(*sql.NullScanner); !ok {
+				return fmt.Errorf("unexpected type %T for field event_type_events", values[i])
+			} else if value.Valid {
+				e.event_type_events = new(uuid.UUID)
+				*e.event_type_events = *value.S.(*uuid.UUID)
+			}
 		}
 	}
 	return nil
@@ -150,6 +169,11 @@ func (e *Event) assignValues(columns []string, values []interface{}) error {
 // QueryUsers queries the "users" edge of the Event entity.
 func (e *Event) QueryUsers() *UserQuery {
 	return (&EventClient{config: e.config}).QueryUsers(e)
+}
+
+// QueryCategory queries the "category" edge of the Event entity.
+func (e *Event) QueryCategory() *EventTypeQuery {
+	return (&EventClient{config: e.config}).QueryCategory(e)
 }
 
 // Update returns a builder for updating this Event.
@@ -177,8 +201,6 @@ func (e *Event) String() string {
 	builder.WriteString(fmt.Sprintf("id=%v", e.ID))
 	builder.WriteString(", name=")
 	builder.WriteString(e.Name)
-	builder.WriteString(", category=")
-	builder.WriteString(fmt.Sprintf("%v", e.Category))
 	builder.WriteString(", description=")
 	builder.WriteString(e.Description)
 	if v := e.TutorsRequired; v != nil {

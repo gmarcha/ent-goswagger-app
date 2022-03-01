@@ -10,25 +10,26 @@ import (
 	"entgo.io/ent/dialect/sql"
 	"github.com/gmarcha/ent-goswagger-app/internal/ent/role"
 	"github.com/go-openapi/strfmt"
+	"github.com/google/uuid"
 )
 
 // Role is the model entity for the Role schema.
 type Role struct {
 	config `json:"-"`
 	// ID of the ent.
-	ID int `json:"id,omitempty"`
+	ID uuid.UUID `json:"id,omitempty"`
 	// Name holds the value of the "name" field.
 	Name string `json:"name,omitempty"`
 	// Event holds the value of the "event" field.
-	Event bool `json:"event,omitempty"`
+	Event string `json:"-"`
 	// EventWrite holds the value of the "event_write" field.
-	EventWrite bool `json:"event_write,omitempty"`
+	EventWrite string `json:"-"`
 	// User holds the value of the "user" field.
-	User bool `json:"user,omitempty"`
+	User string `json:"-"`
 	// UserSubscription holds the value of the "user_subscription" field.
-	UserSubscription bool `json:"user_subscription,omitempty"`
+	UserSubscription string `json:"-"`
 	// UserWrite holds the value of the "user_write" field.
-	UserWrite bool `json:"user_write,omitempty"`
+	UserWrite string `json:"-"`
 	// Edges holds the relations/edges for other nodes in the graph.
 	// The values are being populated by the RoleQuery when eager-loading is set.
 	Edges RoleEdges `json:"edges"`
@@ -57,12 +58,10 @@ func (*Role) scanValues(columns []string) ([]interface{}, error) {
 	values := make([]interface{}, len(columns))
 	for i := range columns {
 		switch columns[i] {
-		case role.FieldEvent, role.FieldEventWrite, role.FieldUser, role.FieldUserSubscription, role.FieldUserWrite:
-			values[i] = new(sql.NullBool)
-		case role.FieldID:
-			values[i] = new(sql.NullInt64)
-		case role.FieldName:
+		case role.FieldName, role.FieldEvent, role.FieldEventWrite, role.FieldUser, role.FieldUserSubscription, role.FieldUserWrite:
 			values[i] = new(sql.NullString)
+		case role.FieldID:
+			values[i] = new(uuid.UUID)
 		default:
 			return nil, fmt.Errorf("unexpected column %q for type Role", columns[i])
 		}
@@ -79,11 +78,11 @@ func (r *Role) assignValues(columns []string, values []interface{}) error {
 	for i := range columns {
 		switch columns[i] {
 		case role.FieldID:
-			value, ok := values[i].(*sql.NullInt64)
-			if !ok {
-				return fmt.Errorf("unexpected type %T for field id", value)
+			if value, ok := values[i].(*uuid.UUID); !ok {
+				return fmt.Errorf("unexpected type %T for field id", values[i])
+			} else if value != nil {
+				r.ID = *value
 			}
-			r.ID = int(value.Int64)
 		case role.FieldName:
 			if value, ok := values[i].(*sql.NullString); !ok {
 				return fmt.Errorf("unexpected type %T for field name", values[i])
@@ -91,34 +90,34 @@ func (r *Role) assignValues(columns []string, values []interface{}) error {
 				r.Name = value.String
 			}
 		case role.FieldEvent:
-			if value, ok := values[i].(*sql.NullBool); !ok {
+			if value, ok := values[i].(*sql.NullString); !ok {
 				return fmt.Errorf("unexpected type %T for field event", values[i])
 			} else if value.Valid {
-				r.Event = value.Bool
+				r.Event = value.String
 			}
 		case role.FieldEventWrite:
-			if value, ok := values[i].(*sql.NullBool); !ok {
+			if value, ok := values[i].(*sql.NullString); !ok {
 				return fmt.Errorf("unexpected type %T for field event_write", values[i])
 			} else if value.Valid {
-				r.EventWrite = value.Bool
+				r.EventWrite = value.String
 			}
 		case role.FieldUser:
-			if value, ok := values[i].(*sql.NullBool); !ok {
+			if value, ok := values[i].(*sql.NullString); !ok {
 				return fmt.Errorf("unexpected type %T for field user", values[i])
 			} else if value.Valid {
-				r.User = value.Bool
+				r.User = value.String
 			}
 		case role.FieldUserSubscription:
-			if value, ok := values[i].(*sql.NullBool); !ok {
+			if value, ok := values[i].(*sql.NullString); !ok {
 				return fmt.Errorf("unexpected type %T for field user_subscription", values[i])
 			} else if value.Valid {
-				r.UserSubscription = value.Bool
+				r.UserSubscription = value.String
 			}
 		case role.FieldUserWrite:
-			if value, ok := values[i].(*sql.NullBool); !ok {
+			if value, ok := values[i].(*sql.NullString); !ok {
 				return fmt.Errorf("unexpected type %T for field user_write", values[i])
 			} else if value.Valid {
-				r.UserWrite = value.Bool
+				r.UserWrite = value.String
 			}
 		}
 	}
@@ -155,16 +154,11 @@ func (r *Role) String() string {
 	builder.WriteString(fmt.Sprintf("id=%v", r.ID))
 	builder.WriteString(", name=")
 	builder.WriteString(r.Name)
-	builder.WriteString(", event=")
-	builder.WriteString(fmt.Sprintf("%v", r.Event))
-	builder.WriteString(", event_write=")
-	builder.WriteString(fmt.Sprintf("%v", r.EventWrite))
-	builder.WriteString(", user=")
-	builder.WriteString(fmt.Sprintf("%v", r.User))
-	builder.WriteString(", user_subscription=")
-	builder.WriteString(fmt.Sprintf("%v", r.UserSubscription))
-	builder.WriteString(", user_write=")
-	builder.WriteString(fmt.Sprintf("%v", r.UserWrite))
+	builder.WriteString(", event=<sensitive>")
+	builder.WriteString(", event_write=<sensitive>")
+	builder.WriteString(", user=<sensitive>")
+	builder.WriteString(", user_subscription=<sensitive>")
+	builder.WriteString(", user_write=<sensitive>")
 	builder.WriteByte(')')
 	return builder.String()
 }

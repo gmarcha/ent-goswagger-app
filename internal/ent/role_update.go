@@ -36,71 +36,71 @@ func (ru *RoleUpdate) SetName(s string) *RoleUpdate {
 }
 
 // SetEvent sets the "event" field.
-func (ru *RoleUpdate) SetEvent(b bool) *RoleUpdate {
-	ru.mutation.SetEvent(b)
+func (ru *RoleUpdate) SetEvent(s string) *RoleUpdate {
+	ru.mutation.SetEvent(s)
 	return ru
 }
 
 // SetNillableEvent sets the "event" field if the given value is not nil.
-func (ru *RoleUpdate) SetNillableEvent(b *bool) *RoleUpdate {
-	if b != nil {
-		ru.SetEvent(*b)
+func (ru *RoleUpdate) SetNillableEvent(s *string) *RoleUpdate {
+	if s != nil {
+		ru.SetEvent(*s)
 	}
 	return ru
 }
 
 // SetEventWrite sets the "event_write" field.
-func (ru *RoleUpdate) SetEventWrite(b bool) *RoleUpdate {
-	ru.mutation.SetEventWrite(b)
+func (ru *RoleUpdate) SetEventWrite(s string) *RoleUpdate {
+	ru.mutation.SetEventWrite(s)
 	return ru
 }
 
 // SetNillableEventWrite sets the "event_write" field if the given value is not nil.
-func (ru *RoleUpdate) SetNillableEventWrite(b *bool) *RoleUpdate {
-	if b != nil {
-		ru.SetEventWrite(*b)
+func (ru *RoleUpdate) SetNillableEventWrite(s *string) *RoleUpdate {
+	if s != nil {
+		ru.SetEventWrite(*s)
 	}
 	return ru
 }
 
 // SetUser sets the "user" field.
-func (ru *RoleUpdate) SetUser(b bool) *RoleUpdate {
-	ru.mutation.SetUser(b)
+func (ru *RoleUpdate) SetUser(s string) *RoleUpdate {
+	ru.mutation.SetUser(s)
 	return ru
 }
 
 // SetNillableUser sets the "user" field if the given value is not nil.
-func (ru *RoleUpdate) SetNillableUser(b *bool) *RoleUpdate {
-	if b != nil {
-		ru.SetUser(*b)
+func (ru *RoleUpdate) SetNillableUser(s *string) *RoleUpdate {
+	if s != nil {
+		ru.SetUser(*s)
 	}
 	return ru
 }
 
 // SetUserSubscription sets the "user_subscription" field.
-func (ru *RoleUpdate) SetUserSubscription(b bool) *RoleUpdate {
-	ru.mutation.SetUserSubscription(b)
+func (ru *RoleUpdate) SetUserSubscription(s string) *RoleUpdate {
+	ru.mutation.SetUserSubscription(s)
 	return ru
 }
 
 // SetNillableUserSubscription sets the "user_subscription" field if the given value is not nil.
-func (ru *RoleUpdate) SetNillableUserSubscription(b *bool) *RoleUpdate {
-	if b != nil {
-		ru.SetUserSubscription(*b)
+func (ru *RoleUpdate) SetNillableUserSubscription(s *string) *RoleUpdate {
+	if s != nil {
+		ru.SetUserSubscription(*s)
 	}
 	return ru
 }
 
 // SetUserWrite sets the "user_write" field.
-func (ru *RoleUpdate) SetUserWrite(b bool) *RoleUpdate {
-	ru.mutation.SetUserWrite(b)
+func (ru *RoleUpdate) SetUserWrite(s string) *RoleUpdate {
+	ru.mutation.SetUserWrite(s)
 	return ru
 }
 
 // SetNillableUserWrite sets the "user_write" field if the given value is not nil.
-func (ru *RoleUpdate) SetNillableUserWrite(b *bool) *RoleUpdate {
-	if b != nil {
-		ru.SetUserWrite(*b)
+func (ru *RoleUpdate) SetNillableUserWrite(s *string) *RoleUpdate {
+	if s != nil {
+		ru.SetUserWrite(*s)
 	}
 	return ru
 }
@@ -206,7 +206,7 @@ func (ru *RoleUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Table:   role.Table,
 			Columns: role.Columns,
 			ID: &sqlgraph.FieldSpec{
-				Type:   field.TypeInt,
+				Type:   field.TypeUUID,
 				Column: role.FieldID,
 			},
 		},
@@ -227,35 +227,35 @@ func (ru *RoleUpdate) sqlSave(ctx context.Context) (n int, err error) {
 	}
 	if value, ok := ru.mutation.Event(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeBool,
+			Type:   field.TypeString,
 			Value:  value,
 			Column: role.FieldEvent,
 		})
 	}
 	if value, ok := ru.mutation.EventWrite(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeBool,
+			Type:   field.TypeString,
 			Value:  value,
 			Column: role.FieldEventWrite,
 		})
 	}
 	if value, ok := ru.mutation.User(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeBool,
+			Type:   field.TypeString,
 			Value:  value,
 			Column: role.FieldUser,
 		})
 	}
 	if value, ok := ru.mutation.UserSubscription(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeBool,
+			Type:   field.TypeString,
 			Value:  value,
 			Column: role.FieldUserSubscription,
 		})
 	}
 	if value, ok := ru.mutation.UserWrite(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeBool,
+			Type:   field.TypeString,
 			Value:  value,
 			Column: role.FieldUserWrite,
 		})
@@ -340,71 +340,71 @@ func (ruo *RoleUpdateOne) SetName(s string) *RoleUpdateOne {
 }
 
 // SetEvent sets the "event" field.
-func (ruo *RoleUpdateOne) SetEvent(b bool) *RoleUpdateOne {
-	ruo.mutation.SetEvent(b)
+func (ruo *RoleUpdateOne) SetEvent(s string) *RoleUpdateOne {
+	ruo.mutation.SetEvent(s)
 	return ruo
 }
 
 // SetNillableEvent sets the "event" field if the given value is not nil.
-func (ruo *RoleUpdateOne) SetNillableEvent(b *bool) *RoleUpdateOne {
-	if b != nil {
-		ruo.SetEvent(*b)
+func (ruo *RoleUpdateOne) SetNillableEvent(s *string) *RoleUpdateOne {
+	if s != nil {
+		ruo.SetEvent(*s)
 	}
 	return ruo
 }
 
 // SetEventWrite sets the "event_write" field.
-func (ruo *RoleUpdateOne) SetEventWrite(b bool) *RoleUpdateOne {
-	ruo.mutation.SetEventWrite(b)
+func (ruo *RoleUpdateOne) SetEventWrite(s string) *RoleUpdateOne {
+	ruo.mutation.SetEventWrite(s)
 	return ruo
 }
 
 // SetNillableEventWrite sets the "event_write" field if the given value is not nil.
-func (ruo *RoleUpdateOne) SetNillableEventWrite(b *bool) *RoleUpdateOne {
-	if b != nil {
-		ruo.SetEventWrite(*b)
+func (ruo *RoleUpdateOne) SetNillableEventWrite(s *string) *RoleUpdateOne {
+	if s != nil {
+		ruo.SetEventWrite(*s)
 	}
 	return ruo
 }
 
 // SetUser sets the "user" field.
-func (ruo *RoleUpdateOne) SetUser(b bool) *RoleUpdateOne {
-	ruo.mutation.SetUser(b)
+func (ruo *RoleUpdateOne) SetUser(s string) *RoleUpdateOne {
+	ruo.mutation.SetUser(s)
 	return ruo
 }
 
 // SetNillableUser sets the "user" field if the given value is not nil.
-func (ruo *RoleUpdateOne) SetNillableUser(b *bool) *RoleUpdateOne {
-	if b != nil {
-		ruo.SetUser(*b)
+func (ruo *RoleUpdateOne) SetNillableUser(s *string) *RoleUpdateOne {
+	if s != nil {
+		ruo.SetUser(*s)
 	}
 	return ruo
 }
 
 // SetUserSubscription sets the "user_subscription" field.
-func (ruo *RoleUpdateOne) SetUserSubscription(b bool) *RoleUpdateOne {
-	ruo.mutation.SetUserSubscription(b)
+func (ruo *RoleUpdateOne) SetUserSubscription(s string) *RoleUpdateOne {
+	ruo.mutation.SetUserSubscription(s)
 	return ruo
 }
 
 // SetNillableUserSubscription sets the "user_subscription" field if the given value is not nil.
-func (ruo *RoleUpdateOne) SetNillableUserSubscription(b *bool) *RoleUpdateOne {
-	if b != nil {
-		ruo.SetUserSubscription(*b)
+func (ruo *RoleUpdateOne) SetNillableUserSubscription(s *string) *RoleUpdateOne {
+	if s != nil {
+		ruo.SetUserSubscription(*s)
 	}
 	return ruo
 }
 
 // SetUserWrite sets the "user_write" field.
-func (ruo *RoleUpdateOne) SetUserWrite(b bool) *RoleUpdateOne {
-	ruo.mutation.SetUserWrite(b)
+func (ruo *RoleUpdateOne) SetUserWrite(s string) *RoleUpdateOne {
+	ruo.mutation.SetUserWrite(s)
 	return ruo
 }
 
 // SetNillableUserWrite sets the "user_write" field if the given value is not nil.
-func (ruo *RoleUpdateOne) SetNillableUserWrite(b *bool) *RoleUpdateOne {
-	if b != nil {
-		ruo.SetUserWrite(*b)
+func (ruo *RoleUpdateOne) SetNillableUserWrite(s *string) *RoleUpdateOne {
+	if s != nil {
+		ruo.SetUserWrite(*s)
 	}
 	return ruo
 }
@@ -517,7 +517,7 @@ func (ruo *RoleUpdateOne) sqlSave(ctx context.Context) (_node *Role, err error) 
 			Table:   role.Table,
 			Columns: role.Columns,
 			ID: &sqlgraph.FieldSpec{
-				Type:   field.TypeInt,
+				Type:   field.TypeUUID,
 				Column: role.FieldID,
 			},
 		},
@@ -555,35 +555,35 @@ func (ruo *RoleUpdateOne) sqlSave(ctx context.Context) (_node *Role, err error) 
 	}
 	if value, ok := ruo.mutation.Event(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeBool,
+			Type:   field.TypeString,
 			Value:  value,
 			Column: role.FieldEvent,
 		})
 	}
 	if value, ok := ruo.mutation.EventWrite(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeBool,
+			Type:   field.TypeString,
 			Value:  value,
 			Column: role.FieldEventWrite,
 		})
 	}
 	if value, ok := ruo.mutation.User(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeBool,
+			Type:   field.TypeString,
 			Value:  value,
 			Column: role.FieldUser,
 		})
 	}
 	if value, ok := ruo.mutation.UserSubscription(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeBool,
+			Type:   field.TypeString,
 			Value:  value,
 			Column: role.FieldUserSubscription,
 		})
 	}
 	if value, ok := ruo.mutation.UserWrite(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeBool,
+			Type:   field.TypeString,
 			Value:  value,
 			Column: role.FieldUserWrite,
 		})

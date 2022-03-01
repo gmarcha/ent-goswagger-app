@@ -3,7 +3,6 @@
 package event
 
 import (
-	"fmt"
 	"time"
 
 	"github.com/google/uuid"
@@ -16,8 +15,6 @@ const (
 	FieldID = "id"
 	// FieldName holds the string denoting the name field in the database.
 	FieldName = "name"
-	// FieldCategory holds the string denoting the category field in the database.
-	FieldCategory = "category"
 	// FieldDescription holds the string denoting the description field in the database.
 	FieldDescription = "description"
 	// FieldTutorsRequired holds the string denoting the tutorsrequired field in the database.
@@ -32,6 +29,8 @@ const (
 	FieldEndAt = "end_at"
 	// EdgeUsers holds the string denoting the users edge name in mutations.
 	EdgeUsers = "users"
+	// EdgeCategory holds the string denoting the category edge name in mutations.
+	EdgeCategory = "category"
 	// Table holds the table name of the event in the database.
 	Table = "events"
 	// UsersTable is the table that holds the users relation/edge. The primary key declared below.
@@ -39,19 +38,31 @@ const (
 	// UsersInverseTable is the table name for the User entity.
 	// It exists in this package in order to avoid circular dependency with the "user" package.
 	UsersInverseTable = "users"
+	// CategoryTable is the table that holds the category relation/edge.
+	CategoryTable = "events"
+	// CategoryInverseTable is the table name for the EventType entity.
+	// It exists in this package in order to avoid circular dependency with the "eventtype" package.
+	CategoryInverseTable = "event_types"
+	// CategoryColumn is the table column denoting the category relation/edge.
+	CategoryColumn = "event_type_events"
 )
 
 // Columns holds all SQL columns for event fields.
 var Columns = []string{
 	FieldID,
 	FieldName,
-	FieldCategory,
 	FieldDescription,
 	FieldTutorsRequired,
 	FieldWalletsReward,
 	FieldCreatedAt,
 	FieldStartAt,
 	FieldEndAt,
+}
+
+// ForeignKeys holds the SQL foreign-keys that are owned by the "events"
+// table and are not defined as standalone fields in the schema.
+var ForeignKeys = []string{
+	"event_type_events",
 }
 
 var (
@@ -64,6 +75,11 @@ var (
 func ValidColumn(column string) bool {
 	for i := range Columns {
 		if column == Columns[i] {
+			return true
+		}
+	}
+	for i := range ForeignKeys {
+		if column == ForeignKeys[i] {
 			return true
 		}
 	}
@@ -82,28 +98,3 @@ var (
 	// DefaultID holds the default value on creation for the "id" field.
 	DefaultID func() uuid.UUID
 )
-
-// Category defines the type for the "category" enum field.
-type Category string
-
-// Category values.
-const (
-	CategoryExam    Category = "exam"
-	CategoryRush    Category = "rush"
-	CategoryMeeting Category = "meeting"
-	CategoryEvents  Category = "events"
-)
-
-func (c Category) String() string {
-	return string(c)
-}
-
-// CategoryValidator is a validator for the "category" field enum values. It is called by the builders before save.
-func CategoryValidator(c Category) error {
-	switch c {
-	case CategoryExam, CategoryRush, CategoryMeeting, CategoryEvents:
-		return nil
-	default:
-		return fmt.Errorf("event: invalid enum value for category field: %q", c)
-	}
-}

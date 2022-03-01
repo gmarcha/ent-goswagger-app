@@ -254,68 +254,6 @@ func NameContainsFold(v string) predicate.Event {
 	})
 }
 
-// CategoryEQ applies the EQ predicate on the "category" field.
-func CategoryEQ(v Category) predicate.Event {
-	return predicate.Event(func(s *sql.Selector) {
-		s.Where(sql.EQ(s.C(FieldCategory), v))
-	})
-}
-
-// CategoryNEQ applies the NEQ predicate on the "category" field.
-func CategoryNEQ(v Category) predicate.Event {
-	return predicate.Event(func(s *sql.Selector) {
-		s.Where(sql.NEQ(s.C(FieldCategory), v))
-	})
-}
-
-// CategoryIn applies the In predicate on the "category" field.
-func CategoryIn(vs ...Category) predicate.Event {
-	v := make([]interface{}, len(vs))
-	for i := range v {
-		v[i] = vs[i]
-	}
-	return predicate.Event(func(s *sql.Selector) {
-		// if not arguments were provided, append the FALSE constants,
-		// since we can't apply "IN ()". This will make this predicate falsy.
-		if len(v) == 0 {
-			s.Where(sql.False())
-			return
-		}
-		s.Where(sql.In(s.C(FieldCategory), v...))
-	})
-}
-
-// CategoryNotIn applies the NotIn predicate on the "category" field.
-func CategoryNotIn(vs ...Category) predicate.Event {
-	v := make([]interface{}, len(vs))
-	for i := range v {
-		v[i] = vs[i]
-	}
-	return predicate.Event(func(s *sql.Selector) {
-		// if not arguments were provided, append the FALSE constants,
-		// since we can't apply "IN ()". This will make this predicate falsy.
-		if len(v) == 0 {
-			s.Where(sql.False())
-			return
-		}
-		s.Where(sql.NotIn(s.C(FieldCategory), v...))
-	})
-}
-
-// CategoryIsNil applies the IsNil predicate on the "category" field.
-func CategoryIsNil() predicate.Event {
-	return predicate.Event(func(s *sql.Selector) {
-		s.Where(sql.IsNull(s.C(FieldCategory)))
-	})
-}
-
-// CategoryNotNil applies the NotNil predicate on the "category" field.
-func CategoryNotNil() predicate.Event {
-	return predicate.Event(func(s *sql.Selector) {
-		s.Where(sql.NotNull(s.C(FieldCategory)))
-	})
-}
-
 // DescriptionEQ applies the EQ predicate on the "description" field.
 func DescriptionEQ(v string) predicate.Event {
 	return predicate.Event(func(s *sql.Selector) {
@@ -868,6 +806,34 @@ func HasUsersWith(preds ...predicate.User) predicate.Event {
 			sqlgraph.From(Table, FieldID),
 			sqlgraph.To(UsersInverseTable, FieldID),
 			sqlgraph.Edge(sqlgraph.M2M, false, UsersTable, UsersPrimaryKey...),
+		)
+		sqlgraph.HasNeighborsWith(s, step, func(s *sql.Selector) {
+			for _, p := range preds {
+				p(s)
+			}
+		})
+	})
+}
+
+// HasCategory applies the HasEdge predicate on the "category" edge.
+func HasCategory() predicate.Event {
+	return predicate.Event(func(s *sql.Selector) {
+		step := sqlgraph.NewStep(
+			sqlgraph.From(Table, FieldID),
+			sqlgraph.To(CategoryTable, FieldID),
+			sqlgraph.Edge(sqlgraph.M2O, true, CategoryTable, CategoryColumn),
+		)
+		sqlgraph.HasNeighbors(s, step)
+	})
+}
+
+// HasCategoryWith applies the HasEdge predicate on the "category" edge with a given conditions (other predicates).
+func HasCategoryWith(preds ...predicate.EventType) predicate.Event {
+	return predicate.Event(func(s *sql.Selector) {
+		step := sqlgraph.NewStep(
+			sqlgraph.From(Table, FieldID),
+			sqlgraph.To(CategoryInverseTable, FieldID),
+			sqlgraph.Edge(sqlgraph.M2O, true, CategoryTable, CategoryColumn),
 		)
 		sqlgraph.HasNeighborsWith(s, step, func(s *sql.Selector) {
 			for _, p := range preds {

@@ -99,14 +99,14 @@ func (uc *UserCreate) SetNillableID(u *uuid.UUID) *UserCreate {
 }
 
 // AddRoleIDs adds the "roles" edge to the Role entity by IDs.
-func (uc *UserCreate) AddRoleIDs(ids ...int) *UserCreate {
+func (uc *UserCreate) AddRoleIDs(ids ...uuid.UUID) *UserCreate {
 	uc.mutation.AddRoleIDs(ids...)
 	return uc
 }
 
 // AddRoles adds the "roles" edges to the Role entity.
 func (uc *UserCreate) AddRoles(r ...*Role) *UserCreate {
-	ids := make([]int, len(r))
+	ids := make([]uuid.UUID, len(r))
 	for i := range r {
 		ids[i] = r[i].ID
 	}
@@ -300,7 +300,7 @@ func (uc *UserCreate) createSpec() (*User, *sqlgraph.CreateSpec) {
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: &sqlgraph.FieldSpec{
-					Type:   field.TypeInt,
+					Type:   field.TypeUUID,
 					Column: role.FieldID,
 				},
 			},

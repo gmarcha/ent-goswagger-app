@@ -6,31 +6,32 @@ import (
 	"entgo.io/ent/dialect/sql"
 	"entgo.io/ent/dialect/sql/sqlgraph"
 	"github.com/gmarcha/ent-goswagger-app/internal/ent/predicate"
+	"github.com/google/uuid"
 )
 
 // ID filters vertices based on their ID field.
-func ID(id int) predicate.Role {
+func ID(id uuid.UUID) predicate.Role {
 	return predicate.Role(func(s *sql.Selector) {
 		s.Where(sql.EQ(s.C(FieldID), id))
 	})
 }
 
 // IDEQ applies the EQ predicate on the ID field.
-func IDEQ(id int) predicate.Role {
+func IDEQ(id uuid.UUID) predicate.Role {
 	return predicate.Role(func(s *sql.Selector) {
 		s.Where(sql.EQ(s.C(FieldID), id))
 	})
 }
 
 // IDNEQ applies the NEQ predicate on the ID field.
-func IDNEQ(id int) predicate.Role {
+func IDNEQ(id uuid.UUID) predicate.Role {
 	return predicate.Role(func(s *sql.Selector) {
 		s.Where(sql.NEQ(s.C(FieldID), id))
 	})
 }
 
 // IDIn applies the In predicate on the ID field.
-func IDIn(ids ...int) predicate.Role {
+func IDIn(ids ...uuid.UUID) predicate.Role {
 	return predicate.Role(func(s *sql.Selector) {
 		// if not arguments were provided, append the FALSE constants,
 		// since we can't apply "IN ()". This will make this predicate falsy.
@@ -47,7 +48,7 @@ func IDIn(ids ...int) predicate.Role {
 }
 
 // IDNotIn applies the NotIn predicate on the ID field.
-func IDNotIn(ids ...int) predicate.Role {
+func IDNotIn(ids ...uuid.UUID) predicate.Role {
 	return predicate.Role(func(s *sql.Selector) {
 		// if not arguments were provided, append the FALSE constants,
 		// since we can't apply "IN ()". This will make this predicate falsy.
@@ -64,28 +65,28 @@ func IDNotIn(ids ...int) predicate.Role {
 }
 
 // IDGT applies the GT predicate on the ID field.
-func IDGT(id int) predicate.Role {
+func IDGT(id uuid.UUID) predicate.Role {
 	return predicate.Role(func(s *sql.Selector) {
 		s.Where(sql.GT(s.C(FieldID), id))
 	})
 }
 
 // IDGTE applies the GTE predicate on the ID field.
-func IDGTE(id int) predicate.Role {
+func IDGTE(id uuid.UUID) predicate.Role {
 	return predicate.Role(func(s *sql.Selector) {
 		s.Where(sql.GTE(s.C(FieldID), id))
 	})
 }
 
 // IDLT applies the LT predicate on the ID field.
-func IDLT(id int) predicate.Role {
+func IDLT(id uuid.UUID) predicate.Role {
 	return predicate.Role(func(s *sql.Selector) {
 		s.Where(sql.LT(s.C(FieldID), id))
 	})
 }
 
 // IDLTE applies the LTE predicate on the ID field.
-func IDLTE(id int) predicate.Role {
+func IDLTE(id uuid.UUID) predicate.Role {
 	return predicate.Role(func(s *sql.Selector) {
 		s.Where(sql.LTE(s.C(FieldID), id))
 	})
@@ -99,35 +100,35 @@ func Name(v string) predicate.Role {
 }
 
 // Event applies equality check predicate on the "event" field. It's identical to EventEQ.
-func Event(v bool) predicate.Role {
+func Event(v string) predicate.Role {
 	return predicate.Role(func(s *sql.Selector) {
 		s.Where(sql.EQ(s.C(FieldEvent), v))
 	})
 }
 
 // EventWrite applies equality check predicate on the "event_write" field. It's identical to EventWriteEQ.
-func EventWrite(v bool) predicate.Role {
+func EventWrite(v string) predicate.Role {
 	return predicate.Role(func(s *sql.Selector) {
 		s.Where(sql.EQ(s.C(FieldEventWrite), v))
 	})
 }
 
 // User applies equality check predicate on the "user" field. It's identical to UserEQ.
-func User(v bool) predicate.Role {
+func User(v string) predicate.Role {
 	return predicate.Role(func(s *sql.Selector) {
 		s.Where(sql.EQ(s.C(FieldUser), v))
 	})
 }
 
 // UserSubscription applies equality check predicate on the "user_subscription" field. It's identical to UserSubscriptionEQ.
-func UserSubscription(v bool) predicate.Role {
+func UserSubscription(v string) predicate.Role {
 	return predicate.Role(func(s *sql.Selector) {
 		s.Where(sql.EQ(s.C(FieldUserSubscription), v))
 	})
 }
 
 // UserWrite applies equality check predicate on the "user_write" field. It's identical to UserWriteEQ.
-func UserWrite(v bool) predicate.Role {
+func UserWrite(v string) predicate.Role {
 	return predicate.Role(func(s *sql.Selector) {
 		s.Where(sql.EQ(s.C(FieldUserWrite), v))
 	})
@@ -245,72 +246,557 @@ func NameContainsFold(v string) predicate.Role {
 }
 
 // EventEQ applies the EQ predicate on the "event" field.
-func EventEQ(v bool) predicate.Role {
+func EventEQ(v string) predicate.Role {
 	return predicate.Role(func(s *sql.Selector) {
 		s.Where(sql.EQ(s.C(FieldEvent), v))
 	})
 }
 
 // EventNEQ applies the NEQ predicate on the "event" field.
-func EventNEQ(v bool) predicate.Role {
+func EventNEQ(v string) predicate.Role {
 	return predicate.Role(func(s *sql.Selector) {
 		s.Where(sql.NEQ(s.C(FieldEvent), v))
 	})
 }
 
+// EventIn applies the In predicate on the "event" field.
+func EventIn(vs ...string) predicate.Role {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.Role(func(s *sql.Selector) {
+		// if not arguments were provided, append the FALSE constants,
+		// since we can't apply "IN ()". This will make this predicate falsy.
+		if len(v) == 0 {
+			s.Where(sql.False())
+			return
+		}
+		s.Where(sql.In(s.C(FieldEvent), v...))
+	})
+}
+
+// EventNotIn applies the NotIn predicate on the "event" field.
+func EventNotIn(vs ...string) predicate.Role {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.Role(func(s *sql.Selector) {
+		// if not arguments were provided, append the FALSE constants,
+		// since we can't apply "IN ()". This will make this predicate falsy.
+		if len(v) == 0 {
+			s.Where(sql.False())
+			return
+		}
+		s.Where(sql.NotIn(s.C(FieldEvent), v...))
+	})
+}
+
+// EventGT applies the GT predicate on the "event" field.
+func EventGT(v string) predicate.Role {
+	return predicate.Role(func(s *sql.Selector) {
+		s.Where(sql.GT(s.C(FieldEvent), v))
+	})
+}
+
+// EventGTE applies the GTE predicate on the "event" field.
+func EventGTE(v string) predicate.Role {
+	return predicate.Role(func(s *sql.Selector) {
+		s.Where(sql.GTE(s.C(FieldEvent), v))
+	})
+}
+
+// EventLT applies the LT predicate on the "event" field.
+func EventLT(v string) predicate.Role {
+	return predicate.Role(func(s *sql.Selector) {
+		s.Where(sql.LT(s.C(FieldEvent), v))
+	})
+}
+
+// EventLTE applies the LTE predicate on the "event" field.
+func EventLTE(v string) predicate.Role {
+	return predicate.Role(func(s *sql.Selector) {
+		s.Where(sql.LTE(s.C(FieldEvent), v))
+	})
+}
+
+// EventContains applies the Contains predicate on the "event" field.
+func EventContains(v string) predicate.Role {
+	return predicate.Role(func(s *sql.Selector) {
+		s.Where(sql.Contains(s.C(FieldEvent), v))
+	})
+}
+
+// EventHasPrefix applies the HasPrefix predicate on the "event" field.
+func EventHasPrefix(v string) predicate.Role {
+	return predicate.Role(func(s *sql.Selector) {
+		s.Where(sql.HasPrefix(s.C(FieldEvent), v))
+	})
+}
+
+// EventHasSuffix applies the HasSuffix predicate on the "event" field.
+func EventHasSuffix(v string) predicate.Role {
+	return predicate.Role(func(s *sql.Selector) {
+		s.Where(sql.HasSuffix(s.C(FieldEvent), v))
+	})
+}
+
+// EventEqualFold applies the EqualFold predicate on the "event" field.
+func EventEqualFold(v string) predicate.Role {
+	return predicate.Role(func(s *sql.Selector) {
+		s.Where(sql.EqualFold(s.C(FieldEvent), v))
+	})
+}
+
+// EventContainsFold applies the ContainsFold predicate on the "event" field.
+func EventContainsFold(v string) predicate.Role {
+	return predicate.Role(func(s *sql.Selector) {
+		s.Where(sql.ContainsFold(s.C(FieldEvent), v))
+	})
+}
+
 // EventWriteEQ applies the EQ predicate on the "event_write" field.
-func EventWriteEQ(v bool) predicate.Role {
+func EventWriteEQ(v string) predicate.Role {
 	return predicate.Role(func(s *sql.Selector) {
 		s.Where(sql.EQ(s.C(FieldEventWrite), v))
 	})
 }
 
 // EventWriteNEQ applies the NEQ predicate on the "event_write" field.
-func EventWriteNEQ(v bool) predicate.Role {
+func EventWriteNEQ(v string) predicate.Role {
 	return predicate.Role(func(s *sql.Selector) {
 		s.Where(sql.NEQ(s.C(FieldEventWrite), v))
 	})
 }
 
+// EventWriteIn applies the In predicate on the "event_write" field.
+func EventWriteIn(vs ...string) predicate.Role {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.Role(func(s *sql.Selector) {
+		// if not arguments were provided, append the FALSE constants,
+		// since we can't apply "IN ()". This will make this predicate falsy.
+		if len(v) == 0 {
+			s.Where(sql.False())
+			return
+		}
+		s.Where(sql.In(s.C(FieldEventWrite), v...))
+	})
+}
+
+// EventWriteNotIn applies the NotIn predicate on the "event_write" field.
+func EventWriteNotIn(vs ...string) predicate.Role {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.Role(func(s *sql.Selector) {
+		// if not arguments were provided, append the FALSE constants,
+		// since we can't apply "IN ()". This will make this predicate falsy.
+		if len(v) == 0 {
+			s.Where(sql.False())
+			return
+		}
+		s.Where(sql.NotIn(s.C(FieldEventWrite), v...))
+	})
+}
+
+// EventWriteGT applies the GT predicate on the "event_write" field.
+func EventWriteGT(v string) predicate.Role {
+	return predicate.Role(func(s *sql.Selector) {
+		s.Where(sql.GT(s.C(FieldEventWrite), v))
+	})
+}
+
+// EventWriteGTE applies the GTE predicate on the "event_write" field.
+func EventWriteGTE(v string) predicate.Role {
+	return predicate.Role(func(s *sql.Selector) {
+		s.Where(sql.GTE(s.C(FieldEventWrite), v))
+	})
+}
+
+// EventWriteLT applies the LT predicate on the "event_write" field.
+func EventWriteLT(v string) predicate.Role {
+	return predicate.Role(func(s *sql.Selector) {
+		s.Where(sql.LT(s.C(FieldEventWrite), v))
+	})
+}
+
+// EventWriteLTE applies the LTE predicate on the "event_write" field.
+func EventWriteLTE(v string) predicate.Role {
+	return predicate.Role(func(s *sql.Selector) {
+		s.Where(sql.LTE(s.C(FieldEventWrite), v))
+	})
+}
+
+// EventWriteContains applies the Contains predicate on the "event_write" field.
+func EventWriteContains(v string) predicate.Role {
+	return predicate.Role(func(s *sql.Selector) {
+		s.Where(sql.Contains(s.C(FieldEventWrite), v))
+	})
+}
+
+// EventWriteHasPrefix applies the HasPrefix predicate on the "event_write" field.
+func EventWriteHasPrefix(v string) predicate.Role {
+	return predicate.Role(func(s *sql.Selector) {
+		s.Where(sql.HasPrefix(s.C(FieldEventWrite), v))
+	})
+}
+
+// EventWriteHasSuffix applies the HasSuffix predicate on the "event_write" field.
+func EventWriteHasSuffix(v string) predicate.Role {
+	return predicate.Role(func(s *sql.Selector) {
+		s.Where(sql.HasSuffix(s.C(FieldEventWrite), v))
+	})
+}
+
+// EventWriteEqualFold applies the EqualFold predicate on the "event_write" field.
+func EventWriteEqualFold(v string) predicate.Role {
+	return predicate.Role(func(s *sql.Selector) {
+		s.Where(sql.EqualFold(s.C(FieldEventWrite), v))
+	})
+}
+
+// EventWriteContainsFold applies the ContainsFold predicate on the "event_write" field.
+func EventWriteContainsFold(v string) predicate.Role {
+	return predicate.Role(func(s *sql.Selector) {
+		s.Where(sql.ContainsFold(s.C(FieldEventWrite), v))
+	})
+}
+
 // UserEQ applies the EQ predicate on the "user" field.
-func UserEQ(v bool) predicate.Role {
+func UserEQ(v string) predicate.Role {
 	return predicate.Role(func(s *sql.Selector) {
 		s.Where(sql.EQ(s.C(FieldUser), v))
 	})
 }
 
 // UserNEQ applies the NEQ predicate on the "user" field.
-func UserNEQ(v bool) predicate.Role {
+func UserNEQ(v string) predicate.Role {
 	return predicate.Role(func(s *sql.Selector) {
 		s.Where(sql.NEQ(s.C(FieldUser), v))
 	})
 }
 
+// UserIn applies the In predicate on the "user" field.
+func UserIn(vs ...string) predicate.Role {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.Role(func(s *sql.Selector) {
+		// if not arguments were provided, append the FALSE constants,
+		// since we can't apply "IN ()". This will make this predicate falsy.
+		if len(v) == 0 {
+			s.Where(sql.False())
+			return
+		}
+		s.Where(sql.In(s.C(FieldUser), v...))
+	})
+}
+
+// UserNotIn applies the NotIn predicate on the "user" field.
+func UserNotIn(vs ...string) predicate.Role {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.Role(func(s *sql.Selector) {
+		// if not arguments were provided, append the FALSE constants,
+		// since we can't apply "IN ()". This will make this predicate falsy.
+		if len(v) == 0 {
+			s.Where(sql.False())
+			return
+		}
+		s.Where(sql.NotIn(s.C(FieldUser), v...))
+	})
+}
+
+// UserGT applies the GT predicate on the "user" field.
+func UserGT(v string) predicate.Role {
+	return predicate.Role(func(s *sql.Selector) {
+		s.Where(sql.GT(s.C(FieldUser), v))
+	})
+}
+
+// UserGTE applies the GTE predicate on the "user" field.
+func UserGTE(v string) predicate.Role {
+	return predicate.Role(func(s *sql.Selector) {
+		s.Where(sql.GTE(s.C(FieldUser), v))
+	})
+}
+
+// UserLT applies the LT predicate on the "user" field.
+func UserLT(v string) predicate.Role {
+	return predicate.Role(func(s *sql.Selector) {
+		s.Where(sql.LT(s.C(FieldUser), v))
+	})
+}
+
+// UserLTE applies the LTE predicate on the "user" field.
+func UserLTE(v string) predicate.Role {
+	return predicate.Role(func(s *sql.Selector) {
+		s.Where(sql.LTE(s.C(FieldUser), v))
+	})
+}
+
+// UserContains applies the Contains predicate on the "user" field.
+func UserContains(v string) predicate.Role {
+	return predicate.Role(func(s *sql.Selector) {
+		s.Where(sql.Contains(s.C(FieldUser), v))
+	})
+}
+
+// UserHasPrefix applies the HasPrefix predicate on the "user" field.
+func UserHasPrefix(v string) predicate.Role {
+	return predicate.Role(func(s *sql.Selector) {
+		s.Where(sql.HasPrefix(s.C(FieldUser), v))
+	})
+}
+
+// UserHasSuffix applies the HasSuffix predicate on the "user" field.
+func UserHasSuffix(v string) predicate.Role {
+	return predicate.Role(func(s *sql.Selector) {
+		s.Where(sql.HasSuffix(s.C(FieldUser), v))
+	})
+}
+
+// UserEqualFold applies the EqualFold predicate on the "user" field.
+func UserEqualFold(v string) predicate.Role {
+	return predicate.Role(func(s *sql.Selector) {
+		s.Where(sql.EqualFold(s.C(FieldUser), v))
+	})
+}
+
+// UserContainsFold applies the ContainsFold predicate on the "user" field.
+func UserContainsFold(v string) predicate.Role {
+	return predicate.Role(func(s *sql.Selector) {
+		s.Where(sql.ContainsFold(s.C(FieldUser), v))
+	})
+}
+
 // UserSubscriptionEQ applies the EQ predicate on the "user_subscription" field.
-func UserSubscriptionEQ(v bool) predicate.Role {
+func UserSubscriptionEQ(v string) predicate.Role {
 	return predicate.Role(func(s *sql.Selector) {
 		s.Where(sql.EQ(s.C(FieldUserSubscription), v))
 	})
 }
 
 // UserSubscriptionNEQ applies the NEQ predicate on the "user_subscription" field.
-func UserSubscriptionNEQ(v bool) predicate.Role {
+func UserSubscriptionNEQ(v string) predicate.Role {
 	return predicate.Role(func(s *sql.Selector) {
 		s.Where(sql.NEQ(s.C(FieldUserSubscription), v))
 	})
 }
 
+// UserSubscriptionIn applies the In predicate on the "user_subscription" field.
+func UserSubscriptionIn(vs ...string) predicate.Role {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.Role(func(s *sql.Selector) {
+		// if not arguments were provided, append the FALSE constants,
+		// since we can't apply "IN ()". This will make this predicate falsy.
+		if len(v) == 0 {
+			s.Where(sql.False())
+			return
+		}
+		s.Where(sql.In(s.C(FieldUserSubscription), v...))
+	})
+}
+
+// UserSubscriptionNotIn applies the NotIn predicate on the "user_subscription" field.
+func UserSubscriptionNotIn(vs ...string) predicate.Role {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.Role(func(s *sql.Selector) {
+		// if not arguments were provided, append the FALSE constants,
+		// since we can't apply "IN ()". This will make this predicate falsy.
+		if len(v) == 0 {
+			s.Where(sql.False())
+			return
+		}
+		s.Where(sql.NotIn(s.C(FieldUserSubscription), v...))
+	})
+}
+
+// UserSubscriptionGT applies the GT predicate on the "user_subscription" field.
+func UserSubscriptionGT(v string) predicate.Role {
+	return predicate.Role(func(s *sql.Selector) {
+		s.Where(sql.GT(s.C(FieldUserSubscription), v))
+	})
+}
+
+// UserSubscriptionGTE applies the GTE predicate on the "user_subscription" field.
+func UserSubscriptionGTE(v string) predicate.Role {
+	return predicate.Role(func(s *sql.Selector) {
+		s.Where(sql.GTE(s.C(FieldUserSubscription), v))
+	})
+}
+
+// UserSubscriptionLT applies the LT predicate on the "user_subscription" field.
+func UserSubscriptionLT(v string) predicate.Role {
+	return predicate.Role(func(s *sql.Selector) {
+		s.Where(sql.LT(s.C(FieldUserSubscription), v))
+	})
+}
+
+// UserSubscriptionLTE applies the LTE predicate on the "user_subscription" field.
+func UserSubscriptionLTE(v string) predicate.Role {
+	return predicate.Role(func(s *sql.Selector) {
+		s.Where(sql.LTE(s.C(FieldUserSubscription), v))
+	})
+}
+
+// UserSubscriptionContains applies the Contains predicate on the "user_subscription" field.
+func UserSubscriptionContains(v string) predicate.Role {
+	return predicate.Role(func(s *sql.Selector) {
+		s.Where(sql.Contains(s.C(FieldUserSubscription), v))
+	})
+}
+
+// UserSubscriptionHasPrefix applies the HasPrefix predicate on the "user_subscription" field.
+func UserSubscriptionHasPrefix(v string) predicate.Role {
+	return predicate.Role(func(s *sql.Selector) {
+		s.Where(sql.HasPrefix(s.C(FieldUserSubscription), v))
+	})
+}
+
+// UserSubscriptionHasSuffix applies the HasSuffix predicate on the "user_subscription" field.
+func UserSubscriptionHasSuffix(v string) predicate.Role {
+	return predicate.Role(func(s *sql.Selector) {
+		s.Where(sql.HasSuffix(s.C(FieldUserSubscription), v))
+	})
+}
+
+// UserSubscriptionEqualFold applies the EqualFold predicate on the "user_subscription" field.
+func UserSubscriptionEqualFold(v string) predicate.Role {
+	return predicate.Role(func(s *sql.Selector) {
+		s.Where(sql.EqualFold(s.C(FieldUserSubscription), v))
+	})
+}
+
+// UserSubscriptionContainsFold applies the ContainsFold predicate on the "user_subscription" field.
+func UserSubscriptionContainsFold(v string) predicate.Role {
+	return predicate.Role(func(s *sql.Selector) {
+		s.Where(sql.ContainsFold(s.C(FieldUserSubscription), v))
+	})
+}
+
 // UserWriteEQ applies the EQ predicate on the "user_write" field.
-func UserWriteEQ(v bool) predicate.Role {
+func UserWriteEQ(v string) predicate.Role {
 	return predicate.Role(func(s *sql.Selector) {
 		s.Where(sql.EQ(s.C(FieldUserWrite), v))
 	})
 }
 
 // UserWriteNEQ applies the NEQ predicate on the "user_write" field.
-func UserWriteNEQ(v bool) predicate.Role {
+func UserWriteNEQ(v string) predicate.Role {
 	return predicate.Role(func(s *sql.Selector) {
 		s.Where(sql.NEQ(s.C(FieldUserWrite), v))
+	})
+}
+
+// UserWriteIn applies the In predicate on the "user_write" field.
+func UserWriteIn(vs ...string) predicate.Role {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.Role(func(s *sql.Selector) {
+		// if not arguments were provided, append the FALSE constants,
+		// since we can't apply "IN ()". This will make this predicate falsy.
+		if len(v) == 0 {
+			s.Where(sql.False())
+			return
+		}
+		s.Where(sql.In(s.C(FieldUserWrite), v...))
+	})
+}
+
+// UserWriteNotIn applies the NotIn predicate on the "user_write" field.
+func UserWriteNotIn(vs ...string) predicate.Role {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.Role(func(s *sql.Selector) {
+		// if not arguments were provided, append the FALSE constants,
+		// since we can't apply "IN ()". This will make this predicate falsy.
+		if len(v) == 0 {
+			s.Where(sql.False())
+			return
+		}
+		s.Where(sql.NotIn(s.C(FieldUserWrite), v...))
+	})
+}
+
+// UserWriteGT applies the GT predicate on the "user_write" field.
+func UserWriteGT(v string) predicate.Role {
+	return predicate.Role(func(s *sql.Selector) {
+		s.Where(sql.GT(s.C(FieldUserWrite), v))
+	})
+}
+
+// UserWriteGTE applies the GTE predicate on the "user_write" field.
+func UserWriteGTE(v string) predicate.Role {
+	return predicate.Role(func(s *sql.Selector) {
+		s.Where(sql.GTE(s.C(FieldUserWrite), v))
+	})
+}
+
+// UserWriteLT applies the LT predicate on the "user_write" field.
+func UserWriteLT(v string) predicate.Role {
+	return predicate.Role(func(s *sql.Selector) {
+		s.Where(sql.LT(s.C(FieldUserWrite), v))
+	})
+}
+
+// UserWriteLTE applies the LTE predicate on the "user_write" field.
+func UserWriteLTE(v string) predicate.Role {
+	return predicate.Role(func(s *sql.Selector) {
+		s.Where(sql.LTE(s.C(FieldUserWrite), v))
+	})
+}
+
+// UserWriteContains applies the Contains predicate on the "user_write" field.
+func UserWriteContains(v string) predicate.Role {
+	return predicate.Role(func(s *sql.Selector) {
+		s.Where(sql.Contains(s.C(FieldUserWrite), v))
+	})
+}
+
+// UserWriteHasPrefix applies the HasPrefix predicate on the "user_write" field.
+func UserWriteHasPrefix(v string) predicate.Role {
+	return predicate.Role(func(s *sql.Selector) {
+		s.Where(sql.HasPrefix(s.C(FieldUserWrite), v))
+	})
+}
+
+// UserWriteHasSuffix applies the HasSuffix predicate on the "user_write" field.
+func UserWriteHasSuffix(v string) predicate.Role {
+	return predicate.Role(func(s *sql.Selector) {
+		s.Where(sql.HasSuffix(s.C(FieldUserWrite), v))
+	})
+}
+
+// UserWriteEqualFold applies the EqualFold predicate on the "user_write" field.
+func UserWriteEqualFold(v string) predicate.Role {
+	return predicate.Role(func(s *sql.Selector) {
+		s.Where(sql.EqualFold(s.C(FieldUserWrite), v))
+	})
+}
+
+// UserWriteContainsFold applies the ContainsFold predicate on the "user_write" field.
+func UserWriteContainsFold(v string) predicate.Role {
+	return predicate.Role(func(s *sql.Selector) {
+		s.Where(sql.ContainsFold(s.C(FieldUserWrite), v))
 	})
 }
 

@@ -111,8 +111,8 @@ func (rq *RoleQuery) FirstX(ctx context.Context) *Role {
 
 // FirstID returns the first Role ID from the query.
 // Returns a *NotFoundError when no Role ID was found.
-func (rq *RoleQuery) FirstID(ctx context.Context) (id int, err error) {
-	var ids []int
+func (rq *RoleQuery) FirstID(ctx context.Context) (id uuid.UUID, err error) {
+	var ids []uuid.UUID
 	if ids, err = rq.Limit(1).IDs(ctx); err != nil {
 		return
 	}
@@ -124,7 +124,7 @@ func (rq *RoleQuery) FirstID(ctx context.Context) (id int, err error) {
 }
 
 // FirstIDX is like FirstID, but panics if an error occurs.
-func (rq *RoleQuery) FirstIDX(ctx context.Context) int {
+func (rq *RoleQuery) FirstIDX(ctx context.Context) uuid.UUID {
 	id, err := rq.FirstID(ctx)
 	if err != nil && !IsNotFound(err) {
 		panic(err)
@@ -162,8 +162,8 @@ func (rq *RoleQuery) OnlyX(ctx context.Context) *Role {
 // OnlyID is like Only, but returns the only Role ID in the query.
 // Returns a *NotSingularError when exactly one Role ID is not found.
 // Returns a *NotFoundError when no entities are found.
-func (rq *RoleQuery) OnlyID(ctx context.Context) (id int, err error) {
-	var ids []int
+func (rq *RoleQuery) OnlyID(ctx context.Context) (id uuid.UUID, err error) {
+	var ids []uuid.UUID
 	if ids, err = rq.Limit(2).IDs(ctx); err != nil {
 		return
 	}
@@ -179,7 +179,7 @@ func (rq *RoleQuery) OnlyID(ctx context.Context) (id int, err error) {
 }
 
 // OnlyIDX is like OnlyID, but panics if an error occurs.
-func (rq *RoleQuery) OnlyIDX(ctx context.Context) int {
+func (rq *RoleQuery) OnlyIDX(ctx context.Context) uuid.UUID {
 	id, err := rq.OnlyID(ctx)
 	if err != nil {
 		panic(err)
@@ -205,8 +205,8 @@ func (rq *RoleQuery) AllX(ctx context.Context) []*Role {
 }
 
 // IDs executes the query and returns a list of Role IDs.
-func (rq *RoleQuery) IDs(ctx context.Context) ([]int, error) {
-	var ids []int
+func (rq *RoleQuery) IDs(ctx context.Context) ([]uuid.UUID, error) {
+	var ids []uuid.UUID
 	if err := rq.Select(role.FieldID).Scan(ctx, &ids); err != nil {
 		return nil, err
 	}
@@ -214,7 +214,7 @@ func (rq *RoleQuery) IDs(ctx context.Context) ([]int, error) {
 }
 
 // IDsX is like IDs, but panics if an error occurs.
-func (rq *RoleQuery) IDsX(ctx context.Context) []int {
+func (rq *RoleQuery) IDsX(ctx context.Context) []uuid.UUID {
 	ids, err := rq.IDs(ctx)
 	if err != nil {
 		panic(err)
@@ -377,7 +377,7 @@ func (rq *RoleQuery) sqlAll(ctx context.Context) ([]*Role, error) {
 
 	if query := rq.withUsers; query != nil {
 		fks := make([]driver.Value, 0, len(nodes))
-		ids := make(map[int]*Role, len(nodes))
+		ids := make(map[uuid.UUID]*Role, len(nodes))
 		for _, node := range nodes {
 			ids[node.ID] = node
 			fks = append(fks, node.ID)
@@ -397,10 +397,10 @@ func (rq *RoleQuery) sqlAll(ctx context.Context) ([]*Role, error) {
 				s.Where(sql.InValues(role.UsersPrimaryKey[0], fks...))
 			},
 			ScanValues: func() [2]interface{} {
-				return [2]interface{}{new(sql.NullInt64), new(uuid.UUID)}
+				return [2]interface{}{new(uuid.UUID), new(uuid.UUID)}
 			},
 			Assign: func(out, in interface{}) error {
-				eout, ok := out.(*sql.NullInt64)
+				eout, ok := out.(*uuid.UUID)
 				if !ok || eout == nil {
 					return fmt.Errorf("unexpected id value for edge-out")
 				}
@@ -408,7 +408,7 @@ func (rq *RoleQuery) sqlAll(ctx context.Context) ([]*Role, error) {
 				if !ok || ein == nil {
 					return fmt.Errorf("unexpected id value for edge-in")
 				}
-				outValue := int(eout.Int64)
+				outValue := *eout
 				inValue := *ein
 				node, ok := ids[outValue]
 				if !ok {
@@ -466,7 +466,7 @@ func (rq *RoleQuery) querySpec() *sqlgraph.QuerySpec {
 			Table:   role.Table,
 			Columns: role.Columns,
 			ID: &sqlgraph.FieldSpec{
-				Type:   field.TypeInt,
+				Type:   field.TypeUUID,
 				Column: role.FieldID,
 			},
 		},
