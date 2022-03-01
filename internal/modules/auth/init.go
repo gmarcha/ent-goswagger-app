@@ -2,33 +2,67 @@ package auth
 
 import (
 	"os"
+	"time"
 
 	"github.com/gmarcha/ent-goswagger-app/internal/ent"
 	"github.com/gmarcha/ent-goswagger-app/internal/goswagger/restapi/operations"
 	"github.com/gmarcha/ent-goswagger-app/internal/modules/user"
 	"github.com/gmarcha/ent-goswagger-app/internal/utils"
+	"github.com/go-redis/redis/v8"
+	"github.com/golang-jwt/jwt/v4"
 	"golang.org/x/oauth2"
 )
 
-func Init(api *operations.TutorAPI, db *ent.Client) {
+type userClaims struct {
+	Roles []string
+	jwt.RegisteredClaims
+}
 
-	state := utils.RandomString(64)
-	config := createOAuthConfig()
+func Init(api *operations.TutorAPI, db *ent.Client, rdb *redis.Client) {
+
+	accessTokenDuration := time.Minute
+	refreshTokenDuration := time.Hour * 72
+	accessTokenState := utils.RandomString(128)
+	refreshTokenState := os.Getenv("REFRESH_TOKEN_STATE")
+	oauthState := utils.RandomString(64)
+	oauthConfig := createConfig()
+	userInfoUrl := os.Getenv("API_USERINFO_URL")
 
 	userService := &user.Service{User: db.User}
 
-	api.OAuth2Auth = authenticate
-	api.AuthenticationLoginHandler = &login{state: state, config: config}
-	api.AuthenticationCallbackHandler = &callback{
-		state:  state,
-		config: config,
-		user:   userService,
+	api.OAuth2Auth = authenticate(rdb, accessTokenState).auth
+	api.AuthenticationLoginHandler = &login{
+		oauthState:  oauthState,
+		oauthConfig: oauthConfig,
 	}
-	api.AuthenticationTokenInfoHandler = &tokenInfo{user: userService}
-	api.AuthenticationTokenRefreshHandler = &tokenRefresh{user: userService}
+	api.AuthenticationCallbackHandler = &callback{
+		userInfoUrl:          userInfoUrl,
+		accessTokenDuration:  accessTokenDuration,
+		refreshTokenDuration: refreshTokenDuration,
+		accessTokenState:     accessTokenState,
+		refreshTokenState:    refreshTokenState,
+		oauthState:           oauthState,
+		oauthConfig:          oauthConfig,
+		user:                 userService,
+		rdb:                  rdb,
+	}
+	api.AuthenticationTokenInfoHandler = &tokenInfo{
+		accessTokenState: accessTokenState,
+		rdb:              rdb,
+	}
+	api.AuthenticationTokenRefreshHandler = &tokenRefresh{
+		userInfoUrl:          userInfoUrl,
+		accessTokenDuration:  accessTokenDuration,
+		refreshTokenDuration: refreshTokenDuration,
+		accessTokenState:     accessTokenState,
+		refreshTokenState:    refreshTokenState,
+		oauthConfig:          oauthConfig,
+		user:                 userService,
+		rdb:                  rdb,
+	}
 }
 
-func createOAuthConfig() *oauth2.Config {
+func createConfig() *oauth2.Config {
 
 	clientID := os.Getenv("API_CLIENT_ID")
 	clientSecret := os.Getenv("API_CLIENT_SECRET")
