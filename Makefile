@@ -83,11 +83,14 @@ run:		install
 #		to code generation and as documentation, from an other
 #		swagger specification used to configure routes and authentication;
 #	- `gen.swag` generates server code from swagger specification;
-#	- `gen` performs `gen.ent`, `gen.swag` and `gen.doc` rules.
+#	- `gen` performs `gen.ent`, `gen.doc` and `gen.swag` rules;
+#	- `gen.serv` performs `gen.doc` and `gen.swag` rules.
 #
 ###################################################################################
 
 gen:		gen.ent gen.doc gen.swag
+
+gen.serv:	gen.doc gen.swag
 
 gen.ent:
 			go generate ./internal/ent

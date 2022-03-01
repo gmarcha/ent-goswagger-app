@@ -31,6 +31,7 @@ Use Makefile rules to build and run application (see comments in `Makefile`).
 Use them to perform code generation with entgo and goswagger.
  
 - `make gen` uses `make gen.ent`, `make gen.doc` and `make gen.swag` internally;
+- `make gen.serv` uses `make gen.doc` and `make gen.swag` internally;
 - `make gen.ent` generates entgo data models from data schemas in `./internal/ent/schema/`;
 - `make gen.doc` generates a swagger specification used to code generation and as a documentation in `./docs/`
     (an other swagger specification should be configure with routes and authentication model in `./config/`);
