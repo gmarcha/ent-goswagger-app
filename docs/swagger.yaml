@@ -47,9 +47,9 @@ paths:
         "200":
           description: OK
           schema:
-            type: string
-        "401":
-          $ref: '#/responses/401'
+            $ref: '#/definitions/Token'
+        "422":
+          $ref: '#/responses/422'
         "500":
           $ref: '#/responses/500'
   /auth/token/info:
@@ -59,11 +59,24 @@ paths:
       tags:
         - Authentication
       operationId: tokenInfo
+      parameters:
+        - in: header
+          name: Authorization
+          type: string
+          required: true
+          description: Bearer access token
       responses:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/User'
+            type: object
+            properties:
+              login:
+                type: string
+                description: username
+              expiresAt:
+                type: string
+                format: date-time
         "401":
           $ref: '#/responses/401'
         "500":
@@ -75,11 +88,17 @@ paths:
       tags:
         - Authentication
       operationId: tokenRefresh
+      parameters:
+        - in: header
+          name: Authorization
+          type: string
+          required: true
+          description: Bearer refresh token
       responses:
         "200":
           description: OK
           schema:
-            type: string
+            $ref: '#/definitions/Token'
         "401":
           $ref: '#/responses/401'
         "500":
@@ -114,8 +133,10 @@ paths:
             type: array
             items:
               $ref: '#/definitions/Event'
-        "400":
-          $ref: '#/responses/400'
+        "401":
+          $ref: '#/responses/401'
+        "403":
+          $ref: '#/responses/403'
         "500":
           $ref: '#/responses/500'
     post:
@@ -143,6 +164,10 @@ paths:
             $ref: '#/definitions/Event'
         "400":
           $ref: '#/responses/400'
+        "401":
+          $ref: '#/responses/401'
+        "403":
+          $ref: '#/responses/403'
         "500":
           $ref: '#/responses/500'
   /events/{id}:
@@ -169,6 +194,10 @@ paths:
             $ref: '#/definitions/Event'
         "400":
           $ref: '#/responses/400'
+        "401":
+          $ref: '#/responses/401'
+        "403":
+          $ref: '#/responses/403'
         "404":
           $ref: '#/responses/404'
         "500":
@@ -198,6 +227,10 @@ paths:
             $ref: '#/definitions/Event'
         "400":
           $ref: '#/responses/400'
+        "401":
+          $ref: '#/responses/401'
+        "403":
+          $ref: '#/responses/403'
         "404":
           $ref: '#/responses/404'
         "500":
@@ -218,6 +251,10 @@ paths:
           description: No Content
         "400":
           $ref: '#/responses/400'
+        "401":
+          $ref: '#/responses/401'
+        "403":
+          $ref: '#/responses/403'
         "404":
           $ref: '#/responses/404'
         "500":
@@ -249,6 +286,186 @@ paths:
               $ref: '#/definitions/User'
         "400":
           $ref: '#/responses/400'
+        "401":
+          $ref: '#/responses/401'
+        "403":
+          $ref: '#/responses/403'
+        "404":
+          $ref: '#/responses/404'
+        "500":
+          $ref: '#/responses/500'
+  /events/{id}/types:
+    parameters:
+      - in: path
+        name: id
+        required: true
+        description: Event ID.
+        type: string
+    get:
+      summary: Event type
+      description: Retrieve event type.
+      tags:
+        - Event
+      operationId: eventType
+      security:
+        - OAuth2:
+            - public
+            - event
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/EventType'
+        "400":
+          $ref: '#/responses/400'
+        "401":
+          $ref: '#/responses/401'
+        "403":
+          $ref: '#/responses/403'
+        "404":
+          $ref: '#/responses/404'
+        "500":
+          $ref: '#/responses/500'
+  /events/types:
+    get:
+      summary: List event types
+      description: List all event categories.
+      tags:
+        - EventType
+      operationId: listType
+      security:
+        - OAuth2:
+            - public
+            - event
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/EventType'
+        "401":
+          $ref: '#/responses/401'
+        "403":
+          $ref: '#/responses/403'
+        "500":
+          $ref: '#/responses/500'
+    post:
+      summary: Create event type
+      description: Create a new event category.
+      tags:
+        - EventType
+      operationId: createType
+      security:
+        - OAuth2:
+            - public
+            - event
+            - event:write
+      parameters:
+        - in: body
+          name: type
+          required: true
+          description: Event category to create.
+          schema:
+            $ref: '#/definitions/EventType'
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/EventType'
+        "400":
+          $ref: '#/responses/400'
+        "401":
+          $ref: '#/responses/401'
+        "403":
+          $ref: '#/responses/403'
+        "500":
+          $ref: '#/responses/500'
+  /events/types/{id}:
+    parameters:
+      - in: path
+        name: id
+        required: true
+        description: ID of event category.
+        type: string
+    get:
+      summary: Read event type
+      description: Read an event category.
+      tags:
+        - EventType
+      operationId: readType
+      security:
+        - OAuth2:
+            - public
+            - event
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/EventType'
+        "400":
+          $ref: '#/responses/400'
+        "401":
+          $ref: '#/responses/401'
+        "403":
+          $ref: '#/responses/403'
+        "404":
+          $ref: '#/responses/404'
+        "500":
+          $ref: '#/responses/500'
+    post:
+      summary: Update event type
+      description: Update an event category.
+      tags:
+        - EventType
+      operationId: updateType
+      security:
+        - OAuth2:
+            - public
+            - event
+            - event:write
+      parameters:
+        - in: body
+          name: type
+          required: true
+          description: Event category to update.
+          schema:
+            $ref: '#/definitions/EventType'
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/EventType'
+        "400":
+          $ref: '#/responses/400'
+        "401":
+          $ref: '#/responses/401'
+        "403":
+          $ref: '#/responses/403'
+        "404":
+          $ref: '#/responses/404'
+        "500":
+          $ref: '#/responses/500'
+    delete:
+      summary: Delete event type
+      description: Update an event category.
+      tags:
+        - EventType
+      operationId: deleteType
+      security:
+        - OAuth2:
+            - public
+            - event
+            - event:write
+      responses:
+        "204":
+          description: No content
+        "400":
+          $ref: '#/responses/400'
+        "401":
+          $ref: '#/responses/401'
+        "403":
+          $ref: '#/responses/403'
         "404":
           $ref: '#/responses/404'
         "500":
@@ -275,8 +492,8 @@ paths:
             type: array
             items:
               $ref: '#/definitions/User'
-        "400":
-          $ref: '#/responses/400'
+        "401":
+          $ref: '#/responses/401'
         "500":
           $ref: '#/responses/500'
     post:
@@ -304,6 +521,10 @@ paths:
             $ref: '#/definitions/User'
         "400":
           $ref: '#/responses/400'
+        "401":
+          $ref: '#/responses/401'
+        "403":
+          $ref: '#/responses/403'
         "500":
           $ref: '#/responses/500'
   /users/me:
@@ -321,6 +542,35 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/User'
+        "401":
+          $ref: '#/responses/401'
+        "500":
+          $ref: '#/responses/500'
+    put:
+      summary: Update authenticated user
+      description: Update the authenticated user.
+      tags:
+        - User
+      operationId: updateMe
+      security:
+        - OAuth2:
+            - public
+      parameters:
+        - in: body
+          name: user
+          required: true
+          description: User to update.
+          schema:
+            $ref: '#/definitions/User'
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/User'
+        "400":
+          $ref: '#/responses/400'
+        "401":
+          $ref: '#/responses/401'
         "500":
           $ref: '#/responses/500'
     delete:
@@ -335,6 +585,8 @@ paths:
       responses:
         "204":
           description: No Content
+        "401":
+          $ref: '#/responses/401'
         "500":
           $ref: '#/responses/500'
   /users/me/events:
@@ -356,6 +608,34 @@ paths:
             type: array
             items:
               $ref: '#/definitions/Event'
+        "401":
+          $ref: '#/responses/401'
+        "403":
+          $ref: '#/responses/403'
+        "500":
+          $ref: '#/responses/500'
+  /users/me/roles:
+    get:
+      summary: List authenticated user roles
+      description: List the authenticated user's roles.
+      tags:
+        - User
+      operationId: listMeRoles
+      security:
+        - OAuth2:
+            - public
+            - user
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Role'
+        "401":
+          $ref: '#/responses/401'
+        "403":
+          $ref: '#/responses/403'
         "500":
           $ref: '#/responses/500'
   /users/me/events/{id}:
@@ -379,12 +659,17 @@ paths:
             - event
       responses:
         "201":
-          description: OK
+          description: Created
           schema:
-            type: string
-            example: Done
+            type: array
+            items:
+              $ref: '#/definitions/Event'
         "400":
           $ref: '#/responses/400'
+        "401":
+          $ref: '#/responses/401'
+        "403":
+          $ref: '#/responses/403'
         "404":
           $ref: '#/responses/404'
         "500":
@@ -406,6 +691,10 @@ paths:
           description: No Content
         "400":
           $ref: '#/responses/400'
+        "401":
+          $ref: '#/responses/401'
+        "403":
+          $ref: '#/responses/403'
         "404":
           $ref: '#/responses/404'
         "500":
@@ -434,6 +723,10 @@ paths:
             $ref: '#/definitions/User'
         "400":
           $ref: '#/responses/400'
+        "401":
+          $ref: '#/responses/401'
+        "403":
+          $ref: '#/responses/403'
         "404":
           $ref: '#/responses/404'
         "500":
@@ -463,6 +756,10 @@ paths:
             $ref: '#/definitions/User'
         "400":
           $ref: '#/responses/400'
+        "401":
+          $ref: '#/responses/401'
+        "403":
+          $ref: '#/responses/403'
         "404":
           $ref: '#/responses/404'
         "500":
@@ -483,6 +780,10 @@ paths:
           description: No Content
         "400":
           $ref: '#/responses/400'
+        "401":
+          $ref: '#/responses/401'
+        "403":
+          $ref: '#/responses/403'
         "404":
           $ref: '#/responses/404'
         "500":
@@ -514,6 +815,44 @@ paths:
               $ref: '#/definitions/Event'
         "400":
           $ref: '#/responses/400'
+        "401":
+          $ref: '#/responses/401'
+        "403":
+          $ref: '#/responses/403'
+        "404":
+          $ref: '#/responses/404'
+        "500":
+          $ref: '#/responses/500'
+  /users/{id}/roles:
+    parameters:
+      - in: path
+        name: id
+        required: true
+        description: User ID.
+        type: string
+    get:
+      summary: List user roles
+      description: List the user's roles.
+      tags:
+        - User
+      operationId: listUserRoles
+      security:
+        - OAuth2:
+            - public
+            - user
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Role'
+        "400":
+          $ref: '#/responses/400'
+        "401":
+          $ref: '#/responses/401'
+        "403":
+          $ref: '#/responses/403'
         "404":
           $ref: '#/responses/404'
         "500":
@@ -545,12 +884,17 @@ paths:
             - event
       responses:
         "201":
-          description: OK
+          description: Created
           schema:
-            type: string
-            example: Done
+            type: array
+            items:
+              $ref: '#/definitions/Event'
         "400":
           $ref: '#/responses/400'
+        "401":
+          $ref: '#/responses/401'
+        "403":
+          $ref: '#/responses/403'
         "404":
           $ref: '#/responses/404'
         "500":
@@ -573,6 +917,10 @@ paths:
           description: No Content
         "400":
           $ref: '#/responses/400'
+        "401":
+          $ref: '#/responses/401'
+        "403":
+          $ref: '#/responses/403'
         "404":
           $ref: '#/responses/404'
         "500":
@@ -588,7 +936,7 @@ paths:
       summary: Add tutor
       description: Add tutor role to a user.
       tags:
-        - User
+        - Role
       operationId: addTutor
       security:
         - OAuth2:
@@ -597,12 +945,17 @@ paths:
             - user:write
       responses:
         "201":
-          description: OK
+          description: Created
           schema:
-            type: string
-            example: Done
+            type: array
+            items:
+              $ref: '#/definitions/Role'
         "400":
           $ref: '#/responses/400'
+        "401":
+          $ref: '#/responses/401'
+        "403":
+          $ref: '#/responses/403'
         "404":
           $ref: '#/responses/404'
         "500":
@@ -611,7 +964,7 @@ paths:
       summary: Remove tutor
       description: Remove tutor role to a user.
       tags:
-        - User
+        - Role
       operationId: removeTutor
       security:
         - OAuth2:
@@ -623,6 +976,10 @@ paths:
           description: No Content
         "400":
           $ref: '#/responses/400'
+        "401":
+          $ref: '#/responses/401'
+        "403":
+          $ref: '#/responses/403'
         "404":
           $ref: '#/responses/404'
         "500":
@@ -638,7 +995,7 @@ paths:
       summary: Add calendar
       description: Add calendar role to a user.
       tags:
-        - User
+        - Role
       operationId: addCalendar
       security:
         - OAuth2:
@@ -647,12 +1004,17 @@ paths:
             - user:write
       responses:
         "201":
-          description: OK
+          description: Created
           schema:
-            type: string
-            example: Done
+            type: array
+            items:
+              $ref: '#/definitions/Role'
         "400":
           $ref: '#/responses/400'
+        "401":
+          $ref: '#/responses/401'
+        "403":
+          $ref: '#/responses/403'
         "404":
           $ref: '#/responses/404'
         "500":
@@ -661,7 +1023,7 @@ paths:
       summary: Remove calendar
       description: Remove calendar role to a user.
       tags:
-        - User
+        - Role
       operationId: removeCalendar
       security:
         - OAuth2:
@@ -673,6 +1035,10 @@ paths:
           description: No Content
         "400":
           $ref: '#/responses/400'
+        "401":
+          $ref: '#/responses/401'
+        "403":
+          $ref: '#/responses/403'
         "404":
           $ref: '#/responses/404'
         "500":
@@ -688,7 +1054,7 @@ paths:
       summary: Add admin
       description: Add admin role to a user.
       tags:
-        - User
+        - Role
       operationId: addAdmin
       security:
         - OAuth2:
@@ -697,12 +1063,17 @@ paths:
             - user:write
       responses:
         "201":
-          description: OK
+          description: Created
           schema:
-            type: string
-            example: Done
+            type: array
+            items:
+              $ref: '#/definitions/Role'
         "400":
           $ref: '#/responses/400'
+        "401":
+          $ref: '#/responses/401'
+        "403":
+          $ref: '#/responses/403'
         "404":
           $ref: '#/responses/404'
         "500":
@@ -711,7 +1082,7 @@ paths:
       summary: Remove admin
       description: Remove admin role to a user.
       tags:
-        - User
+        - Role
       operationId: removeAdmin
       security:
         - OAuth2:
@@ -723,6 +1094,10 @@ paths:
           description: No Content
         "400":
           $ref: '#/responses/400'
+        "401":
+          $ref: '#/responses/401'
+        "403":
+          $ref: '#/responses/403'
         "404":
           $ref: '#/responses/404'
         "500":
@@ -744,6 +1119,10 @@ responses:
     description: Not Found
     schema:
       $ref: '#/definitions/Error'
+  422:
+    description: Unprocessable Entity
+    schema:
+      $ref: '#/definitions/Error'
   500:
     description: Internal Server Error
     schema:
@@ -759,8 +1138,7 @@ definitions:
       - startAt
     properties:
       category:
-        type: string
-        example: exam
+        $ref: '#/definitions/EventType'
       createdAt:
         type: string
         format: date-time
@@ -788,6 +1166,27 @@ definitions:
         format: int64
     x-go-type:
       type: Event
+      import:
+        package: github.com/gmarcha/ent-goswagger-app/internal/ent
+  EventType:
+    type: object
+    required:
+      - color
+      - id
+      - name
+    properties:
+      color:
+        type: string
+      events:
+        type: array
+        items:
+          $ref: '#/definitions/Event'
+      id:
+        type: string
+      name:
+        type: string
+    x-go-type:
+      type: EventType
       import:
         package: github.com/gmarcha/ent-goswagger-app/internal/ent
   User:
@@ -820,6 +1219,46 @@ definitions:
       type: User
       import:
         package: github.com/gmarcha/ent-goswagger-app/internal/ent
+  Role:
+    type: object
+    required:
+      - event
+      - event_write
+      - id
+      - name
+      - user
+      - user_subscription
+      - user_write
+    properties:
+      event:
+        type: string
+      event_write:
+        type: string
+      id:
+        type: string
+      name:
+        type: string
+      user:
+        type: string
+      user_subscription:
+        type: string
+      user_write:
+        type: string
+      users:
+        type: array
+        items:
+          $ref: '#/definitions/User'
+    x-go-type:
+      type: Role
+      import:
+        package: github.com/gmarcha/ent-goswagger-app/internal/ent
+  Token:
+    type: object
+    properties:
+      accessToken:
+        type: string
+      refreshToken:
+        type: string
   Error:
     type: object
     properties:
@@ -838,37 +1277,3 @@ definitions:
       - message
   principal:
     type: string
-  Role:
-    type: object
-    required:
-      - event
-      - event_write
-      - id
-      - name
-      - user
-      - user_subscription
-      - user_write
-    properties:
-      event:
-        type: boolean
-      event_write:
-        type: boolean
-      id:
-        type: integer
-        format: int32
-      name:
-        type: string
-      user:
-        type: boolean
-      user_subscription:
-        type: boolean
-      user_write:
-        type: boolean
-      users:
-        type: array
-        items:
-          $ref: '#/definitions/User'
-    x-go-type:
-      type: Role
-      import:
-        package: github.com/gmarcha/ent-goswagger-app/internal/ent
