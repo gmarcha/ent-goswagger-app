@@ -24,7 +24,9 @@
 │   ├── clients
 │   │   ├── database
 │   │   │   └── init.go
-│   │   └── env
+│   │   ├── env
+│   │   │   └── init.go
+│   │   └── redis
 │   │       └── init.go
 │   ├── ent
 │   │   ├── client.go
@@ -43,6 +45,14 @@
 │   │   ├── event_delete.go
 │   │   ├── event_query.go
 │   │   ├── event_update.go
+│   │   ├── eventtype
+│   │   │   ├── eventtype.go
+│   │   │   └── where.go
+│   │   ├── eventtype.go
+│   │   ├── eventtype_create.go
+│   │   ├── eventtype_delete.go
+│   │   ├── eventtype_query.go
+│   │   ├── eventtype_update.go
 │   │   ├── generate.go
 │   │   ├── hook
 │   │   │   └── hook.go
@@ -66,6 +76,7 @@
 │   │   ├── runtime.go
 │   │   ├── schema
 │   │   │   ├── event.go
+│   │   │   ├── eventType.go
 │   │   │   ├── role.go
 │   │   │   └── user.go
 │   │   ├── template
@@ -82,7 +93,8 @@
 │   ├── goswagger
 │   │   ├── models
 │   │   │   ├── error.go
-│   │   │   └── principal.go
+│   │   │   ├── principal.go
+│   │   │   └── token.go
 │   │   └── restapi
 │   │       ├── configure_tutor.go
 │   │       ├── doc.go
@@ -110,10 +122,22 @@
 │   │       │   │   ├── create_event_parameters.go
 │   │       │   │   ├── create_event_responses.go
 │   │       │   │   ├── create_event_urlbuilder.go
+│   │       │   │   ├── create_type.go
+│   │       │   │   ├── create_type_parameters.go
+│   │       │   │   ├── create_type_responses.go
+│   │       │   │   ├── create_type_urlbuilder.go
 │   │       │   │   ├── delete_event.go
 │   │       │   │   ├── delete_event_parameters.go
 │   │       │   │   ├── delete_event_responses.go
 │   │       │   │   ├── delete_event_urlbuilder.go
+│   │       │   │   ├── delete_type.go
+│   │       │   │   ├── delete_type_parameters.go
+│   │       │   │   ├── delete_type_responses.go
+│   │       │   │   ├── delete_type_urlbuilder.go
+│   │       │   │   ├── event_type.go
+│   │       │   │   ├── event_type_parameters.go
+│   │       │   │   ├── event_type_responses.go
+│   │       │   │   ├── event_type_urlbuilder.go
 │   │       │   │   ├── list_event.go
 │   │       │   │   ├── list_event_parameters.go
 │   │       │   │   ├── list_event_responses.go
@@ -122,14 +146,72 @@
 │   │       │   │   ├── list_event_users_parameters.go
 │   │       │   │   ├── list_event_users_responses.go
 │   │       │   │   ├── list_event_users_urlbuilder.go
+│   │       │   │   ├── list_type.go
+│   │       │   │   ├── list_type_parameters.go
+│   │       │   │   ├── list_type_responses.go
+│   │       │   │   ├── list_type_urlbuilder.go
 │   │       │   │   ├── read_event.go
 │   │       │   │   ├── read_event_parameters.go
 │   │       │   │   ├── read_event_responses.go
 │   │       │   │   ├── read_event_urlbuilder.go
+│   │       │   │   ├── read_type.go
+│   │       │   │   ├── read_type_parameters.go
+│   │       │   │   ├── read_type_responses.go
+│   │       │   │   ├── read_type_urlbuilder.go
 │   │       │   │   ├── update_event.go
 │   │       │   │   ├── update_event_parameters.go
 │   │       │   │   ├── update_event_responses.go
-│   │       │   │   └── update_event_urlbuilder.go
+│   │       │   │   ├── update_event_urlbuilder.go
+│   │       │   │   ├── update_type.go
+│   │       │   │   ├── update_type_parameters.go
+│   │       │   │   ├── update_type_responses.go
+│   │       │   │   └── update_type_urlbuilder.go
+│   │       │   ├── event_type
+│   │       │   │   ├── create_type.go
+│   │       │   │   ├── create_type_parameters.go
+│   │       │   │   ├── create_type_responses.go
+│   │       │   │   ├── create_type_urlbuilder.go
+│   │       │   │   ├── delete_type.go
+│   │       │   │   ├── delete_type_parameters.go
+│   │       │   │   ├── delete_type_responses.go
+│   │       │   │   ├── delete_type_urlbuilder.go
+│   │       │   │   ├── list_type.go
+│   │       │   │   ├── list_type_parameters.go
+│   │       │   │   ├── list_type_responses.go
+│   │       │   │   ├── list_type_urlbuilder.go
+│   │       │   │   ├── read_type.go
+│   │       │   │   ├── read_type_parameters.go
+│   │       │   │   ├── read_type_responses.go
+│   │       │   │   ├── read_type_urlbuilder.go
+│   │       │   │   ├── update_type.go
+│   │       │   │   ├── update_type_parameters.go
+│   │       │   │   ├── update_type_responses.go
+│   │       │   │   └── update_type_urlbuilder.go
+│   │       │   ├── role
+│   │       │   │   ├── add_admin.go
+│   │       │   │   ├── add_admin_parameters.go
+│   │       │   │   ├── add_admin_responses.go
+│   │       │   │   ├── add_admin_urlbuilder.go
+│   │       │   │   ├── add_calendar.go
+│   │       │   │   ├── add_calendar_parameters.go
+│   │       │   │   ├── add_calendar_responses.go
+│   │       │   │   ├── add_calendar_urlbuilder.go
+│   │       │   │   ├── add_tutor.go
+│   │       │   │   ├── add_tutor_parameters.go
+│   │       │   │   ├── add_tutor_responses.go
+│   │       │   │   ├── add_tutor_urlbuilder.go
+│   │       │   │   ├── remove_admin.go
+│   │       │   │   ├── remove_admin_parameters.go
+│   │       │   │   ├── remove_admin_responses.go
+│   │       │   │   ├── remove_admin_urlbuilder.go
+│   │       │   │   ├── remove_calendar.go
+│   │       │   │   ├── remove_calendar_parameters.go
+│   │       │   │   ├── remove_calendar_responses.go
+│   │       │   │   ├── remove_calendar_urlbuilder.go
+│   │       │   │   ├── remove_tutor.go
+│   │       │   │   ├── remove_tutor_parameters.go
+│   │       │   │   ├── remove_tutor_responses.go
+│   │       │   │   └── remove_tutor_urlbuilder.go
 │   │       │   ├── tutor_api.go
 │   │       │   └── user
 │   │       │       ├── add_admin.go
@@ -164,6 +246,10 @@
 │   │       │       ├── list_me_events_parameters.go
 │   │       │       ├── list_me_events_responses.go
 │   │       │       ├── list_me_events_urlbuilder.go
+│   │       │       ├── list_me_roles.go
+│   │       │       ├── list_me_roles_parameters.go
+│   │       │       ├── list_me_roles_responses.go
+│   │       │       ├── list_me_roles_urlbuilder.go
 │   │       │       ├── list_user.go
 │   │       │       ├── list_user_events.go
 │   │       │       ├── list_user_events_parameters.go
@@ -171,6 +257,10 @@
 │   │       │       ├── list_user_events_urlbuilder.go
 │   │       │       ├── list_user_parameters.go
 │   │       │       ├── list_user_responses.go
+│   │       │       ├── list_user_roles.go
+│   │       │       ├── list_user_roles_parameters.go
+│   │       │       ├── list_user_roles_responses.go
+│   │       │       ├── list_user_roles_urlbuilder.go
 │   │       │       ├── list_user_urlbuilder.go
 │   │       │       ├── read_me.go
 │   │       │       ├── read_me_parameters.go
@@ -224,8 +314,10 @@
 │   ├── modules
 │   │   ├── auth
 │   │   │   ├── auth.go
+│   │   │   ├── fetchUser.go
 │   │   │   ├── handle.go
-│   │   │   └── init.go
+│   │   │   ├── init.go
+│   │   │   └── token.go
 │   │   ├── event
 │   │   │   ├── handle.go
 │   │   │   ├── init.go
@@ -237,15 +329,17 @@
 │   └── utils
 │       ├── error.go
 │       └── random.go
-└── scripts
-    ├── docgen.sh
-    ├── setup
-    │   ├── README.md
-    │   ├── entgo.sh
-    │   └── goswagger.sh
-    └── vscode-snippets
-        ├── README.md
-        ├── json.json
-        └── yaml.json
+├── scripts
+│   ├── docgen.sh
+│   ├── setup
+│   │   ├── README.md
+│   │   ├── entgo.sh
+│   │   └── goswagger.sh
+│   └── vscode-snippets
+│       ├── README.md
+│       ├── json.json
+│       └── yaml.json
+└── test
+    └── api.go
 
-37 directories, 211 files
+42 directories, 300 files
