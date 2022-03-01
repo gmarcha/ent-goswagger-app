@@ -1,56 +1,60 @@
 package auth
 
 import (
-	"fmt"
-	"io/ioutil"
-	"net/http"
-	"os"
-
 	"github.com/gmarcha/ent-goswagger-app/internal/goswagger/models"
 	"github.com/go-openapi/errors"
+	"github.com/go-redis/redis/v8"
 )
 
-func authenticate(token string, scopes []string) (*models.Principal, error) {
+type authenticatorFunc func(string, []string) (*models.Principal, error)
 
-	for _, scope := range scopes {
-		fmt.Println("authentication scope:", scope)
-	}
-
-	ok, err := authenticated(token)
-	if err != nil {
-		return nil, errors.New(500, "authentication error")
-	}
-	if !ok {
-		return nil, errors.New(401, "invalid token")
-	}
-	prin := models.Principal(token)
-	return &prin, nil
+func (f authenticatorFunc) auth(tokenString string, scopes []string) (*models.Principal, error) {
+	return f(tokenString, scopes)
 }
 
-func authenticated(token string) (bool, error) {
+type authenticator interface {
+	auth(string, []string) (*models.Principal, error)
+}
 
-	tokenInfoUrl := os.Getenv("API_TOKENINFO_URL")
-	req, err := http.NewRequest("GET", tokenInfoUrl, nil)
-	if err != nil {
-		return false, fmt.Errorf("http request: %v", err)
-	}
-	bearerToken := "Bearer " + token
-	req.Header.Add("Authorization", bearerToken)
+func authenticate(rdb *redis.Client, accessTokenState string) authenticator {
 
-	cli := &http.Client{}
-	resp, err := cli.Do(req)
-	if err != nil {
-		return false, fmt.Errorf("http request: %v", err)
-	}
-	defer resp.Body.Close()
+	return authenticatorFunc(func(tokenString string, scopes []string) (*models.Principal, error) {
 
-	_, err = ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return false, fmt.Errorf("fail to get response: %v", err)
-	}
+		token, err := parseToken(rdb, accessTokenState, tokenString)
+		if err != nil || !token.Valid {
+			return nil, errors.New(401, "Unauthorized")
+		}
 
-	if resp.StatusCode != 200 {
-		return false, nil
-	}
-	return true, nil
+		claims := token.Claims.(*userClaims)
+
+		permissions := map[string]bool{"public": true}
+
+		for _, role := range claims.Roles {
+			switch role {
+			case "tutor":
+				permissions["event"] = true
+				permissions["user"] = true
+				permissions["user:subscription"] = true
+			case "calendar":
+				permissions["event"] = true
+				permissions["event:write"] = true
+				permissions["user"] = true
+			case "admin":
+				permissions["event"] = true
+				permissions["event:write"] = true
+				permissions["user"] = true
+				permissions["user:subscription"] = true
+				permissions["user:write"] = true
+			}
+		}
+
+		for _, scope := range scopes {
+			if _, ok := permissions[scope]; !ok {
+				return nil, errors.New(403, "Forbidden")
+			}
+		}
+
+		prin := models.Principal(claims.Issuer)
+		return &prin, nil
+	})
 }
