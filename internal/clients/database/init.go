@@ -35,7 +35,7 @@ func Init() *ent.Client {
 	log.Println("Schemas created")
 
 	for _, roleName := range []string{"tutor", "calendar", "admin"} {
-		createRole(client, ctx, roleName)
+		setRole(client, ctx, roleName)
 	}
 	return client
 }
@@ -53,32 +53,49 @@ func createPostgresInfo() string {
 	return strings.Join(infos, " ")
 }
 
-func createRole(client *ent.Client, ctx context.Context, roleName string) {
+func setRole(client *ent.Client, ctx context.Context, roleName string) {
 
-	_, err := client.Role.Query().Where(role.Name(roleName)).Only(ctx)
+	r, err := client.Role.Query().Where(role.Name(roleName)).Only(ctx)
 	if err != nil {
 		if !ent.IsNotFound(err) {
 			log.Fatalf("failed querying in database: %v", err)
 		}
 		builder := client.Role.Create()
 		builder.SetName(roleName)
-		createPermissions(builder.Mutation(), roleName)
+		setPermissions(builder.Mutation(), roleName)
 		if _, err = builder.Save(ctx); err != nil {
-			log.Fatalf("failed to create role: %v", roleName)
+			log.Fatalf("failed to create role: %v", err)
+		}
+	} else {
+		builder := r.Update()
+		resetPermissions(builder.Mutation())
+		setPermissions(builder.Mutation(), roleName)
+		if _, err = builder.Save(ctx); err != nil {
+			log.Fatalf("failed to update permissions: %v", err)
 		}
 	}
 }
 
-func createPermissions(m *ent.RoleMutation, roleName string) {
+func setPermissions(m *ent.RoleMutation, roleName string) {
 
+	m.SetEvent("true")
+	m.SetUser("true")
 	switch roleName {
 	case "tutor":
-		m.SetEvent(true)
-		m.SetUser(true)
-		m.SetUserSubscription(true)
+		m.SetUserSubscription("true")
 	case "calendar":
-		m.SetEventWrite(true)
+		m.SetEventWrite("true")
 	case "admin":
-		m.SetUserWrite(true)
+		m.SetUserSubscription("true")
+		m.SetEventWrite("true")
+		m.SetUserWrite("true")
 	}
+}
+
+func resetPermissions(m *ent.RoleMutation) {
+	m.SetEvent("false")
+	m.SetEventWrite("false")
+	m.SetUser("false")
+	m.SetUserSubscription("false")
+	m.SetUserWrite("false")
 }
