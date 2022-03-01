@@ -1044,6 +1044,44 @@ func init() {
         }
       ]
     },
+    "/users/me/roles": {
+      "get": {
+        "security": [
+          {
+            "OAuth2": [
+              "public",
+              "user"
+            ]
+          }
+        ],
+        "description": "List the authenticated user's roles.",
+        "tags": [
+          "User"
+        ],
+        "summary": "List authenticated user roles",
+        "operationId": "listMeRoles",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Role"
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/responses/401"
+          },
+          "403": {
+            "$ref": "#/responses/403"
+          },
+          "500": {
+            "$ref": "#/responses/500"
+          }
+        }
+      }
+    },
     "/users/{id}": {
       "get": {
         "security": [
@@ -1249,7 +1287,7 @@ func init() {
         ],
         "description": "Add admin role to a user.",
         "tags": [
-          "UserRole"
+          "Role"
         ],
         "summary": "Add admin",
         "operationId": "addAdmin",
@@ -1292,7 +1330,7 @@ func init() {
         ],
         "description": "Remove admin role to a user.",
         "tags": [
-          "UserRole"
+          "Role"
         ],
         "summary": "Remove admin",
         "operationId": "removeAdmin",
@@ -1340,7 +1378,7 @@ func init() {
         ],
         "description": "Add calendar role to a user.",
         "tags": [
-          "UserRole"
+          "Role"
         ],
         "summary": "Add calendar",
         "operationId": "addCalendar",
@@ -1383,7 +1421,7 @@ func init() {
         ],
         "description": "Remove calendar role to a user.",
         "tags": [
-          "UserRole"
+          "Role"
         ],
         "summary": "Remove calendar",
         "operationId": "removeCalendar",
@@ -1431,7 +1469,7 @@ func init() {
         ],
         "description": "Add tutor role to a user.",
         "tags": [
-          "UserRole"
+          "Role"
         ],
         "summary": "Add tutor",
         "operationId": "addTutor",
@@ -1474,13 +1512,66 @@ func init() {
         ],
         "description": "Remove tutor role to a user.",
         "tags": [
-          "UserRole"
+          "Role"
         ],
         "summary": "Remove tutor",
         "operationId": "removeTutor",
         "responses": {
           "204": {
             "description": "No Content"
+          },
+          "400": {
+            "$ref": "#/responses/400"
+          },
+          "401": {
+            "$ref": "#/responses/401"
+          },
+          "403": {
+            "$ref": "#/responses/403"
+          },
+          "404": {
+            "$ref": "#/responses/404"
+          },
+          "500": {
+            "$ref": "#/responses/500"
+          }
+        }
+      },
+      "parameters": [
+        {
+          "type": "string",
+          "description": "User ID.",
+          "name": "id",
+          "in": "path",
+          "required": true
+        }
+      ]
+    },
+    "/users/{id}/roles": {
+      "get": {
+        "security": [
+          {
+            "OAuth2": [
+              "public",
+              "user"
+            ]
+          }
+        ],
+        "description": "List the user's roles.",
+        "tags": [
+          "User"
+        ],
+        "summary": "List user roles",
+        "operationId": "listUserRoles",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Role"
+              }
+            }
           },
           "400": {
             "$ref": "#/responses/400"
@@ -3172,6 +3263,53 @@ func init() {
         }
       ]
     },
+    "/users/me/roles": {
+      "get": {
+        "security": [
+          {
+            "OAuth2": [
+              "public",
+              "user"
+            ]
+          }
+        ],
+        "description": "List the authenticated user's roles.",
+        "tags": [
+          "User"
+        ],
+        "summary": "List authenticated user roles",
+        "operationId": "listMeRoles",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Role"
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      }
+    },
     "/users/{id}": {
       "get": {
         "security": [
@@ -3437,7 +3575,7 @@ func init() {
         ],
         "description": "Add admin role to a user.",
         "tags": [
-          "UserRole"
+          "Role"
         ],
         "summary": "Add admin",
         "operationId": "addAdmin",
@@ -3495,7 +3633,7 @@ func init() {
         ],
         "description": "Remove admin role to a user.",
         "tags": [
-          "UserRole"
+          "Role"
         ],
         "summary": "Remove admin",
         "operationId": "removeAdmin",
@@ -3558,7 +3696,7 @@ func init() {
         ],
         "description": "Add calendar role to a user.",
         "tags": [
-          "UserRole"
+          "Role"
         ],
         "summary": "Add calendar",
         "operationId": "addCalendar",
@@ -3616,7 +3754,7 @@ func init() {
         ],
         "description": "Remove calendar role to a user.",
         "tags": [
-          "UserRole"
+          "Role"
         ],
         "summary": "Remove calendar",
         "operationId": "removeCalendar",
@@ -3679,7 +3817,7 @@ func init() {
         ],
         "description": "Add tutor role to a user.",
         "tags": [
-          "UserRole"
+          "Role"
         ],
         "summary": "Add tutor",
         "operationId": "addTutor",
@@ -3737,13 +3875,81 @@ func init() {
         ],
         "description": "Remove tutor role to a user.",
         "tags": [
-          "UserRole"
+          "Role"
         ],
         "summary": "Remove tutor",
         "operationId": "removeTutor",
         "responses": {
           "204": {
             "description": "No Content"
+          },
+          "400": {
+            "description": "Bad request",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      },
+      "parameters": [
+        {
+          "type": "string",
+          "description": "User ID.",
+          "name": "id",
+          "in": "path",
+          "required": true
+        }
+      ]
+    },
+    "/users/{id}/roles": {
+      "get": {
+        "security": [
+          {
+            "OAuth2": [
+              "public",
+              "user"
+            ]
+          }
+        ],
+        "description": "List the user's roles.",
+        "tags": [
+          "User"
+        ],
+        "summary": "List user roles",
+        "operationId": "listUserRoles",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Role"
+              }
+            }
           },
           "400": {
             "description": "Bad request",
