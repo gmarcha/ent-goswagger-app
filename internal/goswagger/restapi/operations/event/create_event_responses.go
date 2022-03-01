@@ -102,6 +102,94 @@ func (o *CreateEventBadRequest) WriteResponse(rw http.ResponseWriter, producer r
 	}
 }
 
+// CreateEventUnauthorizedCode is the HTTP code returned for type CreateEventUnauthorized
+const CreateEventUnauthorizedCode int = 401
+
+/*CreateEventUnauthorized Unauthorized
+
+swagger:response createEventUnauthorized
+*/
+type CreateEventUnauthorized struct {
+
+	/*
+	  In: Body
+	*/
+	Payload *models.Error `json:"body,omitempty"`
+}
+
+// NewCreateEventUnauthorized creates CreateEventUnauthorized with default headers values
+func NewCreateEventUnauthorized() *CreateEventUnauthorized {
+
+	return &CreateEventUnauthorized{}
+}
+
+// WithPayload adds the payload to the create event unauthorized response
+func (o *CreateEventUnauthorized) WithPayload(payload *models.Error) *CreateEventUnauthorized {
+	o.Payload = payload
+	return o
+}
+
+// SetPayload sets the payload to the create event unauthorized response
+func (o *CreateEventUnauthorized) SetPayload(payload *models.Error) {
+	o.Payload = payload
+}
+
+// WriteResponse to the client
+func (o *CreateEventUnauthorized) WriteResponse(rw http.ResponseWriter, producer runtime.Producer) {
+
+	rw.WriteHeader(401)
+	if o.Payload != nil {
+		payload := o.Payload
+		if err := producer.Produce(rw, payload); err != nil {
+			panic(err) // let the recovery middleware deal with this
+		}
+	}
+}
+
+// CreateEventForbiddenCode is the HTTP code returned for type CreateEventForbidden
+const CreateEventForbiddenCode int = 403
+
+/*CreateEventForbidden Forbidden
+
+swagger:response createEventForbidden
+*/
+type CreateEventForbidden struct {
+
+	/*
+	  In: Body
+	*/
+	Payload *models.Error `json:"body,omitempty"`
+}
+
+// NewCreateEventForbidden creates CreateEventForbidden with default headers values
+func NewCreateEventForbidden() *CreateEventForbidden {
+
+	return &CreateEventForbidden{}
+}
+
+// WithPayload adds the payload to the create event forbidden response
+func (o *CreateEventForbidden) WithPayload(payload *models.Error) *CreateEventForbidden {
+	o.Payload = payload
+	return o
+}
+
+// SetPayload sets the payload to the create event forbidden response
+func (o *CreateEventForbidden) SetPayload(payload *models.Error) {
+	o.Payload = payload
+}
+
+// WriteResponse to the client
+func (o *CreateEventForbidden) WriteResponse(rw http.ResponseWriter, producer runtime.Producer) {
+
+	rw.WriteHeader(403)
+	if o.Payload != nil {
+		payload := o.Payload
+		if err := producer.Produce(rw, payload); err != nil {
+			panic(err) // let the recovery middleware deal with this
+		}
+	}
+}
+
 // CreateEventInternalServerErrorCode is the HTTP code returned for type CreateEventInternalServerError
 const CreateEventInternalServerErrorCode int = 500
 

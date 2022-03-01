@@ -102,6 +102,94 @@ func (o *ReadUserBadRequest) WriteResponse(rw http.ResponseWriter, producer runt
 	}
 }
 
+// ReadUserUnauthorizedCode is the HTTP code returned for type ReadUserUnauthorized
+const ReadUserUnauthorizedCode int = 401
+
+/*ReadUserUnauthorized Unauthorized
+
+swagger:response readUserUnauthorized
+*/
+type ReadUserUnauthorized struct {
+
+	/*
+	  In: Body
+	*/
+	Payload *models.Error `json:"body,omitempty"`
+}
+
+// NewReadUserUnauthorized creates ReadUserUnauthorized with default headers values
+func NewReadUserUnauthorized() *ReadUserUnauthorized {
+
+	return &ReadUserUnauthorized{}
+}
+
+// WithPayload adds the payload to the read user unauthorized response
+func (o *ReadUserUnauthorized) WithPayload(payload *models.Error) *ReadUserUnauthorized {
+	o.Payload = payload
+	return o
+}
+
+// SetPayload sets the payload to the read user unauthorized response
+func (o *ReadUserUnauthorized) SetPayload(payload *models.Error) {
+	o.Payload = payload
+}
+
+// WriteResponse to the client
+func (o *ReadUserUnauthorized) WriteResponse(rw http.ResponseWriter, producer runtime.Producer) {
+
+	rw.WriteHeader(401)
+	if o.Payload != nil {
+		payload := o.Payload
+		if err := producer.Produce(rw, payload); err != nil {
+			panic(err) // let the recovery middleware deal with this
+		}
+	}
+}
+
+// ReadUserForbiddenCode is the HTTP code returned for type ReadUserForbidden
+const ReadUserForbiddenCode int = 403
+
+/*ReadUserForbidden Forbidden
+
+swagger:response readUserForbidden
+*/
+type ReadUserForbidden struct {
+
+	/*
+	  In: Body
+	*/
+	Payload *models.Error `json:"body,omitempty"`
+}
+
+// NewReadUserForbidden creates ReadUserForbidden with default headers values
+func NewReadUserForbidden() *ReadUserForbidden {
+
+	return &ReadUserForbidden{}
+}
+
+// WithPayload adds the payload to the read user forbidden response
+func (o *ReadUserForbidden) WithPayload(payload *models.Error) *ReadUserForbidden {
+	o.Payload = payload
+	return o
+}
+
+// SetPayload sets the payload to the read user forbidden response
+func (o *ReadUserForbidden) SetPayload(payload *models.Error) {
+	o.Payload = payload
+}
+
+// WriteResponse to the client
+func (o *ReadUserForbidden) WriteResponse(rw http.ResponseWriter, producer runtime.Producer) {
+
+	rw.WriteHeader(403)
+	if o.Payload != nil {
+		payload := o.Payload
+		if err := producer.Produce(rw, payload); err != nil {
+			panic(err) // let the recovery middleware deal with this
+		}
+	}
+}
+
 // ReadUserNotFoundCode is the HTTP code returned for type ReadUserNotFound
 const ReadUserNotFoundCode int = 404
 

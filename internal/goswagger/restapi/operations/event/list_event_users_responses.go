@@ -105,6 +105,94 @@ func (o *ListEventUsersBadRequest) WriteResponse(rw http.ResponseWriter, produce
 	}
 }
 
+// ListEventUsersUnauthorizedCode is the HTTP code returned for type ListEventUsersUnauthorized
+const ListEventUsersUnauthorizedCode int = 401
+
+/*ListEventUsersUnauthorized Unauthorized
+
+swagger:response listEventUsersUnauthorized
+*/
+type ListEventUsersUnauthorized struct {
+
+	/*
+	  In: Body
+	*/
+	Payload *models.Error `json:"body,omitempty"`
+}
+
+// NewListEventUsersUnauthorized creates ListEventUsersUnauthorized with default headers values
+func NewListEventUsersUnauthorized() *ListEventUsersUnauthorized {
+
+	return &ListEventUsersUnauthorized{}
+}
+
+// WithPayload adds the payload to the list event users unauthorized response
+func (o *ListEventUsersUnauthorized) WithPayload(payload *models.Error) *ListEventUsersUnauthorized {
+	o.Payload = payload
+	return o
+}
+
+// SetPayload sets the payload to the list event users unauthorized response
+func (o *ListEventUsersUnauthorized) SetPayload(payload *models.Error) {
+	o.Payload = payload
+}
+
+// WriteResponse to the client
+func (o *ListEventUsersUnauthorized) WriteResponse(rw http.ResponseWriter, producer runtime.Producer) {
+
+	rw.WriteHeader(401)
+	if o.Payload != nil {
+		payload := o.Payload
+		if err := producer.Produce(rw, payload); err != nil {
+			panic(err) // let the recovery middleware deal with this
+		}
+	}
+}
+
+// ListEventUsersForbiddenCode is the HTTP code returned for type ListEventUsersForbidden
+const ListEventUsersForbiddenCode int = 403
+
+/*ListEventUsersForbidden Forbidden
+
+swagger:response listEventUsersForbidden
+*/
+type ListEventUsersForbidden struct {
+
+	/*
+	  In: Body
+	*/
+	Payload *models.Error `json:"body,omitempty"`
+}
+
+// NewListEventUsersForbidden creates ListEventUsersForbidden with default headers values
+func NewListEventUsersForbidden() *ListEventUsersForbidden {
+
+	return &ListEventUsersForbidden{}
+}
+
+// WithPayload adds the payload to the list event users forbidden response
+func (o *ListEventUsersForbidden) WithPayload(payload *models.Error) *ListEventUsersForbidden {
+	o.Payload = payload
+	return o
+}
+
+// SetPayload sets the payload to the list event users forbidden response
+func (o *ListEventUsersForbidden) SetPayload(payload *models.Error) {
+	o.Payload = payload
+}
+
+// WriteResponse to the client
+func (o *ListEventUsersForbidden) WriteResponse(rw http.ResponseWriter, producer runtime.Producer) {
+
+	rw.WriteHeader(403)
+	if o.Payload != nil {
+		payload := o.Payload
+		if err := producer.Produce(rw, payload); err != nil {
+			panic(err) // let the recovery middleware deal with this
+		}
+	}
+}
+
 // ListEventUsersNotFoundCode is the HTTP code returned for type ListEventUsersNotFound
 const ListEventUsersNotFoundCode int = 404
 

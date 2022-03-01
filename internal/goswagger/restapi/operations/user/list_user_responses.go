@@ -61,14 +61,14 @@ func (o *ListUserOK) WriteResponse(rw http.ResponseWriter, producer runtime.Prod
 	}
 }
 
-// ListUserBadRequestCode is the HTTP code returned for type ListUserBadRequest
-const ListUserBadRequestCode int = 400
+// ListUserUnauthorizedCode is the HTTP code returned for type ListUserUnauthorized
+const ListUserUnauthorizedCode int = 401
 
-/*ListUserBadRequest Bad request
+/*ListUserUnauthorized Unauthorized
 
-swagger:response listUserBadRequest
+swagger:response listUserUnauthorized
 */
-type ListUserBadRequest struct {
+type ListUserUnauthorized struct {
 
 	/*
 	  In: Body
@@ -76,27 +76,27 @@ type ListUserBadRequest struct {
 	Payload *models.Error `json:"body,omitempty"`
 }
 
-// NewListUserBadRequest creates ListUserBadRequest with default headers values
-func NewListUserBadRequest() *ListUserBadRequest {
+// NewListUserUnauthorized creates ListUserUnauthorized with default headers values
+func NewListUserUnauthorized() *ListUserUnauthorized {
 
-	return &ListUserBadRequest{}
+	return &ListUserUnauthorized{}
 }
 
-// WithPayload adds the payload to the list user bad request response
-func (o *ListUserBadRequest) WithPayload(payload *models.Error) *ListUserBadRequest {
+// WithPayload adds the payload to the list user unauthorized response
+func (o *ListUserUnauthorized) WithPayload(payload *models.Error) *ListUserUnauthorized {
 	o.Payload = payload
 	return o
 }
 
-// SetPayload sets the payload to the list user bad request response
-func (o *ListUserBadRequest) SetPayload(payload *models.Error) {
+// SetPayload sets the payload to the list user unauthorized response
+func (o *ListUserUnauthorized) SetPayload(payload *models.Error) {
 	o.Payload = payload
 }
 
 // WriteResponse to the client
-func (o *ListUserBadRequest) WriteResponse(rw http.ResponseWriter, producer runtime.Producer) {
+func (o *ListUserUnauthorized) WriteResponse(rw http.ResponseWriter, producer runtime.Producer) {
 
-	rw.WriteHeader(400)
+	rw.WriteHeader(401)
 	if o.Payload != nil {
 		payload := o.Payload
 		if err := producer.Produce(rw, payload); err != nil {

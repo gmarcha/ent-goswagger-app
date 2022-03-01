@@ -45,11 +45,11 @@ func init() {
           "200": {
             "description": "OK",
             "schema": {
-              "type": "string"
+              "$ref": "#/definitions/Token"
             }
           },
-          "401": {
-            "$ref": "#/responses/401"
+          "422": {
+            "$ref": "#/responses/422"
           },
           "500": {
             "$ref": "#/responses/500"
@@ -83,11 +83,30 @@ func init() {
         ],
         "summary": "Send token information",
         "operationId": "tokenInfo",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "Bearer access token",
+            "name": "Authorization",
+            "in": "header",
+            "required": true
+          }
+        ],
         "responses": {
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/User"
+              "type": "object",
+              "properties": {
+                "expiresAt": {
+                  "type": "string",
+                  "format": "date-time"
+                },
+                "login": {
+                  "description": "username",
+                  "type": "string"
+                }
+              }
             }
           },
           "401": {
@@ -107,11 +126,20 @@ func init() {
         ],
         "summary": "Refresh token",
         "operationId": "tokenRefresh",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "Bearer refresh token",
+            "name": "Authorization",
+            "in": "header",
+            "required": true
+          }
+        ],
         "responses": {
           "200": {
             "description": "OK",
             "schema": {
-              "type": "string"
+              "$ref": "#/definitions/Token"
             }
           },
           "401": {
@@ -168,8 +196,11 @@ func init() {
               }
             }
           },
-          "400": {
-            "$ref": "#/responses/400"
+          "401": {
+            "$ref": "#/responses/401"
+          },
+          "403": {
+            "$ref": "#/responses/403"
           },
           "500": {
             "$ref": "#/responses/500"
@@ -213,11 +244,241 @@ func init() {
           "400": {
             "$ref": "#/responses/400"
           },
+          "401": {
+            "$ref": "#/responses/401"
+          },
+          "403": {
+            "$ref": "#/responses/403"
+          },
           "500": {
             "$ref": "#/responses/500"
           }
         }
       }
+    },
+    "/events/types": {
+      "get": {
+        "security": [
+          {
+            "OAuth2": [
+              "public",
+              "event"
+            ]
+          }
+        ],
+        "description": "List all event categories.",
+        "tags": [
+          "EventType"
+        ],
+        "summary": "List event types",
+        "operationId": "listType",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/EventType"
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/responses/401"
+          },
+          "403": {
+            "$ref": "#/responses/403"
+          },
+          "500": {
+            "$ref": "#/responses/500"
+          }
+        }
+      },
+      "post": {
+        "security": [
+          {
+            "OAuth2": [
+              "public",
+              "event",
+              "event:write"
+            ]
+          }
+        ],
+        "description": "Create a new event category.",
+        "tags": [
+          "EventType"
+        ],
+        "summary": "Create event type",
+        "operationId": "createType",
+        "parameters": [
+          {
+            "description": "Event category to create.",
+            "name": "type",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/EventType"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Created",
+            "schema": {
+              "$ref": "#/definitions/EventType"
+            }
+          },
+          "400": {
+            "$ref": "#/responses/400"
+          },
+          "401": {
+            "$ref": "#/responses/401"
+          },
+          "403": {
+            "$ref": "#/responses/403"
+          },
+          "500": {
+            "$ref": "#/responses/500"
+          }
+        }
+      }
+    },
+    "/events/types/{id}": {
+      "get": {
+        "security": [
+          {
+            "OAuth2": [
+              "public",
+              "event"
+            ]
+          }
+        ],
+        "description": "Read an event category.",
+        "tags": [
+          "EventType"
+        ],
+        "summary": "Read event type",
+        "operationId": "readType",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/EventType"
+            }
+          },
+          "400": {
+            "$ref": "#/responses/400"
+          },
+          "401": {
+            "$ref": "#/responses/401"
+          },
+          "403": {
+            "$ref": "#/responses/403"
+          },
+          "404": {
+            "$ref": "#/responses/404"
+          },
+          "500": {
+            "$ref": "#/responses/500"
+          }
+        }
+      },
+      "post": {
+        "security": [
+          {
+            "OAuth2": [
+              "public",
+              "event",
+              "event:write"
+            ]
+          }
+        ],
+        "description": "Update an event category.",
+        "tags": [
+          "EventType"
+        ],
+        "summary": "Update event type",
+        "operationId": "updateType",
+        "parameters": [
+          {
+            "description": "Event category to update.",
+            "name": "type",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/EventType"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/EventType"
+            }
+          },
+          "400": {
+            "$ref": "#/responses/400"
+          },
+          "401": {
+            "$ref": "#/responses/401"
+          },
+          "403": {
+            "$ref": "#/responses/403"
+          },
+          "404": {
+            "$ref": "#/responses/404"
+          },
+          "500": {
+            "$ref": "#/responses/500"
+          }
+        }
+      },
+      "delete": {
+        "security": [
+          {
+            "OAuth2": [
+              "public",
+              "event",
+              "event:write"
+            ]
+          }
+        ],
+        "description": "Update an event category.",
+        "tags": [
+          "EventType"
+        ],
+        "summary": "Delete event type",
+        "operationId": "deleteType",
+        "responses": {
+          "204": {
+            "description": "No content"
+          },
+          "400": {
+            "$ref": "#/responses/400"
+          },
+          "401": {
+            "$ref": "#/responses/401"
+          },
+          "403": {
+            "$ref": "#/responses/403"
+          },
+          "404": {
+            "$ref": "#/responses/404"
+          },
+          "500": {
+            "$ref": "#/responses/500"
+          }
+        }
+      },
+      "parameters": [
+        {
+          "type": "string",
+          "description": "ID of event category.",
+          "name": "id",
+          "in": "path",
+          "required": true
+        }
+      ]
     },
     "/events/{id}": {
       "get": {
@@ -244,6 +505,12 @@ func init() {
           },
           "400": {
             "$ref": "#/responses/400"
+          },
+          "401": {
+            "$ref": "#/responses/401"
+          },
+          "403": {
+            "$ref": "#/responses/403"
           },
           "404": {
             "$ref": "#/responses/404"
@@ -290,6 +557,12 @@ func init() {
           "400": {
             "$ref": "#/responses/400"
           },
+          "401": {
+            "$ref": "#/responses/401"
+          },
+          "403": {
+            "$ref": "#/responses/403"
+          },
           "404": {
             "$ref": "#/responses/404"
           },
@@ -320,6 +593,62 @@ func init() {
           },
           "400": {
             "$ref": "#/responses/400"
+          },
+          "401": {
+            "$ref": "#/responses/401"
+          },
+          "403": {
+            "$ref": "#/responses/403"
+          },
+          "404": {
+            "$ref": "#/responses/404"
+          },
+          "500": {
+            "$ref": "#/responses/500"
+          }
+        }
+      },
+      "parameters": [
+        {
+          "type": "string",
+          "description": "Event ID.",
+          "name": "id",
+          "in": "path",
+          "required": true
+        }
+      ]
+    },
+    "/events/{id}/types": {
+      "get": {
+        "security": [
+          {
+            "OAuth2": [
+              "public",
+              "event"
+            ]
+          }
+        ],
+        "description": "Retrieve event type.",
+        "tags": [
+          "Event"
+        ],
+        "summary": "Event type",
+        "operationId": "eventType",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/EventType"
+            }
+          },
+          "400": {
+            "$ref": "#/responses/400"
+          },
+          "401": {
+            "$ref": "#/responses/401"
+          },
+          "403": {
+            "$ref": "#/responses/403"
           },
           "404": {
             "$ref": "#/responses/404"
@@ -368,6 +697,12 @@ func init() {
           },
           "400": {
             "$ref": "#/responses/400"
+          },
+          "401": {
+            "$ref": "#/responses/401"
+          },
+          "403": {
+            "$ref": "#/responses/403"
           },
           "404": {
             "$ref": "#/responses/404"
@@ -420,8 +755,8 @@ func init() {
               }
             }
           },
-          "400": {
-            "$ref": "#/responses/400"
+          "401": {
+            "$ref": "#/responses/401"
           },
           "500": {
             "$ref": "#/responses/500"
@@ -465,6 +800,12 @@ func init() {
           "400": {
             "$ref": "#/responses/400"
           },
+          "401": {
+            "$ref": "#/responses/401"
+          },
+          "403": {
+            "$ref": "#/responses/403"
+          },
           "500": {
             "$ref": "#/responses/500"
           }
@@ -493,6 +834,52 @@ func init() {
               "$ref": "#/definitions/User"
             }
           },
+          "401": {
+            "$ref": "#/responses/401"
+          },
+          "500": {
+            "$ref": "#/responses/500"
+          }
+        }
+      },
+      "put": {
+        "security": [
+          {
+            "OAuth2": [
+              "public"
+            ]
+          }
+        ],
+        "description": "Update the authenticated user.",
+        "tags": [
+          "User"
+        ],
+        "summary": "Update authenticated user",
+        "operationId": "updateMe",
+        "parameters": [
+          {
+            "description": "User to update.",
+            "name": "user",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/User"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/User"
+            }
+          },
+          "400": {
+            "$ref": "#/responses/400"
+          },
+          "401": {
+            "$ref": "#/responses/401"
+          },
           "500": {
             "$ref": "#/responses/500"
           }
@@ -515,6 +902,9 @@ func init() {
         "responses": {
           "204": {
             "description": "No Content"
+          },
+          "401": {
+            "$ref": "#/responses/401"
           },
           "500": {
             "$ref": "#/responses/500"
@@ -549,6 +939,12 @@ func init() {
               }
             }
           },
+          "401": {
+            "$ref": "#/responses/401"
+          },
+          "403": {
+            "$ref": "#/responses/403"
+          },
           "500": {
             "$ref": "#/responses/500"
           }
@@ -575,14 +971,22 @@ func init() {
         "operationId": "subscribeMe",
         "responses": {
           "201": {
-            "description": "OK",
+            "description": "Created",
             "schema": {
-              "type": "string",
-              "example": "Done"
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Event"
+              }
             }
           },
           "400": {
             "$ref": "#/responses/400"
+          },
+          "401": {
+            "$ref": "#/responses/401"
+          },
+          "403": {
+            "$ref": "#/responses/403"
           },
           "404": {
             "$ref": "#/responses/404"
@@ -615,6 +1019,12 @@ func init() {
           },
           "400": {
             "$ref": "#/responses/400"
+          },
+          "401": {
+            "$ref": "#/responses/401"
+          },
+          "403": {
+            "$ref": "#/responses/403"
           },
           "404": {
             "$ref": "#/responses/404"
@@ -659,6 +1069,12 @@ func init() {
           },
           "400": {
             "$ref": "#/responses/400"
+          },
+          "401": {
+            "$ref": "#/responses/401"
+          },
+          "403": {
+            "$ref": "#/responses/403"
           },
           "404": {
             "$ref": "#/responses/404"
@@ -705,6 +1121,12 @@ func init() {
           "400": {
             "$ref": "#/responses/400"
           },
+          "401": {
+            "$ref": "#/responses/401"
+          },
+          "403": {
+            "$ref": "#/responses/403"
+          },
           "404": {
             "$ref": "#/responses/404"
           },
@@ -735,6 +1157,12 @@ func init() {
           },
           "400": {
             "$ref": "#/responses/400"
+          },
+          "401": {
+            "$ref": "#/responses/401"
+          },
+          "403": {
+            "$ref": "#/responses/403"
           },
           "404": {
             "$ref": "#/responses/404"
@@ -784,6 +1212,12 @@ func init() {
           "400": {
             "$ref": "#/responses/400"
           },
+          "401": {
+            "$ref": "#/responses/401"
+          },
+          "403": {
+            "$ref": "#/responses/403"
+          },
           "404": {
             "$ref": "#/responses/404"
           },
@@ -815,20 +1249,28 @@ func init() {
         ],
         "description": "Add admin role to a user.",
         "tags": [
-          "User"
+          "UserRole"
         ],
         "summary": "Add admin",
         "operationId": "addAdmin",
         "responses": {
           "201": {
-            "description": "OK",
+            "description": "Created",
             "schema": {
-              "type": "string",
-              "example": "Done"
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Role"
+              }
             }
           },
           "400": {
             "$ref": "#/responses/400"
+          },
+          "401": {
+            "$ref": "#/responses/401"
+          },
+          "403": {
+            "$ref": "#/responses/403"
           },
           "404": {
             "$ref": "#/responses/404"
@@ -850,7 +1292,7 @@ func init() {
         ],
         "description": "Remove admin role to a user.",
         "tags": [
-          "User"
+          "UserRole"
         ],
         "summary": "Remove admin",
         "operationId": "removeAdmin",
@@ -860,6 +1302,12 @@ func init() {
           },
           "400": {
             "$ref": "#/responses/400"
+          },
+          "401": {
+            "$ref": "#/responses/401"
+          },
+          "403": {
+            "$ref": "#/responses/403"
           },
           "404": {
             "$ref": "#/responses/404"
@@ -892,20 +1340,28 @@ func init() {
         ],
         "description": "Add calendar role to a user.",
         "tags": [
-          "User"
+          "UserRole"
         ],
         "summary": "Add calendar",
         "operationId": "addCalendar",
         "responses": {
           "201": {
-            "description": "OK",
+            "description": "Created",
             "schema": {
-              "type": "string",
-              "example": "Done"
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Role"
+              }
             }
           },
           "400": {
             "$ref": "#/responses/400"
+          },
+          "401": {
+            "$ref": "#/responses/401"
+          },
+          "403": {
+            "$ref": "#/responses/403"
           },
           "404": {
             "$ref": "#/responses/404"
@@ -927,7 +1383,7 @@ func init() {
         ],
         "description": "Remove calendar role to a user.",
         "tags": [
-          "User"
+          "UserRole"
         ],
         "summary": "Remove calendar",
         "operationId": "removeCalendar",
@@ -937,6 +1393,12 @@ func init() {
           },
           "400": {
             "$ref": "#/responses/400"
+          },
+          "401": {
+            "$ref": "#/responses/401"
+          },
+          "403": {
+            "$ref": "#/responses/403"
           },
           "404": {
             "$ref": "#/responses/404"
@@ -969,20 +1431,28 @@ func init() {
         ],
         "description": "Add tutor role to a user.",
         "tags": [
-          "User"
+          "UserRole"
         ],
         "summary": "Add tutor",
         "operationId": "addTutor",
         "responses": {
           "201": {
-            "description": "OK",
+            "description": "Created",
             "schema": {
-              "type": "string",
-              "example": "Done"
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Role"
+              }
             }
           },
           "400": {
             "$ref": "#/responses/400"
+          },
+          "401": {
+            "$ref": "#/responses/401"
+          },
+          "403": {
+            "$ref": "#/responses/403"
           },
           "404": {
             "$ref": "#/responses/404"
@@ -1004,7 +1474,7 @@ func init() {
         ],
         "description": "Remove tutor role to a user.",
         "tags": [
-          "User"
+          "UserRole"
         ],
         "summary": "Remove tutor",
         "operationId": "removeTutor",
@@ -1014,6 +1484,12 @@ func init() {
           },
           "400": {
             "$ref": "#/responses/400"
+          },
+          "401": {
+            "$ref": "#/responses/401"
+          },
+          "403": {
+            "$ref": "#/responses/403"
           },
           "404": {
             "$ref": "#/responses/404"
@@ -1054,14 +1530,22 @@ func init() {
         "operationId": "subscribeUser",
         "responses": {
           "201": {
-            "description": "OK",
+            "description": "Created",
             "schema": {
-              "type": "string",
-              "example": "Done"
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Event"
+              }
             }
           },
           "400": {
             "$ref": "#/responses/400"
+          },
+          "401": {
+            "$ref": "#/responses/401"
+          },
+          "403": {
+            "$ref": "#/responses/403"
           },
           "404": {
             "$ref": "#/responses/404"
@@ -1095,6 +1579,12 @@ func init() {
           },
           "400": {
             "$ref": "#/responses/400"
+          },
+          "401": {
+            "$ref": "#/responses/401"
+          },
+          "403": {
+            "$ref": "#/responses/403"
           },
           "404": {
             "$ref": "#/responses/404"
@@ -1156,8 +1646,7 @@ func init() {
       ],
       "properties": {
         "category": {
-          "type": "string",
-          "example": "exam"
+          "$ref": "#/definitions/EventType"
         },
         "createdAt": {
           "type": "string",
@@ -1202,6 +1691,37 @@ func init() {
         "type": "Event"
       }
     },
+    "EventType": {
+      "type": "object",
+      "required": [
+        "color",
+        "id",
+        "name"
+      ],
+      "properties": {
+        "color": {
+          "type": "string"
+        },
+        "events": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Event"
+          }
+        },
+        "id": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        }
+      },
+      "x-go-type": {
+        "import": {
+          "package": "github.com/gmarcha/ent-goswagger-app/internal/ent"
+        },
+        "type": "EventType"
+      }
+    },
     "Role": {
       "type": "object",
       "required": [
@@ -1215,26 +1735,25 @@ func init() {
       ],
       "properties": {
         "event": {
-          "type": "boolean"
+          "type": "string"
         },
         "event_write": {
-          "type": "boolean"
+          "type": "string"
         },
         "id": {
-          "type": "integer",
-          "format": "int32"
+          "type": "string"
         },
         "name": {
           "type": "string"
         },
         "user": {
-          "type": "boolean"
+          "type": "string"
         },
         "user_subscription": {
-          "type": "boolean"
+          "type": "string"
         },
         "user_write": {
-          "type": "boolean"
+          "type": "string"
         },
         "users": {
           "type": "array",
@@ -1248,6 +1767,17 @@ func init() {
           "package": "github.com/gmarcha/ent-goswagger-app/internal/ent"
         },
         "type": "Role"
+      }
+    },
+    "Token": {
+      "type": "object",
+      "properties": {
+        "accessToken": {
+          "type": "string"
+        },
+        "refreshToken": {
+          "type": "string"
+        }
       }
     },
     "User": {
@@ -1320,6 +1850,12 @@ func init() {
     },
     "404": {
       "description": "Not Found",
+      "schema": {
+        "$ref": "#/definitions/Error"
+      }
+    },
+    "422": {
+      "description": "Unprocessable Entity",
       "schema": {
         "$ref": "#/definitions/Error"
       }
@@ -1376,11 +1912,11 @@ func init() {
           "200": {
             "description": "OK",
             "schema": {
-              "type": "string"
+              "$ref": "#/definitions/Token"
             }
           },
-          "401": {
-            "description": "Unauthorized",
+          "422": {
+            "description": "Unprocessable Entity",
             "schema": {
               "$ref": "#/definitions/Error"
             }
@@ -1423,11 +1959,30 @@ func init() {
         ],
         "summary": "Send token information",
         "operationId": "tokenInfo",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "Bearer access token",
+            "name": "Authorization",
+            "in": "header",
+            "required": true
+          }
+        ],
         "responses": {
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/User"
+              "type": "object",
+              "properties": {
+                "expiresAt": {
+                  "type": "string",
+                  "format": "date-time"
+                },
+                "login": {
+                  "description": "username",
+                  "type": "string"
+                }
+              }
             }
           },
           "401": {
@@ -1453,11 +2008,20 @@ func init() {
         ],
         "summary": "Refresh token",
         "operationId": "tokenRefresh",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "Bearer refresh token",
+            "name": "Authorization",
+            "in": "header",
+            "required": true
+          }
+        ],
         "responses": {
           "200": {
             "description": "OK",
             "schema": {
-              "type": "string"
+              "$ref": "#/definitions/Token"
             }
           },
           "401": {
@@ -1520,8 +2084,14 @@ func init() {
               }
             }
           },
-          "400": {
-            "description": "Bad request",
+          "401": {
+            "description": "Unauthorized",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "403": {
+            "description": "Forbidden",
             "schema": {
               "$ref": "#/definitions/Error"
             }
@@ -1574,6 +2144,18 @@ func init() {
               "$ref": "#/definitions/Error"
             }
           },
+          "401": {
+            "description": "Unauthorized",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
           "500": {
             "description": "Internal Server Error",
             "schema": {
@@ -1582,6 +2164,296 @@ func init() {
           }
         }
       }
+    },
+    "/events/types": {
+      "get": {
+        "security": [
+          {
+            "OAuth2": [
+              "event",
+              "public"
+            ]
+          }
+        ],
+        "description": "List all event categories.",
+        "tags": [
+          "EventType"
+        ],
+        "summary": "List event types",
+        "operationId": "listType",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/EventType"
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      },
+      "post": {
+        "security": [
+          {
+            "OAuth2": [
+              "event",
+              "event:write",
+              "public"
+            ]
+          }
+        ],
+        "description": "Create a new event category.",
+        "tags": [
+          "EventType"
+        ],
+        "summary": "Create event type",
+        "operationId": "createType",
+        "parameters": [
+          {
+            "description": "Event category to create.",
+            "name": "type",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/EventType"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Created",
+            "schema": {
+              "$ref": "#/definitions/EventType"
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      }
+    },
+    "/events/types/{id}": {
+      "get": {
+        "security": [
+          {
+            "OAuth2": [
+              "event",
+              "public"
+            ]
+          }
+        ],
+        "description": "Read an event category.",
+        "tags": [
+          "EventType"
+        ],
+        "summary": "Read event type",
+        "operationId": "readType",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/EventType"
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      },
+      "post": {
+        "security": [
+          {
+            "OAuth2": [
+              "event",
+              "event:write",
+              "public"
+            ]
+          }
+        ],
+        "description": "Update an event category.",
+        "tags": [
+          "EventType"
+        ],
+        "summary": "Update event type",
+        "operationId": "updateType",
+        "parameters": [
+          {
+            "description": "Event category to update.",
+            "name": "type",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/EventType"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/EventType"
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      },
+      "delete": {
+        "security": [
+          {
+            "OAuth2": [
+              "event",
+              "event:write",
+              "public"
+            ]
+          }
+        ],
+        "description": "Update an event category.",
+        "tags": [
+          "EventType"
+        ],
+        "summary": "Delete event type",
+        "operationId": "deleteType",
+        "responses": {
+          "204": {
+            "description": "No content"
+          },
+          "400": {
+            "description": "Bad request",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      },
+      "parameters": [
+        {
+          "type": "string",
+          "description": "ID of event category.",
+          "name": "id",
+          "in": "path",
+          "required": true
+        }
+      ]
     },
     "/events/{id}": {
       "get": {
@@ -1608,6 +2480,18 @@ func init() {
           },
           "400": {
             "description": "Bad request",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "403": {
+            "description": "Forbidden",
             "schema": {
               "$ref": "#/definitions/Error"
             }
@@ -1666,6 +2550,18 @@ func init() {
               "$ref": "#/definitions/Error"
             }
           },
+          "401": {
+            "description": "Unauthorized",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
           "404": {
             "description": "Not Found",
             "schema": {
@@ -1702,6 +2598,83 @@ func init() {
           },
           "400": {
             "description": "Bad request",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      },
+      "parameters": [
+        {
+          "type": "string",
+          "description": "Event ID.",
+          "name": "id",
+          "in": "path",
+          "required": true
+        }
+      ]
+    },
+    "/events/{id}/types": {
+      "get": {
+        "security": [
+          {
+            "OAuth2": [
+              "event",
+              "public"
+            ]
+          }
+        ],
+        "description": "Retrieve event type.",
+        "tags": [
+          "Event"
+        ],
+        "summary": "Event type",
+        "operationId": "eventType",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/EventType"
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "403": {
+            "description": "Forbidden",
             "schema": {
               "$ref": "#/definitions/Error"
             }
@@ -1763,6 +2736,18 @@ func init() {
               "$ref": "#/definitions/Error"
             }
           },
+          "401": {
+            "description": "Unauthorized",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
           "404": {
             "description": "Not Found",
             "schema": {
@@ -1820,8 +2805,8 @@ func init() {
               }
             }
           },
-          "400": {
-            "description": "Bad request",
+          "401": {
+            "description": "Unauthorized",
             "schema": {
               "$ref": "#/definitions/Error"
             }
@@ -1874,6 +2859,18 @@ func init() {
               "$ref": "#/definitions/Error"
             }
           },
+          "401": {
+            "description": "Unauthorized",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
           "500": {
             "description": "Internal Server Error",
             "schema": {
@@ -1905,6 +2902,64 @@ func init() {
               "$ref": "#/definitions/User"
             }
           },
+          "401": {
+            "description": "Unauthorized",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      },
+      "put": {
+        "security": [
+          {
+            "OAuth2": [
+              "public"
+            ]
+          }
+        ],
+        "description": "Update the authenticated user.",
+        "tags": [
+          "User"
+        ],
+        "summary": "Update authenticated user",
+        "operationId": "updateMe",
+        "parameters": [
+          {
+            "description": "User to update.",
+            "name": "user",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/User"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/User"
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
           "500": {
             "description": "Internal Server Error",
             "schema": {
@@ -1930,6 +2985,12 @@ func init() {
         "responses": {
           "204": {
             "description": "No Content"
+          },
+          "401": {
+            "description": "Unauthorized",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
           },
           "500": {
             "description": "Internal Server Error",
@@ -1967,6 +3028,18 @@ func init() {
               }
             }
           },
+          "401": {
+            "description": "Unauthorized",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
           "500": {
             "description": "Internal Server Error",
             "schema": {
@@ -1996,14 +3069,28 @@ func init() {
         "operationId": "subscribeMe",
         "responses": {
           "201": {
-            "description": "OK",
+            "description": "Created",
             "schema": {
-              "type": "string",
-              "example": "Done"
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Event"
+              }
             }
           },
           "400": {
             "description": "Bad request",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "403": {
+            "description": "Forbidden",
             "schema": {
               "$ref": "#/definitions/Error"
             }
@@ -2045,6 +3132,18 @@ func init() {
           },
           "400": {
             "description": "Bad request",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "403": {
+            "description": "Forbidden",
             "schema": {
               "$ref": "#/definitions/Error"
             }
@@ -2098,6 +3197,18 @@ func init() {
           },
           "400": {
             "description": "Bad request",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "403": {
+            "description": "Forbidden",
             "schema": {
               "$ref": "#/definitions/Error"
             }
@@ -2156,6 +3267,18 @@ func init() {
               "$ref": "#/definitions/Error"
             }
           },
+          "401": {
+            "description": "Unauthorized",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
           "404": {
             "description": "Not Found",
             "schema": {
@@ -2192,6 +3315,18 @@ func init() {
           },
           "400": {
             "description": "Bad request",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "403": {
+            "description": "Forbidden",
             "schema": {
               "$ref": "#/definitions/Error"
             }
@@ -2253,6 +3388,18 @@ func init() {
               "$ref": "#/definitions/Error"
             }
           },
+          "401": {
+            "description": "Unauthorized",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
           "404": {
             "description": "Not Found",
             "schema": {
@@ -2290,20 +3437,34 @@ func init() {
         ],
         "description": "Add admin role to a user.",
         "tags": [
-          "User"
+          "UserRole"
         ],
         "summary": "Add admin",
         "operationId": "addAdmin",
         "responses": {
           "201": {
-            "description": "OK",
+            "description": "Created",
             "schema": {
-              "type": "string",
-              "example": "Done"
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Role"
+              }
             }
           },
           "400": {
             "description": "Bad request",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "403": {
+            "description": "Forbidden",
             "schema": {
               "$ref": "#/definitions/Error"
             }
@@ -2334,7 +3495,7 @@ func init() {
         ],
         "description": "Remove admin role to a user.",
         "tags": [
-          "User"
+          "UserRole"
         ],
         "summary": "Remove admin",
         "operationId": "removeAdmin",
@@ -2344,6 +3505,18 @@ func init() {
           },
           "400": {
             "description": "Bad request",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "403": {
+            "description": "Forbidden",
             "schema": {
               "$ref": "#/definitions/Error"
             }
@@ -2385,20 +3558,34 @@ func init() {
         ],
         "description": "Add calendar role to a user.",
         "tags": [
-          "User"
+          "UserRole"
         ],
         "summary": "Add calendar",
         "operationId": "addCalendar",
         "responses": {
           "201": {
-            "description": "OK",
+            "description": "Created",
             "schema": {
-              "type": "string",
-              "example": "Done"
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Role"
+              }
             }
           },
           "400": {
             "description": "Bad request",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "403": {
+            "description": "Forbidden",
             "schema": {
               "$ref": "#/definitions/Error"
             }
@@ -2429,7 +3616,7 @@ func init() {
         ],
         "description": "Remove calendar role to a user.",
         "tags": [
-          "User"
+          "UserRole"
         ],
         "summary": "Remove calendar",
         "operationId": "removeCalendar",
@@ -2439,6 +3626,18 @@ func init() {
           },
           "400": {
             "description": "Bad request",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "403": {
+            "description": "Forbidden",
             "schema": {
               "$ref": "#/definitions/Error"
             }
@@ -2480,20 +3679,34 @@ func init() {
         ],
         "description": "Add tutor role to a user.",
         "tags": [
-          "User"
+          "UserRole"
         ],
         "summary": "Add tutor",
         "operationId": "addTutor",
         "responses": {
           "201": {
-            "description": "OK",
+            "description": "Created",
             "schema": {
-              "type": "string",
-              "example": "Done"
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Role"
+              }
             }
           },
           "400": {
             "description": "Bad request",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "403": {
+            "description": "Forbidden",
             "schema": {
               "$ref": "#/definitions/Error"
             }
@@ -2524,7 +3737,7 @@ func init() {
         ],
         "description": "Remove tutor role to a user.",
         "tags": [
-          "User"
+          "UserRole"
         ],
         "summary": "Remove tutor",
         "operationId": "removeTutor",
@@ -2534,6 +3747,18 @@ func init() {
           },
           "400": {
             "description": "Bad request",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "403": {
+            "description": "Forbidden",
             "schema": {
               "$ref": "#/definitions/Error"
             }
@@ -2583,14 +3808,28 @@ func init() {
         "operationId": "subscribeUser",
         "responses": {
           "201": {
-            "description": "OK",
+            "description": "Created",
             "schema": {
-              "type": "string",
-              "example": "Done"
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Event"
+              }
             }
           },
           "400": {
             "description": "Bad request",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "403": {
+            "description": "Forbidden",
             "schema": {
               "$ref": "#/definitions/Error"
             }
@@ -2633,6 +3872,18 @@ func init() {
           },
           "400": {
             "description": "Bad request",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "403": {
+            "description": "Forbidden",
             "schema": {
               "$ref": "#/definitions/Error"
             }
@@ -2703,8 +3954,7 @@ func init() {
       ],
       "properties": {
         "category": {
-          "type": "string",
-          "example": "exam"
+          "$ref": "#/definitions/EventType"
         },
         "createdAt": {
           "type": "string",
@@ -2749,6 +3999,37 @@ func init() {
         "type": "Event"
       }
     },
+    "EventType": {
+      "type": "object",
+      "required": [
+        "color",
+        "id",
+        "name"
+      ],
+      "properties": {
+        "color": {
+          "type": "string"
+        },
+        "events": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Event"
+          }
+        },
+        "id": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        }
+      },
+      "x-go-type": {
+        "import": {
+          "package": "github.com/gmarcha/ent-goswagger-app/internal/ent"
+        },
+        "type": "EventType"
+      }
+    },
     "Role": {
       "type": "object",
       "required": [
@@ -2762,26 +4043,25 @@ func init() {
       ],
       "properties": {
         "event": {
-          "type": "boolean"
+          "type": "string"
         },
         "event_write": {
-          "type": "boolean"
+          "type": "string"
         },
         "id": {
-          "type": "integer",
-          "format": "int32"
+          "type": "string"
         },
         "name": {
           "type": "string"
         },
         "user": {
-          "type": "boolean"
+          "type": "string"
         },
         "user_subscription": {
-          "type": "boolean"
+          "type": "string"
         },
         "user_write": {
-          "type": "boolean"
+          "type": "string"
         },
         "users": {
           "type": "array",
@@ -2795,6 +4075,17 @@ func init() {
           "package": "github.com/gmarcha/ent-goswagger-app/internal/ent"
         },
         "type": "Role"
+      }
+    },
+    "Token": {
+      "type": "object",
+      "properties": {
+        "accessToken": {
+          "type": "string"
+        },
+        "refreshToken": {
+          "type": "string"
+        }
       }
     },
     "User": {
@@ -2867,6 +4158,12 @@ func init() {
     },
     "404": {
       "description": "Not Found",
+      "schema": {
+        "$ref": "#/definitions/Error"
+      }
+    },
+    "422": {
+      "description": "Unprocessable Entity",
       "schema": {
         "$ref": "#/definitions/Error"
       }

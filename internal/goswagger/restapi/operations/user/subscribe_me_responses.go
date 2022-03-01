@@ -10,13 +10,14 @@ import (
 
 	"github.com/go-openapi/runtime"
 
+	"github.com/gmarcha/ent-goswagger-app/internal/ent"
 	"github.com/gmarcha/ent-goswagger-app/internal/goswagger/models"
 )
 
 // SubscribeMeCreatedCode is the HTTP code returned for type SubscribeMeCreated
 const SubscribeMeCreatedCode int = 201
 
-/*SubscribeMeCreated OK
+/*SubscribeMeCreated Created
 
 swagger:response subscribeMeCreated
 */
@@ -25,7 +26,7 @@ type SubscribeMeCreated struct {
 	/*
 	  In: Body
 	*/
-	Payload string `json:"body,omitempty"`
+	Payload []*ent.Event `json:"body,omitempty"`
 }
 
 // NewSubscribeMeCreated creates SubscribeMeCreated with default headers values
@@ -35,13 +36,13 @@ func NewSubscribeMeCreated() *SubscribeMeCreated {
 }
 
 // WithPayload adds the payload to the subscribe me created response
-func (o *SubscribeMeCreated) WithPayload(payload string) *SubscribeMeCreated {
+func (o *SubscribeMeCreated) WithPayload(payload []*ent.Event) *SubscribeMeCreated {
 	o.Payload = payload
 	return o
 }
 
 // SetPayload sets the payload to the subscribe me created response
-func (o *SubscribeMeCreated) SetPayload(payload string) {
+func (o *SubscribeMeCreated) SetPayload(payload []*ent.Event) {
 	o.Payload = payload
 }
 
@@ -50,6 +51,11 @@ func (o *SubscribeMeCreated) WriteResponse(rw http.ResponseWriter, producer runt
 
 	rw.WriteHeader(201)
 	payload := o.Payload
+	if payload == nil {
+		// return empty array
+		payload = make([]*ent.Event, 0, 50)
+	}
+
 	if err := producer.Produce(rw, payload); err != nil {
 		panic(err) // let the recovery middleware deal with this
 	}
@@ -91,6 +97,94 @@ func (o *SubscribeMeBadRequest) SetPayload(payload *models.Error) {
 func (o *SubscribeMeBadRequest) WriteResponse(rw http.ResponseWriter, producer runtime.Producer) {
 
 	rw.WriteHeader(400)
+	if o.Payload != nil {
+		payload := o.Payload
+		if err := producer.Produce(rw, payload); err != nil {
+			panic(err) // let the recovery middleware deal with this
+		}
+	}
+}
+
+// SubscribeMeUnauthorizedCode is the HTTP code returned for type SubscribeMeUnauthorized
+const SubscribeMeUnauthorizedCode int = 401
+
+/*SubscribeMeUnauthorized Unauthorized
+
+swagger:response subscribeMeUnauthorized
+*/
+type SubscribeMeUnauthorized struct {
+
+	/*
+	  In: Body
+	*/
+	Payload *models.Error `json:"body,omitempty"`
+}
+
+// NewSubscribeMeUnauthorized creates SubscribeMeUnauthorized with default headers values
+func NewSubscribeMeUnauthorized() *SubscribeMeUnauthorized {
+
+	return &SubscribeMeUnauthorized{}
+}
+
+// WithPayload adds the payload to the subscribe me unauthorized response
+func (o *SubscribeMeUnauthorized) WithPayload(payload *models.Error) *SubscribeMeUnauthorized {
+	o.Payload = payload
+	return o
+}
+
+// SetPayload sets the payload to the subscribe me unauthorized response
+func (o *SubscribeMeUnauthorized) SetPayload(payload *models.Error) {
+	o.Payload = payload
+}
+
+// WriteResponse to the client
+func (o *SubscribeMeUnauthorized) WriteResponse(rw http.ResponseWriter, producer runtime.Producer) {
+
+	rw.WriteHeader(401)
+	if o.Payload != nil {
+		payload := o.Payload
+		if err := producer.Produce(rw, payload); err != nil {
+			panic(err) // let the recovery middleware deal with this
+		}
+	}
+}
+
+// SubscribeMeForbiddenCode is the HTTP code returned for type SubscribeMeForbidden
+const SubscribeMeForbiddenCode int = 403
+
+/*SubscribeMeForbidden Forbidden
+
+swagger:response subscribeMeForbidden
+*/
+type SubscribeMeForbidden struct {
+
+	/*
+	  In: Body
+	*/
+	Payload *models.Error `json:"body,omitempty"`
+}
+
+// NewSubscribeMeForbidden creates SubscribeMeForbidden with default headers values
+func NewSubscribeMeForbidden() *SubscribeMeForbidden {
+
+	return &SubscribeMeForbidden{}
+}
+
+// WithPayload adds the payload to the subscribe me forbidden response
+func (o *SubscribeMeForbidden) WithPayload(payload *models.Error) *SubscribeMeForbidden {
+	o.Payload = payload
+	return o
+}
+
+// SetPayload sets the payload to the subscribe me forbidden response
+func (o *SubscribeMeForbidden) SetPayload(payload *models.Error) {
+	o.Payload = payload
+}
+
+// WriteResponse to the client
+func (o *SubscribeMeForbidden) WriteResponse(rw http.ResponseWriter, producer runtime.Producer) {
+
+	rw.WriteHeader(403)
 	if o.Payload != nil {
 		payload := o.Payload
 		if err := producer.Produce(rw, payload); err != nil {

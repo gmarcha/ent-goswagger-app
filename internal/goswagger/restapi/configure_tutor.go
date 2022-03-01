@@ -11,6 +11,7 @@ import (
 
 	"github.com/gmarcha/ent-goswagger-app/internal/clients/database"
 	"github.com/gmarcha/ent-goswagger-app/internal/clients/env"
+	"github.com/gmarcha/ent-goswagger-app/internal/clients/redis"
 	"github.com/gmarcha/ent-goswagger-app/internal/goswagger/restapi/operations"
 	"github.com/gmarcha/ent-goswagger-app/internal/modules/auth"
 	"github.com/gmarcha/ent-goswagger-app/internal/modules/user"
@@ -47,12 +48,14 @@ func configureAPI(api *operations.TutorAPI) http.Handler {
 	env.Init("config/.env")
 
 	db := database.Init()
+	rdb := redis.Init()
 
-	auth.Init(api, db)
+	auth.Init(api, db, rdb)
 	user.Init(api, db)
 
 	api.ServerShutdown = func() {
 		db.Close()
+		rdb.Close()
 	}
 
 	return setupGlobalMiddleware(api.Serve(setupMiddlewares))

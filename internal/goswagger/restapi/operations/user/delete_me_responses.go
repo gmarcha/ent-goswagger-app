@@ -37,6 +37,50 @@ func (o *DeleteMeNoContent) WriteResponse(rw http.ResponseWriter, producer runti
 	rw.WriteHeader(204)
 }
 
+// DeleteMeUnauthorizedCode is the HTTP code returned for type DeleteMeUnauthorized
+const DeleteMeUnauthorizedCode int = 401
+
+/*DeleteMeUnauthorized Unauthorized
+
+swagger:response deleteMeUnauthorized
+*/
+type DeleteMeUnauthorized struct {
+
+	/*
+	  In: Body
+	*/
+	Payload *models.Error `json:"body,omitempty"`
+}
+
+// NewDeleteMeUnauthorized creates DeleteMeUnauthorized with default headers values
+func NewDeleteMeUnauthorized() *DeleteMeUnauthorized {
+
+	return &DeleteMeUnauthorized{}
+}
+
+// WithPayload adds the payload to the delete me unauthorized response
+func (o *DeleteMeUnauthorized) WithPayload(payload *models.Error) *DeleteMeUnauthorized {
+	o.Payload = payload
+	return o
+}
+
+// SetPayload sets the payload to the delete me unauthorized response
+func (o *DeleteMeUnauthorized) SetPayload(payload *models.Error) {
+	o.Payload = payload
+}
+
+// WriteResponse to the client
+func (o *DeleteMeUnauthorized) WriteResponse(rw http.ResponseWriter, producer runtime.Producer) {
+
+	rw.WriteHeader(401)
+	if o.Payload != nil {
+		payload := o.Payload
+		if err := producer.Produce(rw, payload); err != nil {
+			panic(err) // let the recovery middleware deal with this
+		}
+	}
+}
+
 // DeleteMeInternalServerErrorCode is the HTTP code returned for type DeleteMeInternalServerError
 const DeleteMeInternalServerErrorCode int = 500
 

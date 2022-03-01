@@ -25,7 +25,7 @@ type TokenRefreshOK struct {
 	/*
 	  In: Body
 	*/
-	Payload string `json:"body,omitempty"`
+	Payload *models.Token `json:"body,omitempty"`
 }
 
 // NewTokenRefreshOK creates TokenRefreshOK with default headers values
@@ -35,13 +35,13 @@ func NewTokenRefreshOK() *TokenRefreshOK {
 }
 
 // WithPayload adds the payload to the token refresh o k response
-func (o *TokenRefreshOK) WithPayload(payload string) *TokenRefreshOK {
+func (o *TokenRefreshOK) WithPayload(payload *models.Token) *TokenRefreshOK {
 	o.Payload = payload
 	return o
 }
 
 // SetPayload sets the payload to the token refresh o k response
-func (o *TokenRefreshOK) SetPayload(payload string) {
+func (o *TokenRefreshOK) SetPayload(payload *models.Token) {
 	o.Payload = payload
 }
 
@@ -49,9 +49,11 @@ func (o *TokenRefreshOK) SetPayload(payload string) {
 func (o *TokenRefreshOK) WriteResponse(rw http.ResponseWriter, producer runtime.Producer) {
 
 	rw.WriteHeader(200)
-	payload := o.Payload
-	if err := producer.Produce(rw, payload); err != nil {
-		panic(err) // let the recovery middleware deal with this
+	if o.Payload != nil {
+		payload := o.Payload
+		if err := producer.Produce(rw, payload); err != nil {
+			panic(err) // let the recovery middleware deal with this
+		}
 	}
 }
 

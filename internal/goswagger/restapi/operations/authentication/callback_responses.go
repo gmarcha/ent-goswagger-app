@@ -25,7 +25,7 @@ type CallbackOK struct {
 	/*
 	  In: Body
 	*/
-	Payload string `json:"body,omitempty"`
+	Payload *models.Token `json:"body,omitempty"`
 }
 
 // NewCallbackOK creates CallbackOK with default headers values
@@ -35,13 +35,13 @@ func NewCallbackOK() *CallbackOK {
 }
 
 // WithPayload adds the payload to the callback o k response
-func (o *CallbackOK) WithPayload(payload string) *CallbackOK {
+func (o *CallbackOK) WithPayload(payload *models.Token) *CallbackOK {
 	o.Payload = payload
 	return o
 }
 
 // SetPayload sets the payload to the callback o k response
-func (o *CallbackOK) SetPayload(payload string) {
+func (o *CallbackOK) SetPayload(payload *models.Token) {
 	o.Payload = payload
 }
 
@@ -49,20 +49,22 @@ func (o *CallbackOK) SetPayload(payload string) {
 func (o *CallbackOK) WriteResponse(rw http.ResponseWriter, producer runtime.Producer) {
 
 	rw.WriteHeader(200)
-	payload := o.Payload
-	if err := producer.Produce(rw, payload); err != nil {
-		panic(err) // let the recovery middleware deal with this
+	if o.Payload != nil {
+		payload := o.Payload
+		if err := producer.Produce(rw, payload); err != nil {
+			panic(err) // let the recovery middleware deal with this
+		}
 	}
 }
 
-// CallbackUnauthorizedCode is the HTTP code returned for type CallbackUnauthorized
-const CallbackUnauthorizedCode int = 401
+// CallbackUnprocessableEntityCode is the HTTP code returned for type CallbackUnprocessableEntity
+const CallbackUnprocessableEntityCode int = 422
 
-/*CallbackUnauthorized Unauthorized
+/*CallbackUnprocessableEntity Unprocessable Entity
 
-swagger:response callbackUnauthorized
+swagger:response callbackUnprocessableEntity
 */
-type CallbackUnauthorized struct {
+type CallbackUnprocessableEntity struct {
 
 	/*
 	  In: Body
@@ -70,27 +72,27 @@ type CallbackUnauthorized struct {
 	Payload *models.Error `json:"body,omitempty"`
 }
 
-// NewCallbackUnauthorized creates CallbackUnauthorized with default headers values
-func NewCallbackUnauthorized() *CallbackUnauthorized {
+// NewCallbackUnprocessableEntity creates CallbackUnprocessableEntity with default headers values
+func NewCallbackUnprocessableEntity() *CallbackUnprocessableEntity {
 
-	return &CallbackUnauthorized{}
+	return &CallbackUnprocessableEntity{}
 }
 
-// WithPayload adds the payload to the callback unauthorized response
-func (o *CallbackUnauthorized) WithPayload(payload *models.Error) *CallbackUnauthorized {
+// WithPayload adds the payload to the callback unprocessable entity response
+func (o *CallbackUnprocessableEntity) WithPayload(payload *models.Error) *CallbackUnprocessableEntity {
 	o.Payload = payload
 	return o
 }
 
-// SetPayload sets the payload to the callback unauthorized response
-func (o *CallbackUnauthorized) SetPayload(payload *models.Error) {
+// SetPayload sets the payload to the callback unprocessable entity response
+func (o *CallbackUnprocessableEntity) SetPayload(payload *models.Error) {
 	o.Payload = payload
 }
 
 // WriteResponse to the client
-func (o *CallbackUnauthorized) WriteResponse(rw http.ResponseWriter, producer runtime.Producer) {
+func (o *CallbackUnprocessableEntity) WriteResponse(rw http.ResponseWriter, producer runtime.Producer) {
 
-	rw.WriteHeader(401)
+	rw.WriteHeader(422)
 	if o.Payload != nil {
 		payload := o.Payload
 		if err := producer.Produce(rw, payload); err != nil {

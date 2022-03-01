@@ -58,6 +58,94 @@ func (o *UpdateMeOK) WriteResponse(rw http.ResponseWriter, producer runtime.Prod
 	}
 }
 
+// UpdateMeBadRequestCode is the HTTP code returned for type UpdateMeBadRequest
+const UpdateMeBadRequestCode int = 400
+
+/*UpdateMeBadRequest Bad request
+
+swagger:response updateMeBadRequest
+*/
+type UpdateMeBadRequest struct {
+
+	/*
+	  In: Body
+	*/
+	Payload *models.Error `json:"body,omitempty"`
+}
+
+// NewUpdateMeBadRequest creates UpdateMeBadRequest with default headers values
+func NewUpdateMeBadRequest() *UpdateMeBadRequest {
+
+	return &UpdateMeBadRequest{}
+}
+
+// WithPayload adds the payload to the update me bad request response
+func (o *UpdateMeBadRequest) WithPayload(payload *models.Error) *UpdateMeBadRequest {
+	o.Payload = payload
+	return o
+}
+
+// SetPayload sets the payload to the update me bad request response
+func (o *UpdateMeBadRequest) SetPayload(payload *models.Error) {
+	o.Payload = payload
+}
+
+// WriteResponse to the client
+func (o *UpdateMeBadRequest) WriteResponse(rw http.ResponseWriter, producer runtime.Producer) {
+
+	rw.WriteHeader(400)
+	if o.Payload != nil {
+		payload := o.Payload
+		if err := producer.Produce(rw, payload); err != nil {
+			panic(err) // let the recovery middleware deal with this
+		}
+	}
+}
+
+// UpdateMeUnauthorizedCode is the HTTP code returned for type UpdateMeUnauthorized
+const UpdateMeUnauthorizedCode int = 401
+
+/*UpdateMeUnauthorized Unauthorized
+
+swagger:response updateMeUnauthorized
+*/
+type UpdateMeUnauthorized struct {
+
+	/*
+	  In: Body
+	*/
+	Payload *models.Error `json:"body,omitempty"`
+}
+
+// NewUpdateMeUnauthorized creates UpdateMeUnauthorized with default headers values
+func NewUpdateMeUnauthorized() *UpdateMeUnauthorized {
+
+	return &UpdateMeUnauthorized{}
+}
+
+// WithPayload adds the payload to the update me unauthorized response
+func (o *UpdateMeUnauthorized) WithPayload(payload *models.Error) *UpdateMeUnauthorized {
+	o.Payload = payload
+	return o
+}
+
+// SetPayload sets the payload to the update me unauthorized response
+func (o *UpdateMeUnauthorized) SetPayload(payload *models.Error) {
+	o.Payload = payload
+}
+
+// WriteResponse to the client
+func (o *UpdateMeUnauthorized) WriteResponse(rw http.ResponseWriter, producer runtime.Producer) {
+
+	rw.WriteHeader(401)
+	if o.Payload != nil {
+		payload := o.Payload
+		if err := producer.Produce(rw, payload); err != nil {
+			panic(err) // let the recovery middleware deal with this
+		}
+	}
+}
+
 // UpdateMeInternalServerErrorCode is the HTTP code returned for type UpdateMeInternalServerError
 const UpdateMeInternalServerErrorCode int = 500
 

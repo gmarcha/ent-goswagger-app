@@ -102,6 +102,94 @@ func (o *UpdateUserBadRequest) WriteResponse(rw http.ResponseWriter, producer ru
 	}
 }
 
+// UpdateUserUnauthorizedCode is the HTTP code returned for type UpdateUserUnauthorized
+const UpdateUserUnauthorizedCode int = 401
+
+/*UpdateUserUnauthorized Unauthorized
+
+swagger:response updateUserUnauthorized
+*/
+type UpdateUserUnauthorized struct {
+
+	/*
+	  In: Body
+	*/
+	Payload *models.Error `json:"body,omitempty"`
+}
+
+// NewUpdateUserUnauthorized creates UpdateUserUnauthorized with default headers values
+func NewUpdateUserUnauthorized() *UpdateUserUnauthorized {
+
+	return &UpdateUserUnauthorized{}
+}
+
+// WithPayload adds the payload to the update user unauthorized response
+func (o *UpdateUserUnauthorized) WithPayload(payload *models.Error) *UpdateUserUnauthorized {
+	o.Payload = payload
+	return o
+}
+
+// SetPayload sets the payload to the update user unauthorized response
+func (o *UpdateUserUnauthorized) SetPayload(payload *models.Error) {
+	o.Payload = payload
+}
+
+// WriteResponse to the client
+func (o *UpdateUserUnauthorized) WriteResponse(rw http.ResponseWriter, producer runtime.Producer) {
+
+	rw.WriteHeader(401)
+	if o.Payload != nil {
+		payload := o.Payload
+		if err := producer.Produce(rw, payload); err != nil {
+			panic(err) // let the recovery middleware deal with this
+		}
+	}
+}
+
+// UpdateUserForbiddenCode is the HTTP code returned for type UpdateUserForbidden
+const UpdateUserForbiddenCode int = 403
+
+/*UpdateUserForbidden Forbidden
+
+swagger:response updateUserForbidden
+*/
+type UpdateUserForbidden struct {
+
+	/*
+	  In: Body
+	*/
+	Payload *models.Error `json:"body,omitempty"`
+}
+
+// NewUpdateUserForbidden creates UpdateUserForbidden with default headers values
+func NewUpdateUserForbidden() *UpdateUserForbidden {
+
+	return &UpdateUserForbidden{}
+}
+
+// WithPayload adds the payload to the update user forbidden response
+func (o *UpdateUserForbidden) WithPayload(payload *models.Error) *UpdateUserForbidden {
+	o.Payload = payload
+	return o
+}
+
+// SetPayload sets the payload to the update user forbidden response
+func (o *UpdateUserForbidden) SetPayload(payload *models.Error) {
+	o.Payload = payload
+}
+
+// WriteResponse to the client
+func (o *UpdateUserForbidden) WriteResponse(rw http.ResponseWriter, producer runtime.Producer) {
+
+	rw.WriteHeader(403)
+	if o.Payload != nil {
+		payload := o.Payload
+		if err := producer.Produce(rw, payload); err != nil {
+			panic(err) // let the recovery middleware deal with this
+		}
+	}
+}
+
 // UpdateUserNotFoundCode is the HTTP code returned for type UpdateUserNotFound
 const UpdateUserNotFoundCode int = 404
 

@@ -16,7 +16,7 @@ import (
 // AddCalendarCreatedCode is the HTTP code returned for type AddCalendarCreated
 const AddCalendarCreatedCode int = 201
 
-/*AddCalendarCreated OK
+/*AddCalendarCreated Created
 
 swagger:response addCalendarCreated
 */

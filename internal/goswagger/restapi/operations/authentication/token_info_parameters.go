@@ -10,6 +10,8 @@ import (
 
 	"github.com/go-openapi/errors"
 	"github.com/go-openapi/runtime/middleware"
+	"github.com/go-openapi/strfmt"
+	"github.com/go-openapi/validate"
 )
 
 // NewTokenInfoParams creates a new TokenInfoParams object
@@ -28,6 +30,12 @@ type TokenInfoParams struct {
 
 	// HTTP Request Object
 	HTTPRequest *http.Request `json:"-"`
+
+	/*Bearer access token
+	  Required: true
+	  In: header
+	*/
+	Authorization string
 }
 
 // BindRequest both binds and validates a request, it assumes that complex things implement a Validatable(strfmt.Registry) error interface
@@ -39,8 +47,31 @@ func (o *TokenInfoParams) BindRequest(r *http.Request, route *middleware.Matched
 
 	o.HTTPRequest = r
 
+	if err := o.bindAuthorization(r.Header[http.CanonicalHeaderKey("Authorization")], true, route.Formats); err != nil {
+		res = append(res, err)
+	}
 	if len(res) > 0 {
 		return errors.CompositeValidationError(res...)
 	}
+	return nil
+}
+
+// bindAuthorization binds and validates parameter Authorization from header.
+func (o *TokenInfoParams) bindAuthorization(rawData []string, hasKey bool, formats strfmt.Registry) error {
+	if !hasKey {
+		return errors.Required("Authorization", "header", rawData)
+	}
+	var raw string
+	if len(rawData) > 0 {
+		raw = rawData[len(rawData)-1]
+	}
+
+	// Required: true
+
+	if err := validate.RequiredString("Authorization", "header", raw); err != nil {
+		return err
+	}
+	o.Authorization = raw
+
 	return nil
 }

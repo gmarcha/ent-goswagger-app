@@ -81,6 +81,94 @@ func (o *UnsubscribeUserBadRequest) WriteResponse(rw http.ResponseWriter, produc
 	}
 }
 
+// UnsubscribeUserUnauthorizedCode is the HTTP code returned for type UnsubscribeUserUnauthorized
+const UnsubscribeUserUnauthorizedCode int = 401
+
+/*UnsubscribeUserUnauthorized Unauthorized
+
+swagger:response unsubscribeUserUnauthorized
+*/
+type UnsubscribeUserUnauthorized struct {
+
+	/*
+	  In: Body
+	*/
+	Payload *models.Error `json:"body,omitempty"`
+}
+
+// NewUnsubscribeUserUnauthorized creates UnsubscribeUserUnauthorized with default headers values
+func NewUnsubscribeUserUnauthorized() *UnsubscribeUserUnauthorized {
+
+	return &UnsubscribeUserUnauthorized{}
+}
+
+// WithPayload adds the payload to the unsubscribe user unauthorized response
+func (o *UnsubscribeUserUnauthorized) WithPayload(payload *models.Error) *UnsubscribeUserUnauthorized {
+	o.Payload = payload
+	return o
+}
+
+// SetPayload sets the payload to the unsubscribe user unauthorized response
+func (o *UnsubscribeUserUnauthorized) SetPayload(payload *models.Error) {
+	o.Payload = payload
+}
+
+// WriteResponse to the client
+func (o *UnsubscribeUserUnauthorized) WriteResponse(rw http.ResponseWriter, producer runtime.Producer) {
+
+	rw.WriteHeader(401)
+	if o.Payload != nil {
+		payload := o.Payload
+		if err := producer.Produce(rw, payload); err != nil {
+			panic(err) // let the recovery middleware deal with this
+		}
+	}
+}
+
+// UnsubscribeUserForbiddenCode is the HTTP code returned for type UnsubscribeUserForbidden
+const UnsubscribeUserForbiddenCode int = 403
+
+/*UnsubscribeUserForbidden Forbidden
+
+swagger:response unsubscribeUserForbidden
+*/
+type UnsubscribeUserForbidden struct {
+
+	/*
+	  In: Body
+	*/
+	Payload *models.Error `json:"body,omitempty"`
+}
+
+// NewUnsubscribeUserForbidden creates UnsubscribeUserForbidden with default headers values
+func NewUnsubscribeUserForbidden() *UnsubscribeUserForbidden {
+
+	return &UnsubscribeUserForbidden{}
+}
+
+// WithPayload adds the payload to the unsubscribe user forbidden response
+func (o *UnsubscribeUserForbidden) WithPayload(payload *models.Error) *UnsubscribeUserForbidden {
+	o.Payload = payload
+	return o
+}
+
+// SetPayload sets the payload to the unsubscribe user forbidden response
+func (o *UnsubscribeUserForbidden) SetPayload(payload *models.Error) {
+	o.Payload = payload
+}
+
+// WriteResponse to the client
+func (o *UnsubscribeUserForbidden) WriteResponse(rw http.ResponseWriter, producer runtime.Producer) {
+
+	rw.WriteHeader(403)
+	if o.Payload != nil {
+		payload := o.Payload
+		if err := producer.Produce(rw, payload); err != nil {
+			panic(err) // let the recovery middleware deal with this
+		}
+	}
+}
+
 // UnsubscribeUserNotFoundCode is the HTTP code returned for type UnsubscribeUserNotFound
 const UnsubscribeUserNotFoundCode int = 404
 

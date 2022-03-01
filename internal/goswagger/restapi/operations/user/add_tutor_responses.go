@@ -16,7 +16,7 @@ import (
 // AddTutorCreatedCode is the HTTP code returned for type AddTutorCreated
 const AddTutorCreatedCode int = 201
 
-/*AddTutorCreated OK
+/*AddTutorCreated Created
 
 swagger:response addTutorCreated
 */

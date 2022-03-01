@@ -102,6 +102,94 @@ func (o *UpdateEventBadRequest) WriteResponse(rw http.ResponseWriter, producer r
 	}
 }
 
+// UpdateEventUnauthorizedCode is the HTTP code returned for type UpdateEventUnauthorized
+const UpdateEventUnauthorizedCode int = 401
+
+/*UpdateEventUnauthorized Unauthorized
+
+swagger:response updateEventUnauthorized
+*/
+type UpdateEventUnauthorized struct {
+
+	/*
+	  In: Body
+	*/
+	Payload *models.Error `json:"body,omitempty"`
+}
+
+// NewUpdateEventUnauthorized creates UpdateEventUnauthorized with default headers values
+func NewUpdateEventUnauthorized() *UpdateEventUnauthorized {
+
+	return &UpdateEventUnauthorized{}
+}
+
+// WithPayload adds the payload to the update event unauthorized response
+func (o *UpdateEventUnauthorized) WithPayload(payload *models.Error) *UpdateEventUnauthorized {
+	o.Payload = payload
+	return o
+}
+
+// SetPayload sets the payload to the update event unauthorized response
+func (o *UpdateEventUnauthorized) SetPayload(payload *models.Error) {
+	o.Payload = payload
+}
+
+// WriteResponse to the client
+func (o *UpdateEventUnauthorized) WriteResponse(rw http.ResponseWriter, producer runtime.Producer) {
+
+	rw.WriteHeader(401)
+	if o.Payload != nil {
+		payload := o.Payload
+		if err := producer.Produce(rw, payload); err != nil {
+			panic(err) // let the recovery middleware deal with this
+		}
+	}
+}
+
+// UpdateEventForbiddenCode is the HTTP code returned for type UpdateEventForbidden
+const UpdateEventForbiddenCode int = 403
+
+/*UpdateEventForbidden Forbidden
+
+swagger:response updateEventForbidden
+*/
+type UpdateEventForbidden struct {
+
+	/*
+	  In: Body
+	*/
+	Payload *models.Error `json:"body,omitempty"`
+}
+
+// NewUpdateEventForbidden creates UpdateEventForbidden with default headers values
+func NewUpdateEventForbidden() *UpdateEventForbidden {
+
+	return &UpdateEventForbidden{}
+}
+
+// WithPayload adds the payload to the update event forbidden response
+func (o *UpdateEventForbidden) WithPayload(payload *models.Error) *UpdateEventForbidden {
+	o.Payload = payload
+	return o
+}
+
+// SetPayload sets the payload to the update event forbidden response
+func (o *UpdateEventForbidden) SetPayload(payload *models.Error) {
+	o.Payload = payload
+}
+
+// WriteResponse to the client
+func (o *UpdateEventForbidden) WriteResponse(rw http.ResponseWriter, producer runtime.Producer) {
+
+	rw.WriteHeader(403)
+	if o.Payload != nil {
+		payload := o.Payload
+		if err := producer.Produce(rw, payload); err != nil {
+			panic(err) // let the recovery middleware deal with this
+		}
+	}
+}
+
 // UpdateEventNotFoundCode is the HTTP code returned for type UpdateEventNotFound
 const UpdateEventNotFoundCode int = 404
 

@@ -22,7 +22,9 @@ import (
 	"github.com/gmarcha/ent-goswagger-app/internal/goswagger/models"
 	"github.com/gmarcha/ent-goswagger-app/internal/goswagger/restapi/operations/authentication"
 	"github.com/gmarcha/ent-goswagger-app/internal/goswagger/restapi/operations/event"
+	"github.com/gmarcha/ent-goswagger-app/internal/goswagger/restapi/operations/event_type"
 	"github.com/gmarcha/ent-goswagger-app/internal/goswagger/restapi/operations/user"
+	"github.com/gmarcha/ent-goswagger-app/internal/goswagger/restapi/operations/user_role"
 )
 
 // NewTutorAPI creates a new Tutor instance
@@ -47,20 +49,23 @@ func NewTutorAPI(spec *loads.Document) *TutorAPI {
 
 		JSONProducer: runtime.JSONProducer(),
 
-		UserAddAdminHandler: user.AddAdminHandlerFunc(func(params user.AddAdminParams, principal *models.Principal) middleware.Responder {
-			return middleware.NotImplemented("operation user.AddAdmin has not yet been implemented")
+		UserRoleAddAdminHandler: user_role.AddAdminHandlerFunc(func(params user_role.AddAdminParams, principal *models.Principal) middleware.Responder {
+			return middleware.NotImplemented("operation user_role.AddAdmin has not yet been implemented")
 		}),
-		UserAddCalendarHandler: user.AddCalendarHandlerFunc(func(params user.AddCalendarParams, principal *models.Principal) middleware.Responder {
-			return middleware.NotImplemented("operation user.AddCalendar has not yet been implemented")
+		UserRoleAddCalendarHandler: user_role.AddCalendarHandlerFunc(func(params user_role.AddCalendarParams, principal *models.Principal) middleware.Responder {
+			return middleware.NotImplemented("operation user_role.AddCalendar has not yet been implemented")
 		}),
-		UserAddTutorHandler: user.AddTutorHandlerFunc(func(params user.AddTutorParams, principal *models.Principal) middleware.Responder {
-			return middleware.NotImplemented("operation user.AddTutor has not yet been implemented")
+		UserRoleAddTutorHandler: user_role.AddTutorHandlerFunc(func(params user_role.AddTutorParams, principal *models.Principal) middleware.Responder {
+			return middleware.NotImplemented("operation user_role.AddTutor has not yet been implemented")
 		}),
 		AuthenticationCallbackHandler: authentication.CallbackHandlerFunc(func(params authentication.CallbackParams) middleware.Responder {
 			return middleware.NotImplemented("operation authentication.Callback has not yet been implemented")
 		}),
 		EventCreateEventHandler: event.CreateEventHandlerFunc(func(params event.CreateEventParams, principal *models.Principal) middleware.Responder {
 			return middleware.NotImplemented("operation event.CreateEvent has not yet been implemented")
+		}),
+		EventTypeCreateTypeHandler: event_type.CreateTypeHandlerFunc(func(params event_type.CreateTypeParams, principal *models.Principal) middleware.Responder {
+			return middleware.NotImplemented("operation event_type.CreateType has not yet been implemented")
 		}),
 		UserCreateUserHandler: user.CreateUserHandlerFunc(func(params user.CreateUserParams, principal *models.Principal) middleware.Responder {
 			return middleware.NotImplemented("operation user.CreateUser has not yet been implemented")
@@ -71,8 +76,14 @@ func NewTutorAPI(spec *loads.Document) *TutorAPI {
 		UserDeleteMeHandler: user.DeleteMeHandlerFunc(func(params user.DeleteMeParams, principal *models.Principal) middleware.Responder {
 			return middleware.NotImplemented("operation user.DeleteMe has not yet been implemented")
 		}),
+		EventTypeDeleteTypeHandler: event_type.DeleteTypeHandlerFunc(func(params event_type.DeleteTypeParams, principal *models.Principal) middleware.Responder {
+			return middleware.NotImplemented("operation event_type.DeleteType has not yet been implemented")
+		}),
 		UserDeleteUserHandler: user.DeleteUserHandlerFunc(func(params user.DeleteUserParams, principal *models.Principal) middleware.Responder {
 			return middleware.NotImplemented("operation user.DeleteUser has not yet been implemented")
+		}),
+		EventEventTypeHandler: event.EventTypeHandlerFunc(func(params event.EventTypeParams, principal *models.Principal) middleware.Responder {
+			return middleware.NotImplemented("operation event.EventType has not yet been implemented")
 		}),
 		EventListEventHandler: event.ListEventHandlerFunc(func(params event.ListEventParams, principal *models.Principal) middleware.Responder {
 			return middleware.NotImplemented("operation event.ListEvent has not yet been implemented")
@@ -82,6 +93,9 @@ func NewTutorAPI(spec *loads.Document) *TutorAPI {
 		}),
 		UserListMeEventsHandler: user.ListMeEventsHandlerFunc(func(params user.ListMeEventsParams, principal *models.Principal) middleware.Responder {
 			return middleware.NotImplemented("operation user.ListMeEvents has not yet been implemented")
+		}),
+		EventTypeListTypeHandler: event_type.ListTypeHandlerFunc(func(params event_type.ListTypeParams, principal *models.Principal) middleware.Responder {
+			return middleware.NotImplemented("operation event_type.ListType has not yet been implemented")
 		}),
 		UserListUserHandler: user.ListUserHandlerFunc(func(params user.ListUserParams, principal *models.Principal) middleware.Responder {
 			return middleware.NotImplemented("operation user.ListUser has not yet been implemented")
@@ -98,17 +112,20 @@ func NewTutorAPI(spec *loads.Document) *TutorAPI {
 		UserReadMeHandler: user.ReadMeHandlerFunc(func(params user.ReadMeParams, principal *models.Principal) middleware.Responder {
 			return middleware.NotImplemented("operation user.ReadMe has not yet been implemented")
 		}),
+		EventTypeReadTypeHandler: event_type.ReadTypeHandlerFunc(func(params event_type.ReadTypeParams, principal *models.Principal) middleware.Responder {
+			return middleware.NotImplemented("operation event_type.ReadType has not yet been implemented")
+		}),
 		UserReadUserHandler: user.ReadUserHandlerFunc(func(params user.ReadUserParams, principal *models.Principal) middleware.Responder {
 			return middleware.NotImplemented("operation user.ReadUser has not yet been implemented")
 		}),
-		UserRemoveAdminHandler: user.RemoveAdminHandlerFunc(func(params user.RemoveAdminParams, principal *models.Principal) middleware.Responder {
-			return middleware.NotImplemented("operation user.RemoveAdmin has not yet been implemented")
+		UserRoleRemoveAdminHandler: user_role.RemoveAdminHandlerFunc(func(params user_role.RemoveAdminParams, principal *models.Principal) middleware.Responder {
+			return middleware.NotImplemented("operation user_role.RemoveAdmin has not yet been implemented")
 		}),
-		UserRemoveCalendarHandler: user.RemoveCalendarHandlerFunc(func(params user.RemoveCalendarParams, principal *models.Principal) middleware.Responder {
-			return middleware.NotImplemented("operation user.RemoveCalendar has not yet been implemented")
+		UserRoleRemoveCalendarHandler: user_role.RemoveCalendarHandlerFunc(func(params user_role.RemoveCalendarParams, principal *models.Principal) middleware.Responder {
+			return middleware.NotImplemented("operation user_role.RemoveCalendar has not yet been implemented")
 		}),
-		UserRemoveTutorHandler: user.RemoveTutorHandlerFunc(func(params user.RemoveTutorParams, principal *models.Principal) middleware.Responder {
-			return middleware.NotImplemented("operation user.RemoveTutor has not yet been implemented")
+		UserRoleRemoveTutorHandler: user_role.RemoveTutorHandlerFunc(func(params user_role.RemoveTutorParams, principal *models.Principal) middleware.Responder {
+			return middleware.NotImplemented("operation user_role.RemoveTutor has not yet been implemented")
 		}),
 		UserSubscribeMeHandler: user.SubscribeMeHandlerFunc(func(params user.SubscribeMeParams, principal *models.Principal) middleware.Responder {
 			return middleware.NotImplemented("operation user.SubscribeMe has not yet been implemented")
@@ -130,6 +147,12 @@ func NewTutorAPI(spec *loads.Document) *TutorAPI {
 		}),
 		EventUpdateEventHandler: event.UpdateEventHandlerFunc(func(params event.UpdateEventParams, principal *models.Principal) middleware.Responder {
 			return middleware.NotImplemented("operation event.UpdateEvent has not yet been implemented")
+		}),
+		UserUpdateMeHandler: user.UpdateMeHandlerFunc(func(params user.UpdateMeParams, principal *models.Principal) middleware.Responder {
+			return middleware.NotImplemented("operation user.UpdateMe has not yet been implemented")
+		}),
+		EventTypeUpdateTypeHandler: event_type.UpdateTypeHandlerFunc(func(params event_type.UpdateTypeParams, principal *models.Principal) middleware.Responder {
+			return middleware.NotImplemented("operation event_type.UpdateType has not yet been implemented")
 		}),
 		UserUpdateUserHandler: user.UpdateUserHandlerFunc(func(params user.UpdateUserParams, principal *models.Principal) middleware.Responder {
 			return middleware.NotImplemented("operation user.UpdateUser has not yet been implemented")
@@ -183,30 +206,38 @@ type TutorAPI struct {
 	// APIAuthorizer provides access control (ACL/RBAC/ABAC) by providing access to the request and authenticated principal
 	APIAuthorizer runtime.Authorizer
 
-	// UserAddAdminHandler sets the operation handler for the add admin operation
-	UserAddAdminHandler user.AddAdminHandler
-	// UserAddCalendarHandler sets the operation handler for the add calendar operation
-	UserAddCalendarHandler user.AddCalendarHandler
-	// UserAddTutorHandler sets the operation handler for the add tutor operation
-	UserAddTutorHandler user.AddTutorHandler
+	// UserRoleAddAdminHandler sets the operation handler for the add admin operation
+	UserRoleAddAdminHandler user_role.AddAdminHandler
+	// UserRoleAddCalendarHandler sets the operation handler for the add calendar operation
+	UserRoleAddCalendarHandler user_role.AddCalendarHandler
+	// UserRoleAddTutorHandler sets the operation handler for the add tutor operation
+	UserRoleAddTutorHandler user_role.AddTutorHandler
 	// AuthenticationCallbackHandler sets the operation handler for the callback operation
 	AuthenticationCallbackHandler authentication.CallbackHandler
 	// EventCreateEventHandler sets the operation handler for the create event operation
 	EventCreateEventHandler event.CreateEventHandler
+	// EventTypeCreateTypeHandler sets the operation handler for the create type operation
+	EventTypeCreateTypeHandler event_type.CreateTypeHandler
 	// UserCreateUserHandler sets the operation handler for the create user operation
 	UserCreateUserHandler user.CreateUserHandler
 	// EventDeleteEventHandler sets the operation handler for the delete event operation
 	EventDeleteEventHandler event.DeleteEventHandler
 	// UserDeleteMeHandler sets the operation handler for the delete me operation
 	UserDeleteMeHandler user.DeleteMeHandler
+	// EventTypeDeleteTypeHandler sets the operation handler for the delete type operation
+	EventTypeDeleteTypeHandler event_type.DeleteTypeHandler
 	// UserDeleteUserHandler sets the operation handler for the delete user operation
 	UserDeleteUserHandler user.DeleteUserHandler
+	// EventEventTypeHandler sets the operation handler for the event type operation
+	EventEventTypeHandler event.EventTypeHandler
 	// EventListEventHandler sets the operation handler for the list event operation
 	EventListEventHandler event.ListEventHandler
 	// EventListEventUsersHandler sets the operation handler for the list event users operation
 	EventListEventUsersHandler event.ListEventUsersHandler
 	// UserListMeEventsHandler sets the operation handler for the list me events operation
 	UserListMeEventsHandler user.ListMeEventsHandler
+	// EventTypeListTypeHandler sets the operation handler for the list type operation
+	EventTypeListTypeHandler event_type.ListTypeHandler
 	// UserListUserHandler sets the operation handler for the list user operation
 	UserListUserHandler user.ListUserHandler
 	// UserListUserEventsHandler sets the operation handler for the list user events operation
@@ -217,14 +248,16 @@ type TutorAPI struct {
 	EventReadEventHandler event.ReadEventHandler
 	// UserReadMeHandler sets the operation handler for the read me operation
 	UserReadMeHandler user.ReadMeHandler
+	// EventTypeReadTypeHandler sets the operation handler for the read type operation
+	EventTypeReadTypeHandler event_type.ReadTypeHandler
 	// UserReadUserHandler sets the operation handler for the read user operation
 	UserReadUserHandler user.ReadUserHandler
-	// UserRemoveAdminHandler sets the operation handler for the remove admin operation
-	UserRemoveAdminHandler user.RemoveAdminHandler
-	// UserRemoveCalendarHandler sets the operation handler for the remove calendar operation
-	UserRemoveCalendarHandler user.RemoveCalendarHandler
-	// UserRemoveTutorHandler sets the operation handler for the remove tutor operation
-	UserRemoveTutorHandler user.RemoveTutorHandler
+	// UserRoleRemoveAdminHandler sets the operation handler for the remove admin operation
+	UserRoleRemoveAdminHandler user_role.RemoveAdminHandler
+	// UserRoleRemoveCalendarHandler sets the operation handler for the remove calendar operation
+	UserRoleRemoveCalendarHandler user_role.RemoveCalendarHandler
+	// UserRoleRemoveTutorHandler sets the operation handler for the remove tutor operation
+	UserRoleRemoveTutorHandler user_role.RemoveTutorHandler
 	// UserSubscribeMeHandler sets the operation handler for the subscribe me operation
 	UserSubscribeMeHandler user.SubscribeMeHandler
 	// UserSubscribeUserHandler sets the operation handler for the subscribe user operation
@@ -239,6 +272,10 @@ type TutorAPI struct {
 	UserUnsubscribeUserHandler user.UnsubscribeUserHandler
 	// EventUpdateEventHandler sets the operation handler for the update event operation
 	EventUpdateEventHandler event.UpdateEventHandler
+	// UserUpdateMeHandler sets the operation handler for the update me operation
+	UserUpdateMeHandler user.UpdateMeHandler
+	// EventTypeUpdateTypeHandler sets the operation handler for the update type operation
+	EventTypeUpdateTypeHandler event_type.UpdateTypeHandler
 	// UserUpdateUserHandler sets the operation handler for the update user operation
 	UserUpdateUserHandler user.UpdateUserHandler
 
@@ -322,20 +359,23 @@ func (o *TutorAPI) Validate() error {
 		unregistered = append(unregistered, "OAuth2Auth")
 	}
 
-	if o.UserAddAdminHandler == nil {
-		unregistered = append(unregistered, "user.AddAdminHandler")
+	if o.UserRoleAddAdminHandler == nil {
+		unregistered = append(unregistered, "user_role.AddAdminHandler")
 	}
-	if o.UserAddCalendarHandler == nil {
-		unregistered = append(unregistered, "user.AddCalendarHandler")
+	if o.UserRoleAddCalendarHandler == nil {
+		unregistered = append(unregistered, "user_role.AddCalendarHandler")
 	}
-	if o.UserAddTutorHandler == nil {
-		unregistered = append(unregistered, "user.AddTutorHandler")
+	if o.UserRoleAddTutorHandler == nil {
+		unregistered = append(unregistered, "user_role.AddTutorHandler")
 	}
 	if o.AuthenticationCallbackHandler == nil {
 		unregistered = append(unregistered, "authentication.CallbackHandler")
 	}
 	if o.EventCreateEventHandler == nil {
 		unregistered = append(unregistered, "event.CreateEventHandler")
+	}
+	if o.EventTypeCreateTypeHandler == nil {
+		unregistered = append(unregistered, "event_type.CreateTypeHandler")
 	}
 	if o.UserCreateUserHandler == nil {
 		unregistered = append(unregistered, "user.CreateUserHandler")
@@ -346,8 +386,14 @@ func (o *TutorAPI) Validate() error {
 	if o.UserDeleteMeHandler == nil {
 		unregistered = append(unregistered, "user.DeleteMeHandler")
 	}
+	if o.EventTypeDeleteTypeHandler == nil {
+		unregistered = append(unregistered, "event_type.DeleteTypeHandler")
+	}
 	if o.UserDeleteUserHandler == nil {
 		unregistered = append(unregistered, "user.DeleteUserHandler")
+	}
+	if o.EventEventTypeHandler == nil {
+		unregistered = append(unregistered, "event.EventTypeHandler")
 	}
 	if o.EventListEventHandler == nil {
 		unregistered = append(unregistered, "event.ListEventHandler")
@@ -357,6 +403,9 @@ func (o *TutorAPI) Validate() error {
 	}
 	if o.UserListMeEventsHandler == nil {
 		unregistered = append(unregistered, "user.ListMeEventsHandler")
+	}
+	if o.EventTypeListTypeHandler == nil {
+		unregistered = append(unregistered, "event_type.ListTypeHandler")
 	}
 	if o.UserListUserHandler == nil {
 		unregistered = append(unregistered, "user.ListUserHandler")
@@ -373,17 +422,20 @@ func (o *TutorAPI) Validate() error {
 	if o.UserReadMeHandler == nil {
 		unregistered = append(unregistered, "user.ReadMeHandler")
 	}
+	if o.EventTypeReadTypeHandler == nil {
+		unregistered = append(unregistered, "event_type.ReadTypeHandler")
+	}
 	if o.UserReadUserHandler == nil {
 		unregistered = append(unregistered, "user.ReadUserHandler")
 	}
-	if o.UserRemoveAdminHandler == nil {
-		unregistered = append(unregistered, "user.RemoveAdminHandler")
+	if o.UserRoleRemoveAdminHandler == nil {
+		unregistered = append(unregistered, "user_role.RemoveAdminHandler")
 	}
-	if o.UserRemoveCalendarHandler == nil {
-		unregistered = append(unregistered, "user.RemoveCalendarHandler")
+	if o.UserRoleRemoveCalendarHandler == nil {
+		unregistered = append(unregistered, "user_role.RemoveCalendarHandler")
 	}
-	if o.UserRemoveTutorHandler == nil {
-		unregistered = append(unregistered, "user.RemoveTutorHandler")
+	if o.UserRoleRemoveTutorHandler == nil {
+		unregistered = append(unregistered, "user_role.RemoveTutorHandler")
 	}
 	if o.UserSubscribeMeHandler == nil {
 		unregistered = append(unregistered, "user.SubscribeMeHandler")
@@ -405,6 +457,12 @@ func (o *TutorAPI) Validate() error {
 	}
 	if o.EventUpdateEventHandler == nil {
 		unregistered = append(unregistered, "event.UpdateEventHandler")
+	}
+	if o.UserUpdateMeHandler == nil {
+		unregistered = append(unregistered, "user.UpdateMeHandler")
+	}
+	if o.EventTypeUpdateTypeHandler == nil {
+		unregistered = append(unregistered, "event_type.UpdateTypeHandler")
 	}
 	if o.UserUpdateUserHandler == nil {
 		unregistered = append(unregistered, "user.UpdateUserHandler")
@@ -510,15 +568,15 @@ func (o *TutorAPI) initHandlerCache() {
 	if o.handlers["POST"] == nil {
 		o.handlers["POST"] = make(map[string]http.Handler)
 	}
-	o.handlers["POST"]["/users/{id}/role/admin"] = user.NewAddAdmin(o.context, o.UserAddAdminHandler)
+	o.handlers["POST"]["/users/{id}/role/admin"] = user_role.NewAddAdmin(o.context, o.UserRoleAddAdminHandler)
 	if o.handlers["POST"] == nil {
 		o.handlers["POST"] = make(map[string]http.Handler)
 	}
-	o.handlers["POST"]["/users/{id}/role/calendar"] = user.NewAddCalendar(o.context, o.UserAddCalendarHandler)
+	o.handlers["POST"]["/users/{id}/role/calendar"] = user_role.NewAddCalendar(o.context, o.UserRoleAddCalendarHandler)
 	if o.handlers["POST"] == nil {
 		o.handlers["POST"] = make(map[string]http.Handler)
 	}
-	o.handlers["POST"]["/users/{id}/role/tutor"] = user.NewAddTutor(o.context, o.UserAddTutorHandler)
+	o.handlers["POST"]["/users/{id}/role/tutor"] = user_role.NewAddTutor(o.context, o.UserRoleAddTutorHandler)
 	if o.handlers["GET"] == nil {
 		o.handlers["GET"] = make(map[string]http.Handler)
 	}
@@ -527,6 +585,10 @@ func (o *TutorAPI) initHandlerCache() {
 		o.handlers["POST"] = make(map[string]http.Handler)
 	}
 	o.handlers["POST"]["/events"] = event.NewCreateEvent(o.context, o.EventCreateEventHandler)
+	if o.handlers["POST"] == nil {
+		o.handlers["POST"] = make(map[string]http.Handler)
+	}
+	o.handlers["POST"]["/events/types"] = event_type.NewCreateType(o.context, o.EventTypeCreateTypeHandler)
 	if o.handlers["POST"] == nil {
 		o.handlers["POST"] = make(map[string]http.Handler)
 	}
@@ -542,7 +604,15 @@ func (o *TutorAPI) initHandlerCache() {
 	if o.handlers["DELETE"] == nil {
 		o.handlers["DELETE"] = make(map[string]http.Handler)
 	}
+	o.handlers["DELETE"]["/events/types/{id}"] = event_type.NewDeleteType(o.context, o.EventTypeDeleteTypeHandler)
+	if o.handlers["DELETE"] == nil {
+		o.handlers["DELETE"] = make(map[string]http.Handler)
+	}
 	o.handlers["DELETE"]["/users/{id}"] = user.NewDeleteUser(o.context, o.UserDeleteUserHandler)
+	if o.handlers["GET"] == nil {
+		o.handlers["GET"] = make(map[string]http.Handler)
+	}
+	o.handlers["GET"]["/events/{id}/types"] = event.NewEventType(o.context, o.EventEventTypeHandler)
 	if o.handlers["GET"] == nil {
 		o.handlers["GET"] = make(map[string]http.Handler)
 	}
@@ -555,6 +625,10 @@ func (o *TutorAPI) initHandlerCache() {
 		o.handlers["GET"] = make(map[string]http.Handler)
 	}
 	o.handlers["GET"]["/users/me/events"] = user.NewListMeEvents(o.context, o.UserListMeEventsHandler)
+	if o.handlers["GET"] == nil {
+		o.handlers["GET"] = make(map[string]http.Handler)
+	}
+	o.handlers["GET"]["/events/types"] = event_type.NewListType(o.context, o.EventTypeListTypeHandler)
 	if o.handlers["GET"] == nil {
 		o.handlers["GET"] = make(map[string]http.Handler)
 	}
@@ -578,19 +652,23 @@ func (o *TutorAPI) initHandlerCache() {
 	if o.handlers["GET"] == nil {
 		o.handlers["GET"] = make(map[string]http.Handler)
 	}
+	o.handlers["GET"]["/events/types/{id}"] = event_type.NewReadType(o.context, o.EventTypeReadTypeHandler)
+	if o.handlers["GET"] == nil {
+		o.handlers["GET"] = make(map[string]http.Handler)
+	}
 	o.handlers["GET"]["/users/{id}"] = user.NewReadUser(o.context, o.UserReadUserHandler)
 	if o.handlers["DELETE"] == nil {
 		o.handlers["DELETE"] = make(map[string]http.Handler)
 	}
-	o.handlers["DELETE"]["/users/{id}/role/admin"] = user.NewRemoveAdmin(o.context, o.UserRemoveAdminHandler)
+	o.handlers["DELETE"]["/users/{id}/role/admin"] = user_role.NewRemoveAdmin(o.context, o.UserRoleRemoveAdminHandler)
 	if o.handlers["DELETE"] == nil {
 		o.handlers["DELETE"] = make(map[string]http.Handler)
 	}
-	o.handlers["DELETE"]["/users/{id}/role/calendar"] = user.NewRemoveCalendar(o.context, o.UserRemoveCalendarHandler)
+	o.handlers["DELETE"]["/users/{id}/role/calendar"] = user_role.NewRemoveCalendar(o.context, o.UserRoleRemoveCalendarHandler)
 	if o.handlers["DELETE"] == nil {
 		o.handlers["DELETE"] = make(map[string]http.Handler)
 	}
-	o.handlers["DELETE"]["/users/{id}/role/tutor"] = user.NewRemoveTutor(o.context, o.UserRemoveTutorHandler)
+	o.handlers["DELETE"]["/users/{id}/role/tutor"] = user_role.NewRemoveTutor(o.context, o.UserRoleRemoveTutorHandler)
 	if o.handlers["POST"] == nil {
 		o.handlers["POST"] = make(map[string]http.Handler)
 	}
@@ -619,6 +697,14 @@ func (o *TutorAPI) initHandlerCache() {
 		o.handlers["PUT"] = make(map[string]http.Handler)
 	}
 	o.handlers["PUT"]["/events/{id}"] = event.NewUpdateEvent(o.context, o.EventUpdateEventHandler)
+	if o.handlers["PUT"] == nil {
+		o.handlers["PUT"] = make(map[string]http.Handler)
+	}
+	o.handlers["PUT"]["/users/me"] = user.NewUpdateMe(o.context, o.UserUpdateMeHandler)
+	if o.handlers["POST"] == nil {
+		o.handlers["POST"] = make(map[string]http.Handler)
+	}
+	o.handlers["POST"]["/events/types/{id}"] = event_type.NewUpdateType(o.context, o.EventTypeUpdateTypeHandler)
 	if o.handlers["PUT"] == nil {
 		o.handlers["PUT"] = make(map[string]http.Handler)
 	}

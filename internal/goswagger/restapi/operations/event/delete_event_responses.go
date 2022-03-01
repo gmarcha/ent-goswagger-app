@@ -81,6 +81,94 @@ func (o *DeleteEventBadRequest) WriteResponse(rw http.ResponseWriter, producer r
 	}
 }
 
+// DeleteEventUnauthorizedCode is the HTTP code returned for type DeleteEventUnauthorized
+const DeleteEventUnauthorizedCode int = 401
+
+/*DeleteEventUnauthorized Unauthorized
+
+swagger:response deleteEventUnauthorized
+*/
+type DeleteEventUnauthorized struct {
+
+	/*
+	  In: Body
+	*/
+	Payload *models.Error `json:"body,omitempty"`
+}
+
+// NewDeleteEventUnauthorized creates DeleteEventUnauthorized with default headers values
+func NewDeleteEventUnauthorized() *DeleteEventUnauthorized {
+
+	return &DeleteEventUnauthorized{}
+}
+
+// WithPayload adds the payload to the delete event unauthorized response
+func (o *DeleteEventUnauthorized) WithPayload(payload *models.Error) *DeleteEventUnauthorized {
+	o.Payload = payload
+	return o
+}
+
+// SetPayload sets the payload to the delete event unauthorized response
+func (o *DeleteEventUnauthorized) SetPayload(payload *models.Error) {
+	o.Payload = payload
+}
+
+// WriteResponse to the client
+func (o *DeleteEventUnauthorized) WriteResponse(rw http.ResponseWriter, producer runtime.Producer) {
+
+	rw.WriteHeader(401)
+	if o.Payload != nil {
+		payload := o.Payload
+		if err := producer.Produce(rw, payload); err != nil {
+			panic(err) // let the recovery middleware deal with this
+		}
+	}
+}
+
+// DeleteEventForbiddenCode is the HTTP code returned for type DeleteEventForbidden
+const DeleteEventForbiddenCode int = 403
+
+/*DeleteEventForbidden Forbidden
+
+swagger:response deleteEventForbidden
+*/
+type DeleteEventForbidden struct {
+
+	/*
+	  In: Body
+	*/
+	Payload *models.Error `json:"body,omitempty"`
+}
+
+// NewDeleteEventForbidden creates DeleteEventForbidden with default headers values
+func NewDeleteEventForbidden() *DeleteEventForbidden {
+
+	return &DeleteEventForbidden{}
+}
+
+// WithPayload adds the payload to the delete event forbidden response
+func (o *DeleteEventForbidden) WithPayload(payload *models.Error) *DeleteEventForbidden {
+	o.Payload = payload
+	return o
+}
+
+// SetPayload sets the payload to the delete event forbidden response
+func (o *DeleteEventForbidden) SetPayload(payload *models.Error) {
+	o.Payload = payload
+}
+
+// WriteResponse to the client
+func (o *DeleteEventForbidden) WriteResponse(rw http.ResponseWriter, producer runtime.Producer) {
+
+	rw.WriteHeader(403)
+	if o.Payload != nil {
+		payload := o.Payload
+		if err := producer.Produce(rw, payload); err != nil {
+			panic(err) // let the recovery middleware deal with this
+		}
+	}
+}
+
 // DeleteEventNotFoundCode is the HTTP code returned for type DeleteEventNotFound
 const DeleteEventNotFoundCode int = 404
 

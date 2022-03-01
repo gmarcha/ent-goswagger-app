@@ -61,14 +61,14 @@ func (o *ListEventOK) WriteResponse(rw http.ResponseWriter, producer runtime.Pro
 	}
 }
 
-// ListEventBadRequestCode is the HTTP code returned for type ListEventBadRequest
-const ListEventBadRequestCode int = 400
+// ListEventUnauthorizedCode is the HTTP code returned for type ListEventUnauthorized
+const ListEventUnauthorizedCode int = 401
 
-/*ListEventBadRequest Bad request
+/*ListEventUnauthorized Unauthorized
 
-swagger:response listEventBadRequest
+swagger:response listEventUnauthorized
 */
-type ListEventBadRequest struct {
+type ListEventUnauthorized struct {
 
 	/*
 	  In: Body
@@ -76,27 +76,71 @@ type ListEventBadRequest struct {
 	Payload *models.Error `json:"body,omitempty"`
 }
 
-// NewListEventBadRequest creates ListEventBadRequest with default headers values
-func NewListEventBadRequest() *ListEventBadRequest {
+// NewListEventUnauthorized creates ListEventUnauthorized with default headers values
+func NewListEventUnauthorized() *ListEventUnauthorized {
 
-	return &ListEventBadRequest{}
+	return &ListEventUnauthorized{}
 }
 
-// WithPayload adds the payload to the list event bad request response
-func (o *ListEventBadRequest) WithPayload(payload *models.Error) *ListEventBadRequest {
+// WithPayload adds the payload to the list event unauthorized response
+func (o *ListEventUnauthorized) WithPayload(payload *models.Error) *ListEventUnauthorized {
 	o.Payload = payload
 	return o
 }
 
-// SetPayload sets the payload to the list event bad request response
-func (o *ListEventBadRequest) SetPayload(payload *models.Error) {
+// SetPayload sets the payload to the list event unauthorized response
+func (o *ListEventUnauthorized) SetPayload(payload *models.Error) {
 	o.Payload = payload
 }
 
 // WriteResponse to the client
-func (o *ListEventBadRequest) WriteResponse(rw http.ResponseWriter, producer runtime.Producer) {
+func (o *ListEventUnauthorized) WriteResponse(rw http.ResponseWriter, producer runtime.Producer) {
 
-	rw.WriteHeader(400)
+	rw.WriteHeader(401)
+	if o.Payload != nil {
+		payload := o.Payload
+		if err := producer.Produce(rw, payload); err != nil {
+			panic(err) // let the recovery middleware deal with this
+		}
+	}
+}
+
+// ListEventForbiddenCode is the HTTP code returned for type ListEventForbidden
+const ListEventForbiddenCode int = 403
+
+/*ListEventForbidden Forbidden
+
+swagger:response listEventForbidden
+*/
+type ListEventForbidden struct {
+
+	/*
+	  In: Body
+	*/
+	Payload *models.Error `json:"body,omitempty"`
+}
+
+// NewListEventForbidden creates ListEventForbidden with default headers values
+func NewListEventForbidden() *ListEventForbidden {
+
+	return &ListEventForbidden{}
+}
+
+// WithPayload adds the payload to the list event forbidden response
+func (o *ListEventForbidden) WithPayload(payload *models.Error) *ListEventForbidden {
+	o.Payload = payload
+	return o
+}
+
+// SetPayload sets the payload to the list event forbidden response
+func (o *ListEventForbidden) SetPayload(payload *models.Error) {
+	o.Payload = payload
+}
+
+// WriteResponse to the client
+func (o *ListEventForbidden) WriteResponse(rw http.ResponseWriter, producer runtime.Producer) {
+
+	rw.WriteHeader(403)
 	if o.Payload != nil {
 		payload := o.Payload
 		if err := producer.Produce(rw, payload); err != nil {

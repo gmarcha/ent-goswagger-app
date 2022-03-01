@@ -102,6 +102,94 @@ func (o *CreateUserBadRequest) WriteResponse(rw http.ResponseWriter, producer ru
 	}
 }
 
+// CreateUserUnauthorizedCode is the HTTP code returned for type CreateUserUnauthorized
+const CreateUserUnauthorizedCode int = 401
+
+/*CreateUserUnauthorized Unauthorized
+
+swagger:response createUserUnauthorized
+*/
+type CreateUserUnauthorized struct {
+
+	/*
+	  In: Body
+	*/
+	Payload *models.Error `json:"body,omitempty"`
+}
+
+// NewCreateUserUnauthorized creates CreateUserUnauthorized with default headers values
+func NewCreateUserUnauthorized() *CreateUserUnauthorized {
+
+	return &CreateUserUnauthorized{}
+}
+
+// WithPayload adds the payload to the create user unauthorized response
+func (o *CreateUserUnauthorized) WithPayload(payload *models.Error) *CreateUserUnauthorized {
+	o.Payload = payload
+	return o
+}
+
+// SetPayload sets the payload to the create user unauthorized response
+func (o *CreateUserUnauthorized) SetPayload(payload *models.Error) {
+	o.Payload = payload
+}
+
+// WriteResponse to the client
+func (o *CreateUserUnauthorized) WriteResponse(rw http.ResponseWriter, producer runtime.Producer) {
+
+	rw.WriteHeader(401)
+	if o.Payload != nil {
+		payload := o.Payload
+		if err := producer.Produce(rw, payload); err != nil {
+			panic(err) // let the recovery middleware deal with this
+		}
+	}
+}
+
+// CreateUserForbiddenCode is the HTTP code returned for type CreateUserForbidden
+const CreateUserForbiddenCode int = 403
+
+/*CreateUserForbidden Forbidden
+
+swagger:response createUserForbidden
+*/
+type CreateUserForbidden struct {
+
+	/*
+	  In: Body
+	*/
+	Payload *models.Error `json:"body,omitempty"`
+}
+
+// NewCreateUserForbidden creates CreateUserForbidden with default headers values
+func NewCreateUserForbidden() *CreateUserForbidden {
+
+	return &CreateUserForbidden{}
+}
+
+// WithPayload adds the payload to the create user forbidden response
+func (o *CreateUserForbidden) WithPayload(payload *models.Error) *CreateUserForbidden {
+	o.Payload = payload
+	return o
+}
+
+// SetPayload sets the payload to the create user forbidden response
+func (o *CreateUserForbidden) SetPayload(payload *models.Error) {
+	o.Payload = payload
+}
+
+// WriteResponse to the client
+func (o *CreateUserForbidden) WriteResponse(rw http.ResponseWriter, producer runtime.Producer) {
+
+	rw.WriteHeader(403)
+	if o.Payload != nil {
+		payload := o.Payload
+		if err := producer.Produce(rw, payload); err != nil {
+			panic(err) // let the recovery middleware deal with this
+		}
+	}
+}
+
 // CreateUserInternalServerErrorCode is the HTTP code returned for type CreateUserInternalServerError
 const CreateUserInternalServerErrorCode int = 500
 

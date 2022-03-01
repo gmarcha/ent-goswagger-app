@@ -102,6 +102,94 @@ func (o *ReadEventBadRequest) WriteResponse(rw http.ResponseWriter, producer run
 	}
 }
 
+// ReadEventUnauthorizedCode is the HTTP code returned for type ReadEventUnauthorized
+const ReadEventUnauthorizedCode int = 401
+
+/*ReadEventUnauthorized Unauthorized
+
+swagger:response readEventUnauthorized
+*/
+type ReadEventUnauthorized struct {
+
+	/*
+	  In: Body
+	*/
+	Payload *models.Error `json:"body,omitempty"`
+}
+
+// NewReadEventUnauthorized creates ReadEventUnauthorized with default headers values
+func NewReadEventUnauthorized() *ReadEventUnauthorized {
+
+	return &ReadEventUnauthorized{}
+}
+
+// WithPayload adds the payload to the read event unauthorized response
+func (o *ReadEventUnauthorized) WithPayload(payload *models.Error) *ReadEventUnauthorized {
+	o.Payload = payload
+	return o
+}
+
+// SetPayload sets the payload to the read event unauthorized response
+func (o *ReadEventUnauthorized) SetPayload(payload *models.Error) {
+	o.Payload = payload
+}
+
+// WriteResponse to the client
+func (o *ReadEventUnauthorized) WriteResponse(rw http.ResponseWriter, producer runtime.Producer) {
+
+	rw.WriteHeader(401)
+	if o.Payload != nil {
+		payload := o.Payload
+		if err := producer.Produce(rw, payload); err != nil {
+			panic(err) // let the recovery middleware deal with this
+		}
+	}
+}
+
+// ReadEventForbiddenCode is the HTTP code returned for type ReadEventForbidden
+const ReadEventForbiddenCode int = 403
+
+/*ReadEventForbidden Forbidden
+
+swagger:response readEventForbidden
+*/
+type ReadEventForbidden struct {
+
+	/*
+	  In: Body
+	*/
+	Payload *models.Error `json:"body,omitempty"`
+}
+
+// NewReadEventForbidden creates ReadEventForbidden with default headers values
+func NewReadEventForbidden() *ReadEventForbidden {
+
+	return &ReadEventForbidden{}
+}
+
+// WithPayload adds the payload to the read event forbidden response
+func (o *ReadEventForbidden) WithPayload(payload *models.Error) *ReadEventForbidden {
+	o.Payload = payload
+	return o
+}
+
+// SetPayload sets the payload to the read event forbidden response
+func (o *ReadEventForbidden) SetPayload(payload *models.Error) {
+	o.Payload = payload
+}
+
+// WriteResponse to the client
+func (o *ReadEventForbidden) WriteResponse(rw http.ResponseWriter, producer runtime.Producer) {
+
+	rw.WriteHeader(403)
+	if o.Payload != nil {
+		payload := o.Payload
+		if err := producer.Produce(rw, payload); err != nil {
+			panic(err) // let the recovery middleware deal with this
+		}
+	}
+}
+
 // ReadEventNotFoundCode is the HTTP code returned for type ReadEventNotFound
 const ReadEventNotFoundCode int = 404
 

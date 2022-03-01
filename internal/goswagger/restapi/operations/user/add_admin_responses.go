@@ -16,7 +16,7 @@ import (
 // AddAdminCreatedCode is the HTTP code returned for type AddAdminCreated
 const AddAdminCreatedCode int = 201
 
-/*AddAdminCreated OK
+/*AddAdminCreated Created
 
 swagger:response addAdminCreated
 */
