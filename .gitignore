@@ -17,4 +17,6 @@
 # Specific to project
 .env
 config/pgadmin/servers.json
+42user.yaml
 user.yaml
+createUser.sh
