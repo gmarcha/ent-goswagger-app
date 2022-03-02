@@ -44,7 +44,7 @@ Other rules are used by application Dockerfile (in `./config/`) and Github Actio
 Repository architecture follows some conventions:
 
 - `/cmd/` contains our applications, i.e. main packages responsible to launch them
-    (generated file that can be edited);
+    (it is a generated file in our case, but it won't be overwritten by further generation so it can be edited);
 - `/internal/` contains all other Go packages used in our applications:
   - `/modules/` contains packages defining our API logic, i.e. our data services,
       route handlers initialisation and definition of them, grouped in a logical way
