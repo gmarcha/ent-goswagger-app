@@ -20,7 +20,7 @@ type userClaims struct {
 
 func Init(api *operations.TutorAPI, db *ent.Client, rdb *redis.Client) {
 
-	accessTokenDuration := time.Minute
+	accessTokenDuration := time.Minute * 30
 	refreshTokenDuration := time.Hour * 72
 	accessTokenState := utils.RandomString(128)
 	refreshTokenState := os.Getenv("REFRESH_TOKEN_STATE")
