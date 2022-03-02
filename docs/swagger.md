@@ -47,12 +47,12 @@ An API for 42 tutors.
 
 Name | Description
 -----|-------------
+user:subscription | Subscribe to events
+user:write | Read-write users
 public | Public access
 event | Read events
 event:write | Read-write events
 user | Read users
-user:subscription | Subscribe to events
-user:write | Read-write users
 
 ## All endpoints
 
@@ -73,10 +73,11 @@ user:write | Read-write users
 |---------|---------|--------|---------|
 | POST | /v2/events | [create event](#create-event) | Create event |
 | DELETE | /v2/events/{id} | [delete event](#delete-event) | Delete event |
-| GET | /v2/events/{id}/types | [event type](#event-type) | Event type |
+| GET | /v2/events/{id}/types | [get event type](#get-event-type) | Get event type |
 | GET | /v2/events | [list event](#list-event) | List events |
 | GET | /v2/events/{id}/users | [list event users](#list-event-users) | List event users |
 | GET | /v2/events/{id} | [read event](#read-event) | Read event |
+| POST | /v2/events/{id}/types | [set event type](#set-event-type) | Set event type |
 | PUT | /v2/events/{id} | [update event](#update-event) | Update event |
   
 
@@ -88,6 +89,7 @@ user:write | Read-write users
 | POST | /v2/events/types | [create type](#create-type) | Create event type |
 | DELETE | /v2/events/types/{id} | [delete type](#delete-type) | Delete event type |
 | GET | /v2/events/types | [list type](#list-type) | List event types |
+| GET | /v2/events/types/{id}/events | [list type events](#list-type-events) | List event type events |
 | GET | /v2/events/types/{id} | [read type](#read-type) | Read event type |
 | POST | /v2/events/types/{id} | [update type](#update-type) | Update event type |
   
@@ -934,13 +936,13 @@ Status: Internal Server Error
 
 [Error](#error)
 
-### <span id="event-type"></span> Event type (*eventType*)
+### <span id="get-event-type"></span> Get event type (*getEventType*)
 
 ```
 GET /v2/events/{id}/types
 ```
 
-Retrieve event type.
+Get event type value.
 
 #### Security Requirements
   * OAuth2: event, public
@@ -954,65 +956,65 @@ Retrieve event type.
 #### All responses
 | Code | Status | Description | Has headers | Schema |
 |------|--------|-------------|:-----------:|--------|
-| [200](#event-type-200) | OK | OK |  | [schema](#event-type-200-schema) |
-| [400](#event-type-400) | Bad Request | Bad request |  | [schema](#event-type-400-schema) |
-| [401](#event-type-401) | Unauthorized | Unauthorized |  | [schema](#event-type-401-schema) |
-| [403](#event-type-403) | Forbidden | Forbidden |  | [schema](#event-type-403-schema) |
-| [404](#event-type-404) | Not Found | Not Found |  | [schema](#event-type-404-schema) |
-| [500](#event-type-500) | Internal Server Error | Internal Server Error |  | [schema](#event-type-500-schema) |
+| [200](#get-event-type-200) | OK | OK |  | [schema](#get-event-type-200-schema) |
+| [400](#get-event-type-400) | Bad Request | Bad request |  | [schema](#get-event-type-400-schema) |
+| [401](#get-event-type-401) | Unauthorized | Unauthorized |  | [schema](#get-event-type-401-schema) |
+| [403](#get-event-type-403) | Forbidden | Forbidden |  | [schema](#get-event-type-403-schema) |
+| [404](#get-event-type-404) | Not Found | Not Found |  | [schema](#get-event-type-404-schema) |
+| [500](#get-event-type-500) | Internal Server Error | Internal Server Error |  | [schema](#get-event-type-500-schema) |
 
 #### Responses
 
 
-##### <span id="event-type-200"></span> 200 - OK
+##### <span id="get-event-type-200"></span> 200 - OK
 Status: OK
 
-###### <span id="event-type-200-schema"></span> Schema
+###### <span id="get-event-type-200-schema"></span> Schema
    
   
 
 [EventType](#event-type)
 
-##### <span id="event-type-400"></span> 400 - Bad request
+##### <span id="get-event-type-400"></span> 400 - Bad request
 Status: Bad Request
 
-###### <span id="event-type-400-schema"></span> Schema
+###### <span id="get-event-type-400-schema"></span> Schema
    
   
 
 [Error](#error)
 
-##### <span id="event-type-401"></span> 401 - Unauthorized
+##### <span id="get-event-type-401"></span> 401 - Unauthorized
 Status: Unauthorized
 
-###### <span id="event-type-401-schema"></span> Schema
+###### <span id="get-event-type-401-schema"></span> Schema
    
   
 
 [Error](#error)
 
-##### <span id="event-type-403"></span> 403 - Forbidden
+##### <span id="get-event-type-403"></span> 403 - Forbidden
 Status: Forbidden
 
-###### <span id="event-type-403-schema"></span> Schema
+###### <span id="get-event-type-403-schema"></span> Schema
    
   
 
 [Error](#error)
 
-##### <span id="event-type-404"></span> 404 - Not Found
+##### <span id="get-event-type-404"></span> 404 - Not Found
 Status: Not Found
 
-###### <span id="event-type-404-schema"></span> Schema
+###### <span id="get-event-type-404-schema"></span> Schema
    
   
 
 [Error](#error)
 
-##### <span id="event-type-500"></span> 500 - Internal Server Error
+##### <span id="get-event-type-500"></span> 500 - Internal Server Error
 Status: Internal Server Error
 
-###### <span id="event-type-500-schema"></span> Schema
+###### <span id="get-event-type-500-schema"></span> Schema
    
   
 
@@ -1035,7 +1037,6 @@ List all events.
 |------|--------|------|---------|-----------| :------: |---------|-------------|
 | day | `query` | string | `string` |  |  |  | Day filter. |
 | month | `query` | string | `string` |  |  |  | Month filter. |
-| week | `query` | string | `string` |  |  |  | Week filter. |
 
 #### All responses
 | Code | Status | Description | Has headers | Schema |
@@ -1337,6 +1338,90 @@ Status: Forbidden
 Status: Internal Server Error
 
 ###### <span id="list-type-500-schema"></span> Schema
+   
+  
+
+[Error](#error)
+
+### <span id="list-type-events"></span> List event type events (*listTypeEvents*)
+
+```
+GET /v2/events/types/{id}/events
+```
+
+List all events in a certain category.
+
+#### Security Requirements
+  * OAuth2: event, public
+
+#### Parameters
+
+| Name | Source | Type | Go type | Separator | Required | Default | Description |
+|------|--------|------|---------|-----------| :------: |---------|-------------|
+| id | `path` | string | `string` |  | ✓ |  | ID of event category. |
+
+#### All responses
+| Code | Status | Description | Has headers | Schema |
+|------|--------|-------------|:-----------:|--------|
+| [200](#list-type-events-200) | OK | OK |  | [schema](#list-type-events-200-schema) |
+| [400](#list-type-events-400) | Bad Request | Bad request |  | [schema](#list-type-events-400-schema) |
+| [401](#list-type-events-401) | Unauthorized | Unauthorized |  | [schema](#list-type-events-401-schema) |
+| [403](#list-type-events-403) | Forbidden | Forbidden |  | [schema](#list-type-events-403-schema) |
+| [404](#list-type-events-404) | Not Found | Not Found |  | [schema](#list-type-events-404-schema) |
+| [500](#list-type-events-500) | Internal Server Error | Internal Server Error |  | [schema](#list-type-events-500-schema) |
+
+#### Responses
+
+
+##### <span id="list-type-events-200"></span> 200 - OK
+Status: OK
+
+###### <span id="list-type-events-200-schema"></span> Schema
+   
+  
+
+[][Event](#event)
+
+##### <span id="list-type-events-400"></span> 400 - Bad request
+Status: Bad Request
+
+###### <span id="list-type-events-400-schema"></span> Schema
+   
+  
+
+[Error](#error)
+
+##### <span id="list-type-events-401"></span> 401 - Unauthorized
+Status: Unauthorized
+
+###### <span id="list-type-events-401-schema"></span> Schema
+   
+  
+
+[Error](#error)
+
+##### <span id="list-type-events-403"></span> 403 - Forbidden
+Status: Forbidden
+
+###### <span id="list-type-events-403-schema"></span> Schema
+   
+  
+
+[Error](#error)
+
+##### <span id="list-type-events-404"></span> 404 - Not Found
+Status: Not Found
+
+###### <span id="list-type-events-404-schema"></span> Schema
+   
+  
+
+[Error](#error)
+
+##### <span id="list-type-events-500"></span> 500 - Internal Server Error
+Status: Internal Server Error
+
+###### <span id="list-type-events-500-schema"></span> Schema
    
   
 
@@ -2130,6 +2215,91 @@ Status: Not Found
 Status: Internal Server Error
 
 ###### <span id="remove-tutor-500-schema"></span> Schema
+   
+  
+
+[Error](#error)
+
+### <span id="set-event-type"></span> Set event type (*setEventType*)
+
+```
+POST /v2/events/{id}/types
+```
+
+Set event type value.
+
+#### Security Requirements
+  * OAuth2: event, event:write, public
+
+#### Parameters
+
+| Name | Source | Type | Go type | Separator | Required | Default | Description |
+|------|--------|------|---------|-----------| :------: |---------|-------------|
+| id | `path` | string | `string` |  | ✓ |  | Event ID. |
+| category | `body` | [EventType](#event-type) | `ent.EventType` | | ✓ | | Event category. |
+
+#### All responses
+| Code | Status | Description | Has headers | Schema |
+|------|--------|-------------|:-----------:|--------|
+| [200](#set-event-type-200) | OK | OK |  | [schema](#set-event-type-200-schema) |
+| [400](#set-event-type-400) | Bad Request | Bad request |  | [schema](#set-event-type-400-schema) |
+| [401](#set-event-type-401) | Unauthorized | Unauthorized |  | [schema](#set-event-type-401-schema) |
+| [403](#set-event-type-403) | Forbidden | Forbidden |  | [schema](#set-event-type-403-schema) |
+| [404](#set-event-type-404) | Not Found | Not Found |  | [schema](#set-event-type-404-schema) |
+| [500](#set-event-type-500) | Internal Server Error | Internal Server Error |  | [schema](#set-event-type-500-schema) |
+
+#### Responses
+
+
+##### <span id="set-event-type-200"></span> 200 - OK
+Status: OK
+
+###### <span id="set-event-type-200-schema"></span> Schema
+   
+  
+
+[EventType](#event-type)
+
+##### <span id="set-event-type-400"></span> 400 - Bad request
+Status: Bad Request
+
+###### <span id="set-event-type-400-schema"></span> Schema
+   
+  
+
+[Error](#error)
+
+##### <span id="set-event-type-401"></span> 401 - Unauthorized
+Status: Unauthorized
+
+###### <span id="set-event-type-401-schema"></span> Schema
+   
+  
+
+[Error](#error)
+
+##### <span id="set-event-type-403"></span> 403 - Forbidden
+Status: Forbidden
+
+###### <span id="set-event-type-403-schema"></span> Schema
+   
+  
+
+[Error](#error)
+
+##### <span id="set-event-type-404"></span> 404 - Not Found
+Status: Not Found
+
+###### <span id="set-event-type-404-schema"></span> Schema
+   
+  
+
+[Error](#error)
+
+##### <span id="set-event-type-500"></span> 500 - Internal Server Error
+Status: Internal Server Error
+
+###### <span id="set-event-type-500-schema"></span> Schema
    
   
 
