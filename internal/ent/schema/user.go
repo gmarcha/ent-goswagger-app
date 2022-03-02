@@ -21,6 +21,7 @@ func (User) Fields() []ent.Field {
 			Immutable().
 			Default(uuid.New),
 		field.String("login").
+			Immutable().
 			Match(regexp.MustCompile("^[a-z]+$")).
 			Unique(),
 		field.String("firstName").

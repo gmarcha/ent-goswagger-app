@@ -1,11 +1,15 @@
 package schema
 
 import (
+	"context"
+	"fmt"
 	"time"
 
 	"entgo.io/ent"
 	"entgo.io/ent/schema/edge"
 	"entgo.io/ent/schema/field"
+	gen "github.com/gmarcha/ent-goswagger-app/internal/ent"
+	"github.com/gmarcha/ent-goswagger-app/internal/ent/hook"
 	"github.com/google/uuid"
 )
 
@@ -47,5 +51,24 @@ func (Event) Edges() []ent.Edge {
 		edge.From("category", EventType.Type).
 			Unique().
 			Ref("events"),
+	}
+}
+
+func (Event) Hooks() []ent.Hook {
+	return []ent.Hook{
+		hook.On(
+			func(next ent.Mutator) ent.Mutator {
+				return hook.EventFunc(func(ctx context.Context, m *gen.EventMutation) (ent.Value, error) {
+					startAt, start := m.StartAt()
+					endAt, end := m.EndAt()
+					if start && end && startAt.Before(endAt) {
+						return nil, fmt.Errorf("invalid date")
+					}
+					return next.Mutate(ctx, m)
+				})
+			},
+			// Limit the hook only for these operations.
+			ent.OpCreate|ent.OpUpdate|ent.OpUpdateOne,
+		),
 	}
 }

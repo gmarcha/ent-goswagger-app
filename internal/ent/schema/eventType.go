@@ -20,7 +20,8 @@ func (EventType) Fields() []ent.Field {
 			Default(uuid.New),
 		field.String("name").
 			Unique(),
-		field.String("color"),
+		field.String("color").
+			Unique(),
 	}
 }
 
