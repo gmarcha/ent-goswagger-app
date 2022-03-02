@@ -10,7 +10,7 @@ import (
 
 func main() {
 
-	names := []string{"azir", "cassiopeia", "lissandra", "corki"}
+	names := []string{"bear", "cow", "horse", "panda"}
 	i := -1
 
 	r := gin.Default()
