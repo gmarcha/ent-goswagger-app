@@ -38,7 +38,7 @@ var (
 	EventTypesColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeUUID},
 		{Name: "name", Type: field.TypeString, Unique: true},
-		{Name: "color", Type: field.TypeString},
+		{Name: "color", Type: field.TypeString, Unique: true},
 	}
 	// EventTypesTable holds the schema information for the "event_types" table.
 	EventTypesTable = &schema.Table{

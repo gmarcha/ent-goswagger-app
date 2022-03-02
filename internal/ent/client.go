@@ -264,7 +264,8 @@ func (c *EventClient) QueryCategory(e *Event) *EventTypeQuery {
 
 // Hooks returns the client hooks.
 func (c *EventClient) Hooks() []Hook {
-	return c.hooks.Event
+	hooks := c.hooks.Event
+	return append(hooks[:len(hooks):len(hooks)], event.Hooks[:]...)
 }
 
 // EventTypeClient is a client for the EventType schema.
