@@ -175,12 +175,6 @@ func init() {
           },
           {
             "type": "string",
-            "description": "Week filter.",
-            "name": "week",
-            "in": "query"
-          },
-          {
-            "type": "string",
             "description": "Month filter.",
             "name": "month",
             "in": "query"
@@ -480,6 +474,59 @@ func init() {
         }
       ]
     },
+    "/events/types/{id}/events/": {
+      "get": {
+        "security": [
+          {
+            "OAuth2": [
+              "public",
+              "event"
+            ]
+          }
+        ],
+        "description": "List all events in a certain category.",
+        "tags": [
+          "EventType"
+        ],
+        "summary": "List event type events",
+        "operationId": "listTypeEvents",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Event"
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/responses/400"
+          },
+          "401": {
+            "$ref": "#/responses/401"
+          },
+          "403": {
+            "$ref": "#/responses/403"
+          },
+          "404": {
+            "$ref": "#/responses/404"
+          },
+          "500": {
+            "$ref": "#/responses/500"
+          }
+        }
+      },
+      "parameters": [
+        {
+          "type": "string",
+          "description": "ID of event category.",
+          "name": "id",
+          "in": "path",
+          "required": true
+        }
+      ]
+    },
     "/events/{id}": {
       "get": {
         "security": [
@@ -628,12 +675,63 @@ func init() {
             ]
           }
         ],
-        "description": "Retrieve event type.",
+        "description": "Get event type value.",
         "tags": [
           "Event"
         ],
-        "summary": "Event type",
-        "operationId": "eventType",
+        "summary": "Get event type",
+        "operationId": "getEventType",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/EventType"
+            }
+          },
+          "400": {
+            "$ref": "#/responses/400"
+          },
+          "401": {
+            "$ref": "#/responses/401"
+          },
+          "403": {
+            "$ref": "#/responses/403"
+          },
+          "404": {
+            "$ref": "#/responses/404"
+          },
+          "500": {
+            "$ref": "#/responses/500"
+          }
+        }
+      },
+      "post": {
+        "security": [
+          {
+            "OAuth2": [
+              "public",
+              "event",
+              "event:write"
+            ]
+          }
+        ],
+        "description": "Set event type value.",
+        "tags": [
+          "Event"
+        ],
+        "summary": "Set event type",
+        "operationId": "setEventType",
+        "parameters": [
+          {
+            "description": "Event category.",
+            "name": "category",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/EventType"
+            }
+          }
+        ],
         "responses": {
           "200": {
             "description": "OK",
@@ -2154,12 +2252,6 @@ func init() {
           },
           {
             "type": "string",
-            "description": "Week filter.",
-            "name": "week",
-            "in": "query"
-          },
-          {
-            "type": "string",
             "description": "Month filter.",
             "name": "month",
             "in": "query"
@@ -2546,6 +2638,74 @@ func init() {
         }
       ]
     },
+    "/events/types/{id}/events/": {
+      "get": {
+        "security": [
+          {
+            "OAuth2": [
+              "event",
+              "public"
+            ]
+          }
+        ],
+        "description": "List all events in a certain category.",
+        "tags": [
+          "EventType"
+        ],
+        "summary": "List event type events",
+        "operationId": "listTypeEvents",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Event"
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      },
+      "parameters": [
+        {
+          "type": "string",
+          "description": "ID of event category.",
+          "name": "id",
+          "in": "path",
+          "required": true
+        }
+      ]
+    },
     "/events/{id}": {
       "get": {
         "security": [
@@ -2739,12 +2899,78 @@ func init() {
             ]
           }
         ],
-        "description": "Retrieve event type.",
+        "description": "Get event type value.",
         "tags": [
           "Event"
         ],
-        "summary": "Event type",
-        "operationId": "eventType",
+        "summary": "Get event type",
+        "operationId": "getEventType",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/EventType"
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      },
+      "post": {
+        "security": [
+          {
+            "OAuth2": [
+              "event",
+              "event:write",
+              "public"
+            ]
+          }
+        ],
+        "description": "Set event type value.",
+        "tags": [
+          "Event"
+        ],
+        "summary": "Set event type",
+        "operationId": "setEventType",
+        "parameters": [
+          {
+            "description": "Event category.",
+            "name": "category",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/EventType"
+            }
+          }
+        ],
         "responses": {
           "200": {
             "description": "OK",

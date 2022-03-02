@@ -39,10 +39,6 @@ type ListEventParams struct {
 	  In: query
 	*/
 	Month *string
-	/*Week filter.
-	  In: query
-	*/
-	Week *string
 }
 
 // BindRequest both binds and validates a request, it assumes that complex things implement a Validatable(strfmt.Registry) error interface
@@ -63,11 +59,6 @@ func (o *ListEventParams) BindRequest(r *http.Request, route *middleware.Matched
 
 	qMonth, qhkMonth, _ := qs.GetOK("month")
 	if err := o.bindMonth(qMonth, qhkMonth, route.Formats); err != nil {
-		res = append(res, err)
-	}
-
-	qWeek, qhkWeek, _ := qs.GetOK("week")
-	if err := o.bindWeek(qWeek, qhkWeek, route.Formats); err != nil {
 		res = append(res, err)
 	}
 	if len(res) > 0 {
@@ -108,24 +99,6 @@ func (o *ListEventParams) bindMonth(rawData []string, hasKey bool, formats strfm
 		return nil
 	}
 	o.Month = &raw
-
-	return nil
-}
-
-// bindWeek binds and validates parameter Week from query.
-func (o *ListEventParams) bindWeek(rawData []string, hasKey bool, formats strfmt.Registry) error {
-	var raw string
-	if len(rawData) > 0 {
-		raw = rawData[len(rawData)-1]
-	}
-
-	// Required: false
-	// AllowEmptyValue: false
-
-	if raw == "" { // empty values pass all other validations
-		return nil
-	}
-	o.Week = &raw
 
 	return nil
 }
