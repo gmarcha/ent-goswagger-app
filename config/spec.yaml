@@ -122,18 +122,14 @@ paths:
       security:
         - OAuth2: [public]
       parameters:
-      - in: query
-        name: day
-        description: Day filter.
-        type: string
-      - in: query
-        name: week
-        description: Week filter.
-        type: string
-      - in: query
-        name: month
-        description: Month filter.
-        type: string
+        - in: query
+          name: day
+          description: Day filter.
+          type: string
+        - in: query
+          name: month
+          description: Month filter.
+          type: string
       responses:
         "200":
           description: OK
@@ -156,12 +152,12 @@ paths:
       security:
         - OAuth2: [public, event, event:write]
       parameters:
-      - in: body
-        name: event
-        required: true
-        description: Event to create.
-        schema:
-          $ref: '#/definitions/Event'
+        - in: body
+          name: event
+          required: true
+          description: Event to create.
+          schema:
+            $ref: '#/definitions/Event'
       responses:
         "201":
           description: Created
@@ -215,12 +211,12 @@ paths:
       security:
         - OAuth2: [public, event, event:write]
       parameters:
-      - in: body
-        name: event
-        required: true
-        description: Event to update.
-        schema:
-          $ref: '#/definitions/Event'
+        - in: body
+          name: event
+          required: true
+          description: Event to update.
+          schema:
+            $ref: '#/definitions/Event'
       responses:
         "200":
           description: OK
@@ -299,11 +295,11 @@ paths:
         description: Event ID.
         type: string
     get:
-      summary: Event type
-      description: Retrieve event type.
+      summary: Get event type
+      description: Get event type value.
       tags:
         - Event
-      operationId: eventType
+      operationId: getEventType
       security:
         - OAuth2: [public, event]
       responses:
@@ -321,6 +317,37 @@ paths:
           $ref: '#/responses/404'
         "500":
           $ref: '#/responses/500'
+    post:
+      summary: Set event type
+      description: Set event type value.
+      tags:
+        - Event
+      operationId: setEventType
+      security:
+        - OAuth2: [public, event, event:write]
+      parameters:
+        - in: body
+          name: category
+          required: true
+          description: Event category.
+          schema:
+            $ref: '#/definitions/EventType'
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/EventType'
+        "400":
+          $ref: '#/responses/400'
+        "401":
+          $ref: '#/responses/401'
+        "403":
+          $ref: '#/responses/403'
+        "404":
+          $ref: '#/responses/404'
+        "500":
+          $ref: '#/responses/500'
+
 
   /events/types:
     get:
@@ -353,12 +380,12 @@ paths:
       security:
         - OAuth2: [public, event, event:write]
       parameters:
-      - in: body
-        name: type
-        required: true
-        description: Event category to create.
-        schema:
-          $ref: '#/definitions/EventType'
+        - in: body
+          name: type
+          required: true
+          description: Event category to create.
+          schema:
+            $ref: '#/definitions/EventType'
       responses:
         "201":
           description: Created
@@ -375,11 +402,11 @@ paths:
 
   /events/types/{id}:
     parameters:
-    - in: path
-      name: id
-      required: true
-      description: ID of event category.
-      type: string
+      - in: path
+        name: id
+        required: true
+        description: ID of event category.
+        type: string
     get:
       summary: Read event type
       description: Read an event category.
@@ -412,12 +439,12 @@ paths:
       security:
         - OAuth2: [public, event, event:write]
       parameters:
-      - in: body
-        name: type
-        required: true
-        description: Event category to update.
-        schema:
-          $ref: '#/definitions/EventType'
+        - in: body
+          name: type
+          required: true
+          description: Event category to update.
+          schema:
+            $ref: '#/definitions/EventType'
       responses:
         "200":
           description: OK
@@ -455,6 +482,39 @@ paths:
         "500":
           $ref: '#/responses/500'
 
+  /events/types/{id}/events/:
+    parameters:
+      - in: path
+        name: id
+        required: true
+        description: ID of event category.
+        type: string
+    get:
+      summary: List event type events
+      description: List all events in a certain category.
+      tags:
+        - EventType
+      operationId: listTypeEvents
+      security:
+        - OAuth2: [public, event]
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Event'
+        "400":
+          $ref: '#/responses/400'
+        "401":
+          $ref: '#/responses/401'
+        "403":
+          $ref: '#/responses/403'
+        "404":
+          $ref: '#/responses/404'
+        "500":
+          $ref: '#/responses/500'
+
   /users:
     get:
       summary: List users
@@ -465,10 +525,10 @@ paths:
       security:
         - OAuth2: [public]
       parameters:
-      - in: query
-        name: tutor
-        description: Tutor filter.
-        type: boolean
+        - in: query
+          name: tutor
+          description: Tutor filter.
+          type: boolean
       responses:
         "200":
           description: OK
@@ -489,12 +549,12 @@ paths:
       security:
         - OAuth2: [public, user, user:write]
       parameters:
-      - in: body
-        name: user
-        required: true
-        description: User to create.
-        schema:
-          $ref: '#/definitions/User'
+        - in: body
+          name: user
+          required: true
+          description: User to create.
+          schema:
+            $ref: '#/definitions/User'
       responses:
         "201":
           description: Created
@@ -536,12 +596,12 @@ paths:
       security:
         - OAuth2: [public]
       parameters:
-      - in: body
-        name: user
-        required: true
-        description: User to update.
-        schema:
-          $ref: '#/definitions/User'
+        - in: body
+          name: user
+          required: true
+          description: User to update.
+          schema:
+            $ref: '#/definitions/User'
       responses:
         "200":
           description: OK
@@ -708,12 +768,12 @@ paths:
       security:
         - OAuth2: [public, user, user:write]
       parameters:
-      - in: body
-        name: user
-        required: true
-        description: User to update.
-        schema:
-          $ref: '#/definitions/User'
+        - in: body
+          name: user
+          required: true
+          description: User to update.
+          schema:
+            $ref: '#/definitions/User'
       responses:
         "200":
           description: OK
