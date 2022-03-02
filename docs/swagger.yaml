@@ -119,10 +119,6 @@ paths:
           description: Day filter.
           type: string
         - in: query
-          name: week
-          description: Week filter.
-          type: string
-        - in: query
           name: month
           description: Month filter.
           type: string
@@ -302,15 +298,48 @@ paths:
         description: Event ID.
         type: string
     get:
-      summary: Event type
-      description: Retrieve event type.
+      summary: Get event type
+      description: Get event type value.
       tags:
         - Event
-      operationId: eventType
+      operationId: getEventType
       security:
         - OAuth2:
             - public
             - event
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/EventType'
+        "400":
+          $ref: '#/responses/400'
+        "401":
+          $ref: '#/responses/401'
+        "403":
+          $ref: '#/responses/403'
+        "404":
+          $ref: '#/responses/404'
+        "500":
+          $ref: '#/responses/500'
+    post:
+      summary: Set event type
+      description: Set event type value.
+      tags:
+        - Event
+      operationId: setEventType
+      security:
+        - OAuth2:
+            - public
+            - event
+            - event:write
+      parameters:
+        - in: body
+          name: category
+          required: true
+          description: Event category.
+          schema:
+            $ref: '#/definitions/EventType'
       responses:
         "200":
           description: OK
@@ -460,6 +489,40 @@ paths:
       responses:
         "204":
           description: No content
+        "400":
+          $ref: '#/responses/400'
+        "401":
+          $ref: '#/responses/401'
+        "403":
+          $ref: '#/responses/403'
+        "404":
+          $ref: '#/responses/404'
+        "500":
+          $ref: '#/responses/500'
+  /events/types/{id}/events/:
+    parameters:
+      - in: path
+        name: id
+        required: true
+        description: ID of event category.
+        type: string
+    get:
+      summary: List event type events
+      description: List all events in a certain category.
+      tags:
+        - EventType
+      operationId: listTypeEvents
+      security:
+        - OAuth2:
+            - public
+            - event
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Event'
         "400":
           $ref: '#/responses/400'
         "401":
