@@ -16,6 +16,7 @@ func Init(api *operations.TutorAPI, db *ent.Client) {
 	api.UserUpdateMeHandler = &updateMe{user: userService}
 	api.UserDeleteMeHandler = &deleteMe{user: userService}
 	api.UserListMeEventsHandler = &listMeEvents{user: userService}
+	api.UserListMeRolesHandler = &listMeRoles{user: userService}
 	api.UserSubscribeMeHandler = &subscribeMe{user: userService}
 	api.UserUnsubscribeMeHandler = &unsuscribeMe{user: userService}
 
@@ -23,6 +24,7 @@ func Init(api *operations.TutorAPI, db *ent.Client) {
 	api.UserUpdateUserHandler = &updateUser{user: userService}
 	api.UserDeleteUserHandler = &deleteUser{user: userService}
 	api.UserListUserEventsHandler = &listUserEvents{user: userService}
+	api.UserListUserRolesHandler = &listUserRoles{user: userService}
 	api.UserSubscribeUserHandler = &subscribeUser{user: userService}
 	api.UserUnsubscribeUserHandler = &unsubscribeUser{user: userService}
 }

@@ -40,7 +40,7 @@ func (s *Service) CreateUser(ctx context.Context, user *ent.User) (*ent.User, er
 
 func (s *Service) ReadUserByLogin(ctx context.Context, login string) (*ent.User, error) {
 
-	res, err := s.User.Query().Where(user.Login(login)).WithRoles().Only(ctx)
+	res, err := s.User.Query().Where(user.Login(login)).WithRoles().WithEvents().Only(ctx)
 	if err != nil {
 		return nil, err
 	}
@@ -70,7 +70,16 @@ func (s *Service) ListUserEventsByLogin(ctx context.Context, login string) ([]*e
 	if err != nil {
 		return nil, err
 	}
-	return res.Edges.Events, err
+	return res.Edges.Events, nil
+}
+
+func (s *Service) ListUserRolesByLogin(ctx context.Context, login string) ([]*ent.Role, error) {
+
+	res, err := s.ReadUserByLogin(ctx, login)
+	if err != nil {
+		return nil, err
+	}
+	return res.Edges.Roles, nil
 }
 
 func (s *Service) SubscribeUserByLogin(ctx context.Context, login string, id uuid.UUID) ([]*ent.Event, error) {
@@ -83,7 +92,7 @@ func (s *Service) SubscribeUserByLogin(ctx context.Context, login string, id uui
 	if err != nil {
 		return nil, err
 	}
-	return res.Edges.Events, err
+	return res.Edges.Events, nil
 }
 
 func (s *Service) UnsubscribeUserByLogin(ctx context.Context, login string, id uuid.UUID) error {
@@ -101,7 +110,7 @@ func (s *Service) UnsubscribeUserByLogin(ctx context.Context, login string, id u
 
 func (s *Service) ReadUserByID(ctx context.Context, id uuid.UUID) (*ent.User, error) {
 
-	res, err := s.User.Query().Where(user.ID(id)).WithRoles().Only(ctx)
+	res, err := s.User.Query().Where(user.ID(id)).WithRoles().WithEvents().Only(ctx)
 	if err != nil {
 		return nil, err
 	}
@@ -130,7 +139,16 @@ func (s *Service) ListUserEventsByID(ctx context.Context, id uuid.UUID) ([]*ent.
 	if err != nil {
 		return nil, err
 	}
-	return res.Edges.Events, err
+	return res.Edges.Events, nil
+}
+
+func (s *Service) ListUserRolesByID(ctx context.Context, id uuid.UUID) ([]*ent.Role, error) {
+
+	res, err := s.ReadUserByID(ctx, id)
+	if err != nil {
+		return nil, err
+	}
+	return res.Edges.Roles, nil
 }
 
 func (s *Service) SubscribeUserByID(ctx context.Context, userId uuid.UUID, eventId uuid.UUID) ([]*ent.Event, error) {
@@ -143,7 +161,7 @@ func (s *Service) SubscribeUserByID(ctx context.Context, userId uuid.UUID, event
 	if err != nil {
 		return nil, err
 	}
-	return res.Edges.Events, err
+	return res.Edges.Events, nil
 }
 
 func (s *Service) UnsubscribeUserByID(ctx context.Context, userId uuid.UUID, eventId uuid.UUID) error {

@@ -95,6 +95,19 @@ func (u *listMeEvents) Handle(params user.ListMeEventsParams, principal *models.
 	return user.NewListMeEventsOK().WithPayload(res)
 }
 
+type listMeRoles struct {
+	user *Service
+}
+
+func (u *listMeRoles) Handle(params user.ListMeRolesParams, principal *models.Principal) middleware.Responder {
+	ctx := context.Background()
+	res, err := u.user.ListUserRolesByLogin(ctx, string(*principal))
+	if err != nil {
+		return user.NewListMeRolesInternalServerError().WithPayload(e.Err(500, err))
+	}
+	return user.NewListMeRolesOK().WithPayload(res)
+}
+
 type subscribeMe struct {
 	user *Service
 }
@@ -167,10 +180,10 @@ func (u *updateUser) Handle(params user.UpdateUserParams, principal *models.Prin
 	ctx := context.Background()
 	res, err := u.user.UpdateUserByID(ctx, id, params.User)
 	if err != nil {
-		if ent.IsNotFound(err) {
-			return user.NewUpdateUserNotFound().WithPayload(e.Err(404, err))
-		} else if ent.IsValidationError(err) || ent.IsConstraintError(err) {
+		if ent.IsValidationError(err) || ent.IsConstraintError(err) {
 			return user.NewUpdateUserBadRequest().WithPayload(e.Err(400, err))
+		} else if ent.IsNotFound(err) {
+			return user.NewUpdateUserNotFound().WithPayload(e.Err(404, err))
 		}
 		return user.NewUpdateUserInternalServerError().WithPayload(e.Err(500, err))
 	}
@@ -215,6 +228,26 @@ func (u *listUserEvents) Handle(params user.ListUserEventsParams, principal *mod
 		return user.NewListUserEventsInternalServerError().WithPayload(e.Err(500, err))
 	}
 	return user.NewListUserEventsOK().WithPayload(res)
+}
+
+type listUserRoles struct {
+	user *Service
+}
+
+func (u *listUserRoles) Handle(params user.ListUserRolesParams, principal *models.Principal) middleware.Responder {
+	id, err := uuid.Parse(params.ID)
+	if err != nil {
+		return user.NewListUserRolesBadRequest().WithPayload(e.Err(400, err))
+	}
+	ctx := context.Background()
+	res, err := u.user.ListUserRolesByID(ctx, id)
+	if err != nil {
+		if ent.IsNotFound(err) {
+			return user.NewListUserRolesNotFound().WithPayload(e.Err(404, err))
+		}
+		return user.NewListUserRolesInternalServerError().WithPayload(e.Err(500, err))
+	}
+	return user.NewListUserRolesOK().WithPayload(res)
 }
 
 type subscribeUser struct {
