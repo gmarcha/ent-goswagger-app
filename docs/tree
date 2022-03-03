@@ -138,6 +138,10 @@
 │   │       │   │   ├── event_type_parameters.go
 │   │       │   │   ├── event_type_responses.go
 │   │       │   │   ├── event_type_urlbuilder.go
+│   │       │   │   ├── get_event_type.go
+│   │       │   │   ├── get_event_type_parameters.go
+│   │       │   │   ├── get_event_type_responses.go
+│   │       │   │   ├── get_event_type_urlbuilder.go
 │   │       │   │   ├── list_event.go
 │   │       │   │   ├── list_event_parameters.go
 │   │       │   │   ├── list_event_responses.go
@@ -158,6 +162,10 @@
 │   │       │   │   ├── read_type_parameters.go
 │   │       │   │   ├── read_type_responses.go
 │   │       │   │   ├── read_type_urlbuilder.go
+│   │       │   │   ├── set_event_type.go
+│   │       │   │   ├── set_event_type_parameters.go
+│   │       │   │   ├── set_event_type_responses.go
+│   │       │   │   ├── set_event_type_urlbuilder.go
 │   │       │   │   ├── update_event.go
 │   │       │   │   ├── update_event_parameters.go
 │   │       │   │   ├── update_event_responses.go
@@ -176,6 +184,10 @@
 │   │       │   │   ├── delete_type_responses.go
 │   │       │   │   ├── delete_type_urlbuilder.go
 │   │       │   │   ├── list_type.go
+│   │       │   │   ├── list_type_events.go
+│   │       │   │   ├── list_type_events_parameters.go
+│   │       │   │   ├── list_type_events_responses.go
+│   │       │   │   ├── list_type_events_urlbuilder.go
 │   │       │   │   ├── list_type_parameters.go
 │   │       │   │   ├── list_type_responses.go
 │   │       │   │   ├── list_type_urlbuilder.go
@@ -322,6 +334,14 @@
 │   │   │   ├── handle.go
 │   │   │   ├── init.go
 │   │   │   └── service.go
+│   │   ├── eventType
+│   │   │   ├── handler.go
+│   │   │   ├── init.go
+│   │   │   └── service.go
+│   │   ├── role
+│   │   │   ├── handler.go
+│   │   │   ├── init.go
+│   │   │   └── service.go
 │   │   └── user
 │   │       ├── handle.go
 │   │       ├── init.go
@@ -339,7 +359,7 @@
 │       ├── README.md
 │       ├── json.json
 │       └── yaml.json
-└── test
-    └── api.go
+└── tests
+    └── server.go
 
-42 directories, 300 files
+44 directories, 318 files
