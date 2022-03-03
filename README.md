@@ -155,7 +155,7 @@ Continuous integration (with Github Actions) allows to run code validation, code
   It allows to directly manipulate or monitore a database in a web browser.\
   *Links to [documentation](https://www.pgadmin.org/docs/pgadmin4/latest/) and how to [deploy](https://www.pgadmin.org/docs/pgadmin4/latest/container_deployment.html) it in a container*
 
-- **Redis**
+- **Redis**\
   Redis is a lightweight key-value database.\
   It allows to easy manage caches or data stores in our application.\
   *Links to [documentation](https://redis.io/documentation) and Go [package](https://pkg.go.dev/github.com/go-redis/redis/v8).*
