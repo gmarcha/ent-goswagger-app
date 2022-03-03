@@ -45,7 +45,7 @@ services:
     ports:
       - "8080:8080"
     command: >
-      go run test/api.go
+      go run tests/server.go
     volumes:
       - module-volume:/go/pkg/mod/cache/download
       - build-volume:/root/.cache/go-build
