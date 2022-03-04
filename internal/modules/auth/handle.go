@@ -109,7 +109,7 @@ func (t *tokenInfo) Handle(params authentication.TokenInfoParams) middleware.Res
 
 	claims := token.Claims.(*userClaims)
 
-	return authentication.NewTokenInfoOK().WithPayload(&authentication.TokenInfoOKBody{
+	return authentication.NewTokenInfoOK().WithPayload(&models.TokenInfo{
 		ExpiresAt: strfmt.DateTime(claims.ExpiresAt.Time),
 		Login:     claims.Issuer,
 	})
@@ -130,10 +130,13 @@ func (t *tokenRefresh) Handle(params authentication.TokenRefreshParams) middlewa
 
 	token, err := readAndParseToken(t.rdb, t.refreshTokenState, params.Authorization)
 	if err != nil || !token.Valid {
-		return authentication.NewTokenInfoUnauthorized().WithPayload(e.Err(401, err))
+		return authentication.NewTokenRefreshUnauthorized().WithPayload(e.Err(401, err))
 	}
-	if validateRefreshToken(t.rdb, token) == nil {
-		return authentication.NewTokenRefreshInternalServerError().WithPayload(e.Err(401, fmt.Errorf("invalid token")))
+	err = validateRefreshToken(t.rdb, token)
+	if err == nil {
+		return authentication.NewTokenRefreshUnauthorized().WithPayload(e.Err(401, fmt.Errorf("invalid token")))
+	} else if err != redis.Nil {
+		return authentication.NewTokenRefreshInternalServerError().WithPayload(e.Err(500, err))
 	}
 	if blacklistRefreshToken(t.rdb, token) != nil {
 		return authentication.NewTokenRefreshInternalServerError().WithPayload(e.Err(500, err))
