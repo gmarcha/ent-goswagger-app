@@ -76,14 +76,7 @@ paths:
         "200":
           description: OK
           schema:
-            type: object
-            properties:
-              login:
-                type: string
-                description: username
-              expiresAt:
-                type: string
-                format: date-time
+            $ref: '#/definitions/TokenInfo'
         "401":
           $ref: '#/responses/401'
         "500":
@@ -1139,6 +1132,16 @@ definitions:
         type: string
       refreshToken:
         type: string
+
+  TokenInfo:
+    type: object
+    properties:
+      login:
+        type: string
+        description: username
+      expiresAt:
+        type: string
+        format: date-time
 
   Error:
     type: object
