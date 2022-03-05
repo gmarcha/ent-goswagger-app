@@ -25,7 +25,7 @@ type TokenInfoOK struct {
 	/*
 	  In: Body
 	*/
-	Payload *TokenInfoOKBody `json:"body,omitempty"`
+	Payload *models.TokenInfo `json:"body,omitempty"`
 }
 
 // NewTokenInfoOK creates TokenInfoOK with default headers values
@@ -35,13 +35,13 @@ func NewTokenInfoOK() *TokenInfoOK {
 }
 
 // WithPayload adds the payload to the token info o k response
-func (o *TokenInfoOK) WithPayload(payload *TokenInfoOKBody) *TokenInfoOK {
+func (o *TokenInfoOK) WithPayload(payload *models.TokenInfo) *TokenInfoOK {
 	o.Payload = payload
 	return o
 }
 
 // SetPayload sets the payload to the token info o k response
-func (o *TokenInfoOK) SetPayload(payload *TokenInfoOKBody) {
+func (o *TokenInfoOK) SetPayload(payload *models.TokenInfo) {
 	o.Payload = payload
 }
 

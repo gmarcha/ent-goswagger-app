@@ -6,14 +6,9 @@ package authentication
 // Editing this file might prove futile when you re-run the generate command
 
 import (
-	"context"
 	"net/http"
 
-	"github.com/go-openapi/errors"
 	"github.com/go-openapi/runtime/middleware"
-	"github.com/go-openapi/strfmt"
-	"github.com/go-openapi/swag"
-	"github.com/go-openapi/validate"
 )
 
 // TokenInfoHandlerFunc turns a function with the right signature into a token info handler
@@ -60,66 +55,4 @@ func (o *TokenInfo) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
 	res := o.Handler.Handle(Params) // actually handle the request
 	o.Context.Respond(rw, r, route.Produces, route, res)
 
-}
-
-// TokenInfoOKBody token info o k body
-//
-// swagger:model TokenInfoOKBody
-type TokenInfoOKBody struct {
-
-	// expires at
-	// Format: date-time
-	ExpiresAt strfmt.DateTime `json:"expiresAt,omitempty"`
-
-	// username
-	Login string `json:"login,omitempty"`
-}
-
-// Validate validates this token info o k body
-func (o *TokenInfoOKBody) Validate(formats strfmt.Registry) error {
-	var res []error
-
-	if err := o.validateExpiresAt(formats); err != nil {
-		res = append(res, err)
-	}
-
-	if len(res) > 0 {
-		return errors.CompositeValidationError(res...)
-	}
-	return nil
-}
-
-func (o *TokenInfoOKBody) validateExpiresAt(formats strfmt.Registry) error {
-	if swag.IsZero(o.ExpiresAt) { // not required
-		return nil
-	}
-
-	if err := validate.FormatOf("tokenInfoOK"+"."+"expiresAt", "body", "date-time", o.ExpiresAt.String(), formats); err != nil {
-		return err
-	}
-
-	return nil
-}
-
-// ContextValidate validates this token info o k body based on context it is used
-func (o *TokenInfoOKBody) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
-	return nil
-}
-
-// MarshalBinary interface implementation
-func (o *TokenInfoOKBody) MarshalBinary() ([]byte, error) {
-	if o == nil {
-		return nil, nil
-	}
-	return swag.WriteJSON(o)
-}
-
-// UnmarshalBinary interface implementation
-func (o *TokenInfoOKBody) UnmarshalBinary(b []byte) error {
-	var res TokenInfoOKBody
-	if err := swag.ReadJSON(b, &res); err != nil {
-		return err
-	}
-	*o = res
-	return nil
 }

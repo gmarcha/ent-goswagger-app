@@ -96,17 +96,7 @@ func init() {
           "200": {
             "description": "OK",
             "schema": {
-              "type": "object",
-              "properties": {
-                "expiresAt": {
-                  "type": "string",
-                  "format": "date-time"
-                },
-                "login": {
-                  "description": "username",
-                  "type": "string"
-                }
-              }
+              "$ref": "#/definitions/TokenInfo"
             }
           },
           "401": {
@@ -1965,6 +1955,19 @@ func init() {
           "type": "string"
         },
         "refreshToken": {
+          "type": "string"
+        }
+      }
+    },
+    "TokenInfo": {
+      "type": "object",
+      "properties": {
+        "expiresAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "login": {
+          "description": "username",
           "type": "string"
         }
       }
@@ -2161,17 +2164,7 @@ func init() {
           "200": {
             "description": "OK",
             "schema": {
-              "type": "object",
-              "properties": {
-                "expiresAt": {
-                  "type": "string",
-                  "format": "date-time"
-                },
-                "login": {
-                  "description": "username",
-                  "type": "string"
-                }
-              }
+              "$ref": "#/definitions/TokenInfo"
             }
           },
           "401": {
@@ -4516,6 +4509,19 @@ func init() {
           "type": "string"
         },
         "refreshToken": {
+          "type": "string"
+        }
+      }
+    },
+    "TokenInfo": {
+      "type": "object",
+      "properties": {
+        "expiresAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "login": {
+          "description": "username",
           "type": "string"
         }
       }
