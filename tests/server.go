@@ -10,7 +10,7 @@ import (
 
 func main() {
 
-	names := []string{"bear", "cow", "horse", "panda"}
+	names := []string{"test", "student", "tutor", "calendar", "admin"}
 	i := -1
 
 	r := gin.Default()
@@ -38,5 +38,5 @@ func main() {
 			"image_url":  "none",
 		})
 	})
-	_ = r.Run() // listen and serve on 0.0.0.0:8080 (for windows "localhost:8080")
+	_ = r.Run("0.0.0.0:8080") // listen and serve on 0.0.0.0:8080 (for windows "localhost:8080")
 }
