@@ -61,7 +61,7 @@ func (Event) Hooks() []ent.Hook {
 				return hook.EventFunc(func(ctx context.Context, m *gen.EventMutation) (ent.Value, error) {
 					startAt, start := m.StartAt()
 					endAt, end := m.EndAt()
-					if start && end && startAt.Before(endAt) {
+					if start && end && startAt.After(endAt) {
 						return nil, fmt.Errorf("invalid date")
 					}
 					return next.Mutate(ctx, m)
