@@ -17,6 +17,7 @@ import (
 	"github.com/gmarcha/ent-goswagger-app/internal/modules/event"
 	"github.com/gmarcha/ent-goswagger-app/internal/modules/eventType"
 	"github.com/gmarcha/ent-goswagger-app/internal/modules/role"
+	"github.com/gmarcha/ent-goswagger-app/internal/modules/test"
 	"github.com/gmarcha/ent-goswagger-app/internal/modules/user"
 )
 
@@ -54,10 +55,12 @@ func configureAPI(api *operations.TutorAPI) http.Handler {
 	rdb := redis.Init()
 
 	auth.Init(api, db, rdb)
-	user.Init(api, db)
 	role.Init(api, db)
+	user.Init(api, db)
 	event.Init(api, db)
 	eventType.Init(api, db)
+
+	test.Init(db)
 
 	api.ServerShutdown = func() {
 		db.Close()
