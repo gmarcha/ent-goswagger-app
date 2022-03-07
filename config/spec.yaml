@@ -423,7 +423,7 @@ paths:
           $ref: '#/responses/404'
         "500":
           $ref: '#/responses/500'
-    post:
+    put:
       summary: Update event type
       description: Update an event category.
       tags:
