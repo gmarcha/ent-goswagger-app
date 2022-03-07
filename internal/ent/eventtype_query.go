@@ -133,7 +133,7 @@ func (etq *EventTypeQuery) FirstIDX(ctx context.Context) uuid.UUID {
 }
 
 // Only returns a single EventType entity found by the query, ensuring it only returns one.
-// Returns a *NotSingularError when exactly one EventType entity is not found.
+// Returns a *NotSingularError when more than one EventType entity is found.
 // Returns a *NotFoundError when no EventType entities are found.
 func (etq *EventTypeQuery) Only(ctx context.Context) (*EventType, error) {
 	nodes, err := etq.Limit(2).All(ctx)
@@ -160,7 +160,7 @@ func (etq *EventTypeQuery) OnlyX(ctx context.Context) *EventType {
 }
 
 // OnlyID is like Only, but returns the only EventType ID in the query.
-// Returns a *NotSingularError when exactly one EventType ID is not found.
+// Returns a *NotSingularError when more than one EventType ID is found.
 // Returns a *NotFoundError when no entities are found.
 func (etq *EventTypeQuery) OnlyID(ctx context.Context) (id uuid.UUID, err error) {
 	var ids []uuid.UUID
@@ -270,8 +270,9 @@ func (etq *EventTypeQuery) Clone() *EventTypeQuery {
 		predicates: append([]predicate.EventType{}, etq.predicates...),
 		withEvents: etq.withEvents.Clone(),
 		// clone intermediate query.
-		sql:  etq.sql.Clone(),
-		path: etq.path,
+		sql:    etq.sql.Clone(),
+		path:   etq.path,
+		unique: etq.unique,
 	}
 }
 
