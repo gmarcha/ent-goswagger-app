@@ -366,7 +366,7 @@ func init() {
           }
         }
       },
-      "post": {
+      "put": {
         "security": [
           {
             "OAuth2": [
@@ -2503,7 +2503,7 @@ func init() {
           }
         }
       },
-      "post": {
+      "put": {
         "security": [
           {
             "OAuth2": [

@@ -749,10 +749,10 @@ func (o *TutorAPI) initHandlerCache() {
 		o.handlers["PUT"] = make(map[string]http.Handler)
 	}
 	o.handlers["PUT"]["/users/me"] = user.NewUpdateMe(o.context, o.UserUpdateMeHandler)
-	if o.handlers["POST"] == nil {
-		o.handlers["POST"] = make(map[string]http.Handler)
+	if o.handlers["PUT"] == nil {
+		o.handlers["PUT"] = make(map[string]http.Handler)
 	}
-	o.handlers["POST"]["/events/types/{id}"] = event_type.NewUpdateType(o.context, o.EventTypeUpdateTypeHandler)
+	o.handlers["PUT"]["/events/types/{id}"] = event_type.NewUpdateType(o.context, o.EventTypeUpdateTypeHandler)
 	if o.handlers["PUT"] == nil {
 		o.handlers["PUT"] = make(map[string]http.Handler)
 	}
