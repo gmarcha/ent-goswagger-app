@@ -94,7 +94,8 @@
 │   │   ├── models
 │   │   │   ├── error.go
 │   │   │   ├── principal.go
-│   │   │   └── token.go
+│   │   │   ├── token.go
+│   │   │   └── token_info.go
 │   │   └── restapi
 │   │       ├── configure_tutor.go
 │   │       ├── doc.go
@@ -342,6 +343,8 @@
 │   │   │   ├── handler.go
 │   │   │   ├── init.go
 │   │   │   └── service.go
+│   │   ├── test
+│   │   │   └── init.go
 │   │   └── user
 │   │       ├── handle.go
 │   │       ├── init.go
@@ -360,6 +363,15 @@
 │       ├── json.json
 │       └── yaml.json
 └── tests
+    ├── integration
+    │   ├── admin_test.go
+    │   ├── auth_test.go
+    │   ├── calendar_test.go
+    │   ├── integration.go
+    │   ├── integration_test.go
+    │   ├── student_test.go
+    │   ├── tutor_test.go
+    │   └── unauthenticated_test.go
     └── server.go
 
-44 directories, 318 files
+46 directories, 328 files
