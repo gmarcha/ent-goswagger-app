@@ -44,9 +44,9 @@ func fetchUserInfo(client *http.Client, userInfoUrl string, token string) (*ent.
 
 	user := &ent.User{
 		Login:     info.Login,
-		FirstName: info.FirstName,
-		LastName:  info.LastName,
-		ImagePath: info.Image,
+		FirstName: &info.FirstName,
+		LastName:  &info.LastName,
+		ImagePath: &info.Image,
 	}
 	return user, nil
 }
