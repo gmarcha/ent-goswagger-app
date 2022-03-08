@@ -25,11 +25,13 @@ func createTestUsers(db *ent.Client) {
 	calendar, _ := db.Role.Query().Where(role.Name("calendar")).Only(ctx)
 	admin, _ := db.Role.Query().Where(role.Name("admin")).Only(ctx)
 
-	db.User.Create().SetLogin("student").Save(ctx)
-	db.User.Create().SetLogin("tutor").AddRoles(tutor).Save(ctx)
-	db.User.Create().SetLogin("calendar").AddRoles(calendar).Save(ctx)
-	db.User.Create().SetLogin("admin").AddRoles(admin).Save(ctx)
+	_, _ = db.User.Create().SetLogin("student").Save(ctx)
+	_, _ = db.User.Create().SetLogin("tutor").AddRoles(tutor).Save(ctx)
+	_, _ = db.User.Create().SetLogin("calendar").AddRoles(calendar).Save(ctx)
+	_, _ = db.User.Create().SetLogin("admin").AddRoles(admin).Save(ctx)
 
 	test, _ := db.EventType.Create().SetName("test").SetColor("test").Save(ctx)
-	db.Event.Create().SetName("test").SetStartAt(startAt).SetEndAt(endAt).SetCategoryID(test.ID).Save(ctx)
+	if test != nil {
+		db.Event.Create().SetName("test").SetStartAt(startAt).SetEndAt(endAt).SetCategoryID(test.ID).Save(ctx)
+	}
 }
