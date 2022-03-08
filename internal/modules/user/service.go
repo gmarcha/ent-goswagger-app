@@ -49,7 +49,11 @@ func (s *Service) ReadUserByLogin(ctx context.Context, login string) (*ent.User,
 
 func (s *Service) UpdateUserByLogin(ctx context.Context, login string, userInfo *ent.User) (*ent.User, error) {
 
-	builder := s.User.UpdateOne(userInfo)
+	user, err := s.ReadUserByLogin(ctx, login)
+	if err != nil {
+		return nil, err
+	}
+	builder := s.User.UpdateOne(user)
 	setUser(builder.Mutation(), userInfo)
 	res, err := builder.Save(ctx)
 	if err != nil {
@@ -199,7 +203,16 @@ func (s *Service) SetUserOnLogin(ctx context.Context, user *ent.User) (*ent.User
 
 func setUser(m *ent.UserMutation, u *ent.User) {
 
-	m.SetFirstName(u.FirstName)
-	m.SetLastName(u.LastName)
-	m.SetImagePath(u.ImagePath)
+	if u.FirstName != nil {
+		m.SetFirstName(*u.FirstName)
+	}
+	if u.LastName != nil {
+		m.SetLastName(*u.LastName)
+	}
+	if u.DisplayName != nil {
+		m.SetDisplayName(*u.DisplayName)
+	}
+	if u.ImagePath != nil {
+		m.SetImagePath(*u.ImagePath)
+	}
 }
