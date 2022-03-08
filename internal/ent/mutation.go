@@ -2282,7 +2282,7 @@ func (m *UserMutation) FirstName() (r string, exists bool) {
 // OldFirstName returns the old "firstName" field's value of the User entity.
 // If the User object wasn't provided to the builder, the object is fetched from the database.
 // An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *UserMutation) OldFirstName(ctx context.Context) (v string, err error) {
+func (m *UserMutation) OldFirstName(ctx context.Context) (v *string, err error) {
 	if !m.op.Is(OpUpdateOne) {
 		return v, errors.New("OldFirstName is only allowed on UpdateOne operations")
 	}
@@ -2331,7 +2331,7 @@ func (m *UserMutation) LastName() (r string, exists bool) {
 // OldLastName returns the old "lastName" field's value of the User entity.
 // If the User object wasn't provided to the builder, the object is fetched from the database.
 // An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *UserMutation) OldLastName(ctx context.Context) (v string, err error) {
+func (m *UserMutation) OldLastName(ctx context.Context) (v *string, err error) {
 	if !m.op.Is(OpUpdateOne) {
 		return v, errors.New("OldLastName is only allowed on UpdateOne operations")
 	}
@@ -2380,7 +2380,7 @@ func (m *UserMutation) DisplayName() (r string, exists bool) {
 // OldDisplayName returns the old "displayName" field's value of the User entity.
 // If the User object wasn't provided to the builder, the object is fetched from the database.
 // An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *UserMutation) OldDisplayName(ctx context.Context) (v string, err error) {
+func (m *UserMutation) OldDisplayName(ctx context.Context) (v *string, err error) {
 	if !m.op.Is(OpUpdateOne) {
 		return v, errors.New("OldDisplayName is only allowed on UpdateOne operations")
 	}
@@ -2429,7 +2429,7 @@ func (m *UserMutation) ImagePath() (r string, exists bool) {
 // OldImagePath returns the old "imagePath" field's value of the User entity.
 // If the User object wasn't provided to the builder, the object is fetched from the database.
 // An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *UserMutation) OldImagePath(ctx context.Context) (v string, err error) {
+func (m *UserMutation) OldImagePath(ctx context.Context) (v *string, err error) {
 	if !m.op.Is(OpUpdateOne) {
 		return v, errors.New("OldImagePath is only allowed on UpdateOne operations")
 	}

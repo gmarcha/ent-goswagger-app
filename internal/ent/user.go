@@ -21,13 +21,13 @@ type User struct {
 	// Login holds the value of the "login" field.
 	Login string `json:"login,omitempty"`
 	// FirstName holds the value of the "firstName" field.
-	FirstName string `json:"firstName,omitempty"`
+	FirstName *string `json:"firstName,omitempty"`
 	// LastName holds the value of the "lastName" field.
-	LastName string `json:"lastName,omitempty"`
+	LastName *string `json:"lastName,omitempty"`
 	// DisplayName holds the value of the "displayName" field.
-	DisplayName string `json:"displayName,omitempty"`
+	DisplayName *string `json:"displayName,omitempty"`
 	// ImagePath holds the value of the "imagePath" field.
-	ImagePath string `json:"imagePath,omitempty"`
+	ImagePath *string `json:"imagePath,omitempty"`
 	// Edges holds the relations/edges for other nodes in the graph.
 	// The values are being populated by the UserQuery when eager-loading is set.
 	Edges UserEdges `json:"edges"`
@@ -102,25 +102,29 @@ func (u *User) assignValues(columns []string, values []interface{}) error {
 			if value, ok := values[i].(*sql.NullString); !ok {
 				return fmt.Errorf("unexpected type %T for field firstName", values[i])
 			} else if value.Valid {
-				u.FirstName = value.String
+				u.FirstName = new(string)
+				*u.FirstName = value.String
 			}
 		case user.FieldLastName:
 			if value, ok := values[i].(*sql.NullString); !ok {
 				return fmt.Errorf("unexpected type %T for field lastName", values[i])
 			} else if value.Valid {
-				u.LastName = value.String
+				u.LastName = new(string)
+				*u.LastName = value.String
 			}
 		case user.FieldDisplayName:
 			if value, ok := values[i].(*sql.NullString); !ok {
 				return fmt.Errorf("unexpected type %T for field displayName", values[i])
 			} else if value.Valid {
-				u.DisplayName = value.String
+				u.DisplayName = new(string)
+				*u.DisplayName = value.String
 			}
 		case user.FieldImagePath:
 			if value, ok := values[i].(*sql.NullString); !ok {
 				return fmt.Errorf("unexpected type %T for field imagePath", values[i])
 			} else if value.Valid {
-				u.ImagePath = value.String
+				u.ImagePath = new(string)
+				*u.ImagePath = value.String
 			}
 		}
 	}
@@ -162,14 +166,22 @@ func (u *User) String() string {
 	builder.WriteString(fmt.Sprintf("id=%v", u.ID))
 	builder.WriteString(", login=")
 	builder.WriteString(u.Login)
-	builder.WriteString(", firstName=")
-	builder.WriteString(u.FirstName)
-	builder.WriteString(", lastName=")
-	builder.WriteString(u.LastName)
-	builder.WriteString(", displayName=")
-	builder.WriteString(u.DisplayName)
-	builder.WriteString(", imagePath=")
-	builder.WriteString(u.ImagePath)
+	if v := u.FirstName; v != nil {
+		builder.WriteString(", firstName=")
+		builder.WriteString(*v)
+	}
+	if v := u.LastName; v != nil {
+		builder.WriteString(", lastName=")
+		builder.WriteString(*v)
+	}
+	if v := u.DisplayName; v != nil {
+		builder.WriteString(", displayName=")
+		builder.WriteString(*v)
+	}
+	if v := u.ImagePath; v != nil {
+		builder.WriteString(", imagePath=")
+		builder.WriteString(*v)
+	}
 	builder.WriteByte(')')
 	return builder.String()
 }

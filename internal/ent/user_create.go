@@ -265,7 +265,7 @@ func (uc *UserCreate) createSpec() (*User, *sqlgraph.CreateSpec) {
 			Value:  value,
 			Column: user.FieldFirstName,
 		})
-		_node.FirstName = value
+		_node.FirstName = &value
 	}
 	if value, ok := uc.mutation.LastName(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
@@ -273,7 +273,7 @@ func (uc *UserCreate) createSpec() (*User, *sqlgraph.CreateSpec) {
 			Value:  value,
 			Column: user.FieldLastName,
 		})
-		_node.LastName = value
+		_node.LastName = &value
 	}
 	if value, ok := uc.mutation.DisplayName(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
@@ -281,7 +281,7 @@ func (uc *UserCreate) createSpec() (*User, *sqlgraph.CreateSpec) {
 			Value:  value,
 			Column: user.FieldDisplayName,
 		})
-		_node.DisplayName = value
+		_node.DisplayName = &value
 	}
 	if value, ok := uc.mutation.ImagePath(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
@@ -289,7 +289,7 @@ func (uc *UserCreate) createSpec() (*User, *sqlgraph.CreateSpec) {
 			Value:  value,
 			Column: user.FieldImagePath,
 		})
-		_node.ImagePath = value
+		_node.ImagePath = &value
 	}
 	if nodes := uc.mutation.RolesIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
