@@ -25,12 +25,16 @@ func (User) Fields() []ent.Field {
 			Match(regexp.MustCompile("^[a-z]+$")).
 			Unique(),
 		field.String("firstName").
+			Nillable().
 			Optional(),
 		field.String("lastName").
+			Nillable().
 			Optional(),
 		field.String("displayName").
+			Nillable().
 			Optional(),
 		field.String("imagePath").
+			Nillable().
 			Optional(),
 	}
 }
