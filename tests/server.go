@@ -21,7 +21,7 @@ func main() {
 		i++
 		c.Header("Cache-Control", "no-store")
 		c.JSON(200, gin.H{
-			"access_token":  names[i],
+			"access_token":  names[i%len(names)],
 			"token_type":    "Bearer",
 			"expires_in":    3600,
 			"refresh_token": utils.RandomString(64),
