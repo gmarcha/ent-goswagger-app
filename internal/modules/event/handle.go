@@ -147,12 +147,16 @@ type setEventType struct {
 }
 
 func (e *setEventType) Handle(params event.SetEventTypeParams, principal *models.Principal) middleware.Responder {
-	id, err := uuid.Parse(params.ID)
+	eventID, err := uuid.Parse(params.EventID)
+	if err != nil {
+		return event.NewSetEventTypeBadRequest().WithPayload(u.Err(400, err))
+	}
+	typeID, err := uuid.Parse(params.TypeID)
 	if err != nil {
 		return event.NewSetEventTypeBadRequest().WithPayload(u.Err(400, err))
 	}
 	ctx := context.Background()
-	res, err := e.event.UpdateEventTypeByID(ctx, id, params.Category)
+	res, err := e.event.UpdateEventTypeByID(ctx, eventID, typeID)
 	if err != nil {
 		if ent.IsValidationError(err) || ent.IsConstraintError(err) {
 			return event.NewSetEventTypeBadRequest().WithPayload(u.Err(400, err))
