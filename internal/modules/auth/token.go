@@ -22,8 +22,10 @@ func createToken(ctx context.Context, user *user.Service, accessTokenState strin
 	claims := &userClaims{
 		make([]string, 0, 8),
 		jwt.RegisteredClaims{
+			Issuer:    "tutor-server",
+			Subject:   login,
 			ExpiresAt: jwt.NewNumericDate(time.Now().Add(duration)),
-			Issuer:    u.Login,
+			IssuedAt:  jwt.NewNumericDate(time.Now()),
 		},
 	}
 

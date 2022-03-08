@@ -54,7 +54,7 @@ func authenticate(rdb *redis.Client, accessTokenState string) authenticator {
 			}
 		}
 
-		prin := models.Principal(claims.Issuer)
+		prin := models.Principal(claims.Subject)
 		return &prin, nil
 	})
 }

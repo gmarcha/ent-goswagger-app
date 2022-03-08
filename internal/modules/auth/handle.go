@@ -111,7 +111,7 @@ func (t *tokenInfo) Handle(params authentication.TokenInfoParams) middleware.Res
 
 	return authentication.NewTokenInfoOK().WithPayload(&models.TokenInfo{
 		ExpiresAt: strfmt.DateTime(claims.ExpiresAt.Time),
-		Login:     claims.Issuer,
+		Login:     claims.Subject,
 	})
 }
 
@@ -144,7 +144,7 @@ func (t *tokenRefresh) Handle(params authentication.TokenRefreshParams) middlewa
 
 	claims := token.Claims.(*userClaims)
 
-	oauthToken, err := retrieveOauthTokenFromStore(t.rdb, claims.Issuer)
+	oauthToken, err := retrieveOauthTokenFromStore(t.rdb, claims.Subject)
 	if err != nil {
 		return authentication.NewTokenRefreshInternalServerError().WithPayload(e.Err(500, err))
 	}
@@ -160,18 +160,18 @@ func (t *tokenRefresh) Handle(params authentication.TokenRefreshParams) middlewa
 		return authentication.NewTokenRefreshUnauthorized().WithPayload(e.Err(401, fmt.Errorf("invalid token")))
 	}
 
-	err = saveOauthTokenInStore(t.rdb, claims.Issuer, oauthToken)
+	err = saveOauthTokenInStore(t.rdb, claims.Subject, oauthToken)
 	if err != nil {
 		return authentication.NewTokenRefreshInternalServerError().WithPayload(e.Err(500, err))
 	}
 
 	// Create and return a JSON web token to authenticate API consumers.
-	accessToken, err := createToken(ctx, t.user, t.accessTokenState, claims.Issuer, t.accessTokenDuration)
+	accessToken, err := createToken(ctx, t.user, t.accessTokenState, claims.Subject, t.accessTokenDuration)
 	if err != nil {
 		return authentication.NewTokenRefreshInternalServerError().WithPayload(e.Err(500, err))
 	}
 
-	refreshToken, err := createToken(ctx, t.user, t.refreshTokenState, claims.Issuer, t.refreshTokenDuration)
+	refreshToken, err := createToken(ctx, t.user, t.refreshTokenState, claims.Subject, t.refreshTokenDuration)
 	if err != nil {
 		return authentication.NewTokenRefreshInternalServerError().WithPayload(e.Err(500, err))
 	}
