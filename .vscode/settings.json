@@ -1,0 +1,6 @@
+{
+    "gitlens.currentLine.enabled": false,
+    "gitlens.codeLens.scopes": [
+        "document"
+    ]
+}
