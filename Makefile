@@ -43,10 +43,10 @@ build:
 			$(DOCKER-COMPOSE) -f $(DOCKER-COMPOSE-PATH) build --build-arg PORT=$(PORT)
 
 up:
-			$(DOCKER-COMPOSE) -f $(DOCKER-COMPOSE-PATH) up
+			$(DOCKER-COMPOSE) -f $(DOCKER-COMPOSE-PATH) up -d --remove-orphans
 
 down:
-			$(DOCKER-COMPOSE) -f $(DOCKER-COMPOSE-PATH) down --remove-orphans
+			$(DOCKER-COMPOSE) -f $(DOCKER-COMPOSE-PATH) down
 
 delete:
 			$(DOCKER-COMPOSE) -f $(DOCKER-COMPOSE-PATH) down --volumes
