@@ -77,8 +77,8 @@ user | Read users
 | GET | /v2/events | [list event](#list-event) | List events |
 | GET | /v2/events/{id}/users | [list event users](#list-event-users) | List event users |
 | GET | /v2/events/{id} | [read event](#read-event) | Read event |
-| POST | /v2/events/{id}/types | [set event type](#set-event-type) | Set event type |
-| PUT | /v2/events/{id} | [update event](#update-event) | Update event |
+| PATCH | /v2/events/{eventID}/types/{typeID} | [set event type](#set-event-type) | Set event type |
+| PATCH | /v2/events/{id} | [update event](#update-event) | Update event |
   
 
 
@@ -91,7 +91,7 @@ user | Read users
 | GET | /v2/events/types | [list type](#list-type) | List event types |
 | GET | /v2/events/types/{id}/events | [list type events](#list-type-events) | List event type events |
 | GET | /v2/events/types/{id} | [read type](#read-type) | Read event type |
-| POST | /v2/events/types/{id} | [update type](#update-type) | Update event type |
+| PATCH | /v2/events/types/{id} | [update type](#update-type) | Update event type |
   
 
 
@@ -126,8 +126,8 @@ user | Read users
 | POST | /v2/users/{userId}/events/{eventId} | [subscribe user](#subscribe-user) | Subscribe user |
 | DELETE | /v2/users/me/events/{id} | [unsubscribe me](#unsubscribe-me) | Unsubscribe authenticated user |
 | DELETE | /v2/users/{userId}/events/{eventId} | [unsubscribe user](#unsubscribe-user) | Unsubscribe user |
-| PUT | /v2/users/me | [update me](#update-me) | Update authenticated user |
-| PUT | /v2/users/{id} | [update user](#update-user) | Update user |
+| PATCH | /v2/users/me | [update me](#update-me) | Update authenticated user |
+| PATCH | /v2/users/{id} | [update user](#update-user) | Update user |
   
 
 
@@ -2223,7 +2223,7 @@ Status: Internal Server Error
 ### <span id="set-event-type"></span> Set event type (*setEventType*)
 
 ```
-POST /v2/events/{id}/types
+PATCH /v2/events/{eventID}/types/{typeID}
 ```
 
 Set event type value.
@@ -2235,8 +2235,8 @@ Set event type value.
 
 | Name | Source | Type | Go type | Separator | Required | Default | Description |
 |------|--------|------|---------|-----------| :------: |---------|-------------|
-| id | `path` | string | `string` |  | ✓ |  | Event ID. |
-| category | `body` | [EventType](#event-type) | `ent.EventType` | | ✓ | | Event category. |
+| eventID | `path` | string | `string` |  | ✓ |  | Event ID. |
+| typeID | `path` | string | `string` |  | ✓ |  | Category ID. |
 
 #### All responses
 | Code | Status | Description | Has headers | Schema |
@@ -2258,7 +2258,7 @@ Status: OK
    
   
 
-[EventType](#event-type)
+[Event](#event)
 
 ##### <span id="set-event-type-400"></span> 400 - Bad request
 Status: Bad Request
@@ -2505,7 +2505,7 @@ Status: OK
    
   
 
-[TokenInfoOKBody](#token-info-o-k-body)
+[TokenInfo](#token-info)
 
 ##### <span id="token-info-401"></span> 401 - Unauthorized
 Status: Unauthorized
@@ -2524,24 +2524,6 @@ Status: Internal Server Error
   
 
 [Error](#error)
-
-###### Inlined models
-
-**<span id="token-info-o-k-body"></span> TokenInfoOKBody**
-
-
-  
-
-
-
-**Properties**
-
-| Name | Type | Go type | Required | Default | Description | Example |
-|------|------|---------|:--------:| ------- |-------------|---------|
-| expiresAt | date-time (formatted string)| `strfmt.DateTime` |  | |  |  |
-| login | string| `string` |  | | username |  |
-
-
 
 ### <span id="token-refresh"></span> Refresh token (*tokenRefresh*)
 
@@ -2758,7 +2740,7 @@ Status: Internal Server Error
 ### <span id="update-event"></span> Update event (*updateEvent*)
 
 ```
-PUT /v2/events/{id}
+PATCH /v2/events/{id}
 ```
 
 Update an event by ID.
@@ -2843,7 +2825,7 @@ Status: Internal Server Error
 ### <span id="update-me"></span> Update authenticated user (*updateMe*)
 
 ```
-PUT /v2/users/me
+PATCH /v2/users/me
 ```
 
 Update the authenticated user.
@@ -2907,7 +2889,7 @@ Status: Internal Server Error
 ### <span id="update-type"></span> Update event type (*updateType*)
 
 ```
-POST /v2/events/types/{id}
+PATCH /v2/events/types/{id}
 ```
 
 Update an event category.
@@ -2992,7 +2974,7 @@ Status: Internal Server Error
 ### <span id="update-user"></span> Update user (*updateUser*)
 
 ```
-PUT /v2/users/{id}
+PATCH /v2/users/{id}
 ```
 
 Update an user by ID.
@@ -3106,6 +3088,22 @@ Status: Internal Server Error
 |------|------|---------|:--------:| ------- |-------------|---------|
 | accessToken | string| `string` |  | |  |  |
 | refreshToken | string| `string` |  | |  |  |
+
+
+
+### <span id="token-info"></span> TokenInfo
+
+
+  
+
+
+
+**Properties**
+
+| Name | Type | Go type | Required | Default | Description | Example |
+|------|------|---------|:--------:| ------- |-------------|---------|
+| expiresAt | date-time (formatted string)| `strfmt.DateTime` |  | |  |  |
+| login | string| `string` |  | | username |  |
 
 
 
