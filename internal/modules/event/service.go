@@ -108,17 +108,17 @@ func (s *Service) ReadEventTypeByID(ctx context.Context, id uuid.UUID) (*ent.Eve
 	return event.Edges.Category, nil
 }
 
-func (s *Service) UpdateEventTypeByID(ctx context.Context, id uuid.UUID, category *ent.EventType) (*ent.EventType, error) {
+func (s *Service) UpdateEventTypeByID(ctx context.Context, eventID uuid.UUID, typeID uuid.UUID) (*ent.Event, error) {
 
-	event, err := s.ReadEventByID(ctx, id)
+	event, err := s.ReadEventByID(ctx, eventID)
 	if err != nil {
 		return nil, err
 	}
-	res, err := event.Update().SetCategory(category).Save(ctx)
+	res, err := event.Update().SetCategoryID(typeID).Save(ctx)
 	if err != nil {
 		return nil, err
 	}
-	return res.Edges.Category, err
+	return res, err
 }
 
 func setEvent(m *ent.EventMutation, event *ent.Event) {
