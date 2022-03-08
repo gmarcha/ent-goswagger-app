@@ -191,7 +191,7 @@ paths:
           $ref: '#/responses/404'
         "500":
           $ref: '#/responses/500'
-    put:
+    patch:
       summary: Update event
       description: Update an event by ID.
       tags:
@@ -315,7 +315,19 @@ paths:
           $ref: '#/responses/404'
         "500":
           $ref: '#/responses/500'
-    post:
+  /events/{eventID}/types/{typeID}:
+    parameters:
+      - in: path
+        name: eventID
+        required: true
+        description: Event ID.
+        type: string
+      - in: path
+        name: typeID
+        required: true
+        description: Category ID.
+        type: string
+    patch:
       summary: Set event type
       description: Set event type value.
       tags:
@@ -326,18 +338,11 @@ paths:
             - public
             - event
             - event:write
-      parameters:
-        - in: body
-          name: category
-          required: true
-          description: Event category.
-          schema:
-            $ref: '#/definitions/EventType'
       responses:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/EventType'
+            $ref: '#/definitions/Event'
         "400":
           $ref: '#/responses/400'
         "401":
@@ -435,7 +440,7 @@ paths:
           $ref: '#/responses/404'
         "500":
           $ref: '#/responses/500'
-    post:
+    patch:
       summary: Update event type
       description: Update an event category.
       tags:
@@ -602,7 +607,7 @@ paths:
           $ref: '#/responses/401'
         "500":
           $ref: '#/responses/500'
-    put:
+    patch:
       summary: Update authenticated user
       description: Update the authenticated user.
       tags:
@@ -787,7 +792,7 @@ paths:
           $ref: '#/responses/404'
         "500":
           $ref: '#/responses/500'
-    put:
+    patch:
       summary: Update user
       description: Update an user by ID.
       tags:
