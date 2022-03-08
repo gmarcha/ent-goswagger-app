@@ -31,7 +31,7 @@ func NewUpdateEvent(ctx *middleware.Context, handler UpdateEventHandler) *Update
 	return &UpdateEvent{Context: ctx, Handler: handler}
 }
 
-/* UpdateEvent swagger:route PUT /events/{id} Event updateEvent
+/* UpdateEvent swagger:route PATCH /events/{id} Event updateEvent
 
 Update event
 

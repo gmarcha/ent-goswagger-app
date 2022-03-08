@@ -366,7 +366,44 @@ func init() {
           }
         }
       },
-      "put": {
+      "delete": {
+        "security": [
+          {
+            "OAuth2": [
+              "public",
+              "event",
+              "event:write"
+            ]
+          }
+        ],
+        "description": "Update an event category.",
+        "tags": [
+          "EventType"
+        ],
+        "summary": "Delete event type",
+        "operationId": "deleteType",
+        "responses": {
+          "204": {
+            "description": "No content"
+          },
+          "400": {
+            "$ref": "#/responses/400"
+          },
+          "401": {
+            "$ref": "#/responses/401"
+          },
+          "403": {
+            "$ref": "#/responses/403"
+          },
+          "404": {
+            "$ref": "#/responses/404"
+          },
+          "500": {
+            "$ref": "#/responses/500"
+          }
+        }
+      },
+      "patch": {
         "security": [
           {
             "OAuth2": [
@@ -399,43 +436,6 @@ func init() {
             "schema": {
               "$ref": "#/definitions/EventType"
             }
-          },
-          "400": {
-            "$ref": "#/responses/400"
-          },
-          "401": {
-            "$ref": "#/responses/401"
-          },
-          "403": {
-            "$ref": "#/responses/403"
-          },
-          "404": {
-            "$ref": "#/responses/404"
-          },
-          "500": {
-            "$ref": "#/responses/500"
-          }
-        }
-      },
-      "delete": {
-        "security": [
-          {
-            "OAuth2": [
-              "public",
-              "event",
-              "event:write"
-            ]
-          }
-        ],
-        "description": "Update an event category.",
-        "tags": [
-          "EventType"
-        ],
-        "summary": "Delete event type",
-        "operationId": "deleteType",
-        "responses": {
-          "204": {
-            "description": "No content"
           },
           "400": {
             "$ref": "#/responses/400"
@@ -517,22 +517,23 @@ func init() {
         }
       ]
     },
-    "/events/{id}": {
-      "get": {
+    "/events/{eventID}/types/{typeID}": {
+      "patch": {
         "security": [
           {
             "OAuth2": [
               "public",
-              "event"
+              "event",
+              "event:write"
             ]
           }
         ],
-        "description": "Read an event by ID.",
+        "description": "Set event type value.",
         "tags": [
           "Event"
         ],
-        "summary": "Read event",
-        "operationId": "readEvent",
+        "summary": "Set event type",
+        "operationId": "setEventType",
         "responses": {
           "200": {
             "description": "OK",
@@ -557,33 +558,39 @@ func init() {
           }
         }
       },
-      "put": {
+      "parameters": [
+        {
+          "type": "string",
+          "description": "Event ID.",
+          "name": "eventID",
+          "in": "path",
+          "required": true
+        },
+        {
+          "type": "string",
+          "description": "Category ID.",
+          "name": "typeID",
+          "in": "path",
+          "required": true
+        }
+      ]
+    },
+    "/events/{id}": {
+      "get": {
         "security": [
           {
             "OAuth2": [
               "public",
-              "event",
-              "event:write"
+              "event"
             ]
           }
         ],
-        "description": "Update an event by ID.",
+        "description": "Read an event by ID.",
         "tags": [
           "Event"
         ],
-        "summary": "Update event",
-        "operationId": "updateEvent",
-        "parameters": [
-          {
-            "description": "Event to update.",
-            "name": "event",
-            "in": "body",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/Event"
-            }
-          }
-        ],
+        "summary": "Read event",
+        "operationId": "readEvent",
         "responses": {
           "200": {
             "description": "OK",
@@ -645,6 +652,57 @@ func init() {
           }
         }
       },
+      "patch": {
+        "security": [
+          {
+            "OAuth2": [
+              "public",
+              "event",
+              "event:write"
+            ]
+          }
+        ],
+        "description": "Update an event by ID.",
+        "tags": [
+          "Event"
+        ],
+        "summary": "Update event",
+        "operationId": "updateEvent",
+        "parameters": [
+          {
+            "description": "Event to update.",
+            "name": "event",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Event"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/Event"
+            }
+          },
+          "400": {
+            "$ref": "#/responses/400"
+          },
+          "401": {
+            "$ref": "#/responses/401"
+          },
+          "403": {
+            "$ref": "#/responses/403"
+          },
+          "404": {
+            "$ref": "#/responses/404"
+          },
+          "500": {
+            "$ref": "#/responses/500"
+          }
+        }
+      },
       "parameters": [
         {
           "type": "string",
@@ -671,57 +729,6 @@ func init() {
         ],
         "summary": "Get event type",
         "operationId": "getEventType",
-        "responses": {
-          "200": {
-            "description": "OK",
-            "schema": {
-              "$ref": "#/definitions/EventType"
-            }
-          },
-          "400": {
-            "$ref": "#/responses/400"
-          },
-          "401": {
-            "$ref": "#/responses/401"
-          },
-          "403": {
-            "$ref": "#/responses/403"
-          },
-          "404": {
-            "$ref": "#/responses/404"
-          },
-          "500": {
-            "$ref": "#/responses/500"
-          }
-        }
-      },
-      "post": {
-        "security": [
-          {
-            "OAuth2": [
-              "public",
-              "event",
-              "event:write"
-            ]
-          }
-        ],
-        "description": "Set event type value.",
-        "tags": [
-          "Event"
-        ],
-        "summary": "Set event type",
-        "operationId": "setEventType",
-        "parameters": [
-          {
-            "description": "Event category.",
-            "name": "category",
-            "in": "body",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/EventType"
-            }
-          }
-        ],
         "responses": {
           "200": {
             "description": "OK",
@@ -930,7 +937,33 @@ func init() {
           }
         }
       },
-      "put": {
+      "delete": {
+        "security": [
+          {
+            "OAuth2": [
+              "public"
+            ]
+          }
+        ],
+        "description": "Delete the authenticated user.",
+        "tags": [
+          "User"
+        ],
+        "summary": "Delete authenticated user",
+        "operationId": "deleteMe",
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "401": {
+            "$ref": "#/responses/401"
+          },
+          "500": {
+            "$ref": "#/responses/500"
+          }
+        }
+      },
+      "patch": {
         "security": [
           {
             "OAuth2": [
@@ -964,32 +997,6 @@ func init() {
           },
           "400": {
             "$ref": "#/responses/400"
-          },
-          "401": {
-            "$ref": "#/responses/401"
-          },
-          "500": {
-            "$ref": "#/responses/500"
-          }
-        }
-      },
-      "delete": {
-        "security": [
-          {
-            "OAuth2": [
-              "public"
-            ]
-          }
-        ],
-        "description": "Delete the authenticated user.",
-        "tags": [
-          "User"
-        ],
-        "summary": "Delete authenticated user",
-        "operationId": "deleteMe",
-        "responses": {
-          "204": {
-            "description": "No Content"
           },
           "401": {
             "$ref": "#/responses/401"
@@ -1210,7 +1217,44 @@ func init() {
           }
         }
       },
-      "put": {
+      "delete": {
+        "security": [
+          {
+            "OAuth2": [
+              "public",
+              "user",
+              "user:write"
+            ]
+          }
+        ],
+        "description": "Delete an user by ID.",
+        "tags": [
+          "User"
+        ],
+        "summary": "Delete user",
+        "operationId": "deleteUser",
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "400": {
+            "$ref": "#/responses/400"
+          },
+          "401": {
+            "$ref": "#/responses/401"
+          },
+          "403": {
+            "$ref": "#/responses/403"
+          },
+          "404": {
+            "$ref": "#/responses/404"
+          },
+          "500": {
+            "$ref": "#/responses/500"
+          }
+        }
+      },
+      "patch": {
         "security": [
           {
             "OAuth2": [
@@ -1243,43 +1287,6 @@ func init() {
             "schema": {
               "$ref": "#/definitions/User"
             }
-          },
-          "400": {
-            "$ref": "#/responses/400"
-          },
-          "401": {
-            "$ref": "#/responses/401"
-          },
-          "403": {
-            "$ref": "#/responses/403"
-          },
-          "404": {
-            "$ref": "#/responses/404"
-          },
-          "500": {
-            "$ref": "#/responses/500"
-          }
-        }
-      },
-      "delete": {
-        "security": [
-          {
-            "OAuth2": [
-              "public",
-              "user",
-              "user:write"
-            ]
-          }
-        ],
-        "description": "Delete an user by ID.",
-        "tags": [
-          "User"
-        ],
-        "summary": "Delete user",
-        "operationId": "deleteUser",
-        "responses": {
-          "204": {
-            "description": "No Content"
           },
           "400": {
             "$ref": "#/responses/400"
@@ -2503,7 +2510,7 @@ func init() {
           }
         }
       },
-      "put": {
+      "delete": {
         "security": [
           {
             "OAuth2": [
@@ -2517,25 +2524,11 @@ func init() {
         "tags": [
           "EventType"
         ],
-        "summary": "Update event type",
-        "operationId": "updateType",
-        "parameters": [
-          {
-            "description": "Event category to update.",
-            "name": "type",
-            "in": "body",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/EventType"
-            }
-          }
-        ],
+        "summary": "Delete event type",
+        "operationId": "deleteType",
         "responses": {
-          "200": {
-            "description": "OK",
-            "schema": {
-              "$ref": "#/definitions/EventType"
-            }
+          "204": {
+            "description": "No content"
           },
           "400": {
             "description": "Bad request",
@@ -2569,7 +2562,7 @@ func init() {
           }
         }
       },
-      "delete": {
+      "patch": {
         "security": [
           {
             "OAuth2": [
@@ -2583,11 +2576,25 @@ func init() {
         "tags": [
           "EventType"
         ],
-        "summary": "Delete event type",
-        "operationId": "deleteType",
+        "summary": "Update event type",
+        "operationId": "updateType",
+        "parameters": [
+          {
+            "description": "Event category to update.",
+            "name": "type",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/EventType"
+            }
+          }
+        ],
         "responses": {
-          "204": {
-            "description": "No content"
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/EventType"
+            }
           },
           "400": {
             "description": "Bad request",
@@ -2699,22 +2706,23 @@ func init() {
         }
       ]
     },
-    "/events/{id}": {
-      "get": {
+    "/events/{eventID}/types/{typeID}": {
+      "patch": {
         "security": [
           {
             "OAuth2": [
               "event",
+              "event:write",
               "public"
             ]
           }
         ],
-        "description": "Read an event by ID.",
+        "description": "Set event type value.",
         "tags": [
           "Event"
         ],
-        "summary": "Read event",
-        "operationId": "readEvent",
+        "summary": "Set event type",
+        "operationId": "setEventType",
         "responses": {
           "200": {
             "description": "OK",
@@ -2754,33 +2762,39 @@ func init() {
           }
         }
       },
-      "put": {
+      "parameters": [
+        {
+          "type": "string",
+          "description": "Event ID.",
+          "name": "eventID",
+          "in": "path",
+          "required": true
+        },
+        {
+          "type": "string",
+          "description": "Category ID.",
+          "name": "typeID",
+          "in": "path",
+          "required": true
+        }
+      ]
+    },
+    "/events/{id}": {
+      "get": {
         "security": [
           {
             "OAuth2": [
               "event",
-              "event:write",
               "public"
             ]
           }
         ],
-        "description": "Update an event by ID.",
+        "description": "Read an event by ID.",
         "tags": [
           "Event"
         ],
-        "summary": "Update event",
-        "operationId": "updateEvent",
-        "parameters": [
-          {
-            "description": "Event to update.",
-            "name": "event",
-            "in": "body",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/Event"
-            }
-          }
-        ],
+        "summary": "Read event",
+        "operationId": "readEvent",
         "responses": {
           "200": {
             "description": "OK",
@@ -2872,37 +2886,38 @@ func init() {
           }
         }
       },
-      "parameters": [
-        {
-          "type": "string",
-          "description": "Event ID.",
-          "name": "id",
-          "in": "path",
-          "required": true
-        }
-      ]
-    },
-    "/events/{id}/types": {
-      "get": {
+      "patch": {
         "security": [
           {
             "OAuth2": [
               "event",
+              "event:write",
               "public"
             ]
           }
         ],
-        "description": "Get event type value.",
+        "description": "Update an event by ID.",
         "tags": [
           "Event"
         ],
-        "summary": "Get event type",
-        "operationId": "getEventType",
+        "summary": "Update event",
+        "operationId": "updateEvent",
+        "parameters": [
+          {
+            "description": "Event to update.",
+            "name": "event",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Event"
+            }
+          }
+        ],
         "responses": {
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/EventType"
+              "$ref": "#/definitions/Event"
             }
           },
           "400": {
@@ -2937,33 +2952,32 @@ func init() {
           }
         }
       },
-      "post": {
+      "parameters": [
+        {
+          "type": "string",
+          "description": "Event ID.",
+          "name": "id",
+          "in": "path",
+          "required": true
+        }
+      ]
+    },
+    "/events/{id}/types": {
+      "get": {
         "security": [
           {
             "OAuth2": [
               "event",
-              "event:write",
               "public"
             ]
           }
         ],
-        "description": "Set event type value.",
+        "description": "Get event type value.",
         "tags": [
           "Event"
         ],
-        "summary": "Set event type",
-        "operationId": "setEventType",
-        "parameters": [
-          {
-            "description": "Event category.",
-            "name": "category",
-            "in": "body",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/EventType"
-            }
-          }
-        ],
+        "summary": "Get event type",
+        "operationId": "getEventType",
         "responses": {
           "200": {
             "description": "OK",
@@ -3226,7 +3240,39 @@ func init() {
           }
         }
       },
-      "put": {
+      "delete": {
+        "security": [
+          {
+            "OAuth2": [
+              "public"
+            ]
+          }
+        ],
+        "description": "Delete the authenticated user.",
+        "tags": [
+          "User"
+        ],
+        "summary": "Delete authenticated user",
+        "operationId": "deleteMe",
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "401": {
+            "description": "Unauthorized",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      },
+      "patch": {
         "security": [
           {
             "OAuth2": [
@@ -3263,38 +3309,6 @@ func init() {
             "schema": {
               "$ref": "#/definitions/Error"
             }
-          },
-          "401": {
-            "description": "Unauthorized",
-            "schema": {
-              "$ref": "#/definitions/Error"
-            }
-          },
-          "500": {
-            "description": "Internal Server Error",
-            "schema": {
-              "$ref": "#/definitions/Error"
-            }
-          }
-        }
-      },
-      "delete": {
-        "security": [
-          {
-            "OAuth2": [
-              "public"
-            ]
-          }
-        ],
-        "description": "Delete the authenticated user.",
-        "tags": [
-          "User"
-        ],
-        "summary": "Delete authenticated user",
-        "operationId": "deleteMe",
-        "responses": {
-          "204": {
-            "description": "No Content"
           },
           "401": {
             "description": "Unauthorized",
@@ -3584,7 +3598,7 @@ func init() {
           }
         }
       },
-      "put": {
+      "delete": {
         "security": [
           {
             "OAuth2": [
@@ -3594,29 +3608,15 @@ func init() {
             ]
           }
         ],
-        "description": "Update an user by ID.",
+        "description": "Delete an user by ID.",
         "tags": [
           "User"
         ],
-        "summary": "Update user",
-        "operationId": "updateUser",
-        "parameters": [
-          {
-            "description": "User to update.",
-            "name": "user",
-            "in": "body",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/User"
-            }
-          }
-        ],
+        "summary": "Delete user",
+        "operationId": "deleteUser",
         "responses": {
-          "200": {
-            "description": "OK",
-            "schema": {
-              "$ref": "#/definitions/User"
-            }
+          "204": {
+            "description": "No Content"
           },
           "400": {
             "description": "Bad request",
@@ -3650,7 +3650,7 @@ func init() {
           }
         }
       },
-      "delete": {
+      "patch": {
         "security": [
           {
             "OAuth2": [
@@ -3660,15 +3660,29 @@ func init() {
             ]
           }
         ],
-        "description": "Delete an user by ID.",
+        "description": "Update an user by ID.",
         "tags": [
           "User"
         ],
-        "summary": "Delete user",
-        "operationId": "deleteUser",
+        "summary": "Update user",
+        "operationId": "updateUser",
+        "parameters": [
+          {
+            "description": "User to update.",
+            "name": "user",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/User"
+            }
+          }
+        ],
         "responses": {
-          "204": {
-            "description": "No Content"
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/User"
+            }
           },
           "400": {
             "description": "Bad request",

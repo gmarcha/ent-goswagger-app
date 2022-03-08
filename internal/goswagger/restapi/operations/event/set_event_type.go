@@ -31,7 +31,7 @@ func NewSetEventType(ctx *middleware.Context, handler SetEventTypeHandler) *SetE
 	return &SetEventType{Context: ctx, Handler: handler}
 }
 
-/* SetEventType swagger:route POST /events/{id}/types Event setEventType
+/* SetEventType swagger:route PATCH /events/{eventID}/types/{typeID} Event setEventType
 
 Set event type
 

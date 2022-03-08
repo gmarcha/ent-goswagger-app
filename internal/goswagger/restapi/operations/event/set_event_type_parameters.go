@@ -6,17 +6,11 @@ package event
 // Editing this file might prove futile when you re-run the swagger generate command
 
 import (
-	"context"
-	"io"
 	"net/http"
 
 	"github.com/go-openapi/errors"
-	"github.com/go-openapi/runtime"
 	"github.com/go-openapi/runtime/middleware"
 	"github.com/go-openapi/strfmt"
-	"github.com/go-openapi/validate"
-
-	"github.com/gmarcha/ent-goswagger-app/internal/ent"
 )
 
 // NewSetEventTypeParams creates a new SetEventTypeParams object
@@ -36,16 +30,16 @@ type SetEventTypeParams struct {
 	// HTTP Request Object
 	HTTPRequest *http.Request `json:"-"`
 
-	/*Event category.
-	  Required: true
-	  In: body
-	*/
-	Category *ent.EventType
 	/*Event ID.
 	  Required: true
 	  In: path
 	*/
-	ID string
+	EventID string
+	/*Category ID.
+	  Required: true
+	  In: path
+	*/
+	TypeID string
 }
 
 // BindRequest both binds and validates a request, it assumes that complex things implement a Validatable(strfmt.Registry) error interface
@@ -57,36 +51,13 @@ func (o *SetEventTypeParams) BindRequest(r *http.Request, route *middleware.Matc
 
 	o.HTTPRequest = r
 
-	if runtime.HasBody(r) {
-		defer r.Body.Close()
-		var body ent.EventType
-		if err := route.Consumer.Consume(r.Body, &body); err != nil {
-			if err == io.EOF {
-				res = append(res, errors.Required("category", "body", ""))
-			} else {
-				res = append(res, errors.NewParseError("category", "body", "", err))
-			}
-		} else {
-			// validate body object
-			if err := body.Validate(route.Formats); err != nil {
-				res = append(res, err)
-			}
-
-			ctx := validate.WithOperationRequest(context.Background())
-			if err := body.ContextValidate(ctx, route.Formats); err != nil {
-				res = append(res, err)
-			}
-
-			if len(res) == 0 {
-				o.Category = &body
-			}
-		}
-	} else {
-		res = append(res, errors.Required("category", "body", ""))
+	rEventID, rhkEventID, _ := route.Params.GetOK("eventID")
+	if err := o.bindEventID(rEventID, rhkEventID, route.Formats); err != nil {
+		res = append(res, err)
 	}
 
-	rID, rhkID, _ := route.Params.GetOK("id")
-	if err := o.bindID(rID, rhkID, route.Formats); err != nil {
+	rTypeID, rhkTypeID, _ := route.Params.GetOK("typeID")
+	if err := o.bindTypeID(rTypeID, rhkTypeID, route.Formats); err != nil {
 		res = append(res, err)
 	}
 	if len(res) > 0 {
@@ -95,8 +66,8 @@ func (o *SetEventTypeParams) BindRequest(r *http.Request, route *middleware.Matc
 	return nil
 }
 
-// bindID binds and validates parameter ID from path.
-func (o *SetEventTypeParams) bindID(rawData []string, hasKey bool, formats strfmt.Registry) error {
+// bindEventID binds and validates parameter EventID from path.
+func (o *SetEventTypeParams) bindEventID(rawData []string, hasKey bool, formats strfmt.Registry) error {
 	var raw string
 	if len(rawData) > 0 {
 		raw = rawData[len(rawData)-1]
@@ -104,7 +75,21 @@ func (o *SetEventTypeParams) bindID(rawData []string, hasKey bool, formats strfm
 
 	// Required: true
 	// Parameter is provided by construction from the route
-	o.ID = raw
+	o.EventID = raw
+
+	return nil
+}
+
+// bindTypeID binds and validates parameter TypeID from path.
+func (o *SetEventTypeParams) bindTypeID(rawData []string, hasKey bool, formats strfmt.Registry) error {
+	var raw string
+	if len(rawData) > 0 {
+		raw = rawData[len(rawData)-1]
+	}
+
+	// Required: true
+	// Parameter is provided by construction from the route
+	o.TypeID = raw
 
 	return nil
 }

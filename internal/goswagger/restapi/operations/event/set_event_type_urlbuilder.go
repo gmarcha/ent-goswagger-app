@@ -14,7 +14,8 @@ import (
 
 // SetEventTypeURL generates an URL for the set event type operation
 type SetEventTypeURL struct {
-	ID string
+	EventID string
+	TypeID  string
 
 	_basePath string
 	// avoid unkeyed usage
@@ -40,13 +41,20 @@ func (o *SetEventTypeURL) SetBasePath(bp string) {
 func (o *SetEventTypeURL) Build() (*url.URL, error) {
 	var _result url.URL
 
-	var _path = "/events/{id}/types"
+	var _path = "/events/{eventID}/types/{typeID}"
 
-	id := o.ID
-	if id != "" {
-		_path = strings.Replace(_path, "{id}", id, -1)
+	eventID := o.EventID
+	if eventID != "" {
+		_path = strings.Replace(_path, "{eventID}", eventID, -1)
 	} else {
-		return nil, errors.New("id is required on SetEventTypeURL")
+		return nil, errors.New("eventId is required on SetEventTypeURL")
+	}
+
+	typeID := o.TypeID
+	if typeID != "" {
+		_path = strings.Replace(_path, "{typeID}", typeID, -1)
+	} else {
+		return nil, errors.New("typeId is required on SetEventTypeURL")
 	}
 
 	_basePath := o._basePath

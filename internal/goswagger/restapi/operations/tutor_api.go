@@ -713,10 +713,10 @@ func (o *TutorAPI) initHandlerCache() {
 		o.handlers["DELETE"] = make(map[string]http.Handler)
 	}
 	o.handlers["DELETE"]["/users/{id}/role/tutor"] = role.NewRemoveTutor(o.context, o.RoleRemoveTutorHandler)
-	if o.handlers["POST"] == nil {
-		o.handlers["POST"] = make(map[string]http.Handler)
+	if o.handlers["PATCH"] == nil {
+		o.handlers["PATCH"] = make(map[string]http.Handler)
 	}
-	o.handlers["POST"]["/events/{id}/types"] = event.NewSetEventType(o.context, o.EventSetEventTypeHandler)
+	o.handlers["PATCH"]["/events/{eventID}/types/{typeID}"] = event.NewSetEventType(o.context, o.EventSetEventTypeHandler)
 	if o.handlers["POST"] == nil {
 		o.handlers["POST"] = make(map[string]http.Handler)
 	}
@@ -741,22 +741,22 @@ func (o *TutorAPI) initHandlerCache() {
 		o.handlers["DELETE"] = make(map[string]http.Handler)
 	}
 	o.handlers["DELETE"]["/users/{userId}/events/{eventId}"] = user.NewUnsubscribeUser(o.context, o.UserUnsubscribeUserHandler)
-	if o.handlers["PUT"] == nil {
-		o.handlers["PUT"] = make(map[string]http.Handler)
+	if o.handlers["PATCH"] == nil {
+		o.handlers["PATCH"] = make(map[string]http.Handler)
 	}
-	o.handlers["PUT"]["/events/{id}"] = event.NewUpdateEvent(o.context, o.EventUpdateEventHandler)
-	if o.handlers["PUT"] == nil {
-		o.handlers["PUT"] = make(map[string]http.Handler)
+	o.handlers["PATCH"]["/events/{id}"] = event.NewUpdateEvent(o.context, o.EventUpdateEventHandler)
+	if o.handlers["PATCH"] == nil {
+		o.handlers["PATCH"] = make(map[string]http.Handler)
 	}
-	o.handlers["PUT"]["/users/me"] = user.NewUpdateMe(o.context, o.UserUpdateMeHandler)
-	if o.handlers["PUT"] == nil {
-		o.handlers["PUT"] = make(map[string]http.Handler)
+	o.handlers["PATCH"]["/users/me"] = user.NewUpdateMe(o.context, o.UserUpdateMeHandler)
+	if o.handlers["PATCH"] == nil {
+		o.handlers["PATCH"] = make(map[string]http.Handler)
 	}
-	o.handlers["PUT"]["/events/types/{id}"] = event_type.NewUpdateType(o.context, o.EventTypeUpdateTypeHandler)
-	if o.handlers["PUT"] == nil {
-		o.handlers["PUT"] = make(map[string]http.Handler)
+	o.handlers["PATCH"]["/events/types/{id}"] = event_type.NewUpdateType(o.context, o.EventTypeUpdateTypeHandler)
+	if o.handlers["PATCH"] == nil {
+		o.handlers["PATCH"] = make(map[string]http.Handler)
 	}
-	o.handlers["PUT"]["/users/{id}"] = user.NewUpdateUser(o.context, o.UserUpdateUserHandler)
+	o.handlers["PATCH"]["/users/{id}"] = user.NewUpdateUser(o.context, o.UserUpdateUserHandler)
 }
 
 // Serve creates a http handler to serve the API over HTTP

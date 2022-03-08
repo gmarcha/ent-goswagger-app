@@ -31,7 +31,7 @@ func NewUpdateType(ctx *middleware.Context, handler UpdateTypeHandler) *UpdateTy
 	return &UpdateType{Context: ctx, Handler: handler}
 }
 
-/* UpdateType swagger:route PUT /events/types/{id} EventType updateType
+/* UpdateType swagger:route PATCH /events/types/{id} EventType updateType
 
 Update event type
 

@@ -26,7 +26,7 @@ type SetEventTypeOK struct {
 	/*
 	  In: Body
 	*/
-	Payload *ent.EventType `json:"body,omitempty"`
+	Payload *ent.Event `json:"body,omitempty"`
 }
 
 // NewSetEventTypeOK creates SetEventTypeOK with default headers values
@@ -36,13 +36,13 @@ func NewSetEventTypeOK() *SetEventTypeOK {
 }
 
 // WithPayload adds the payload to the set event type o k response
-func (o *SetEventTypeOK) WithPayload(payload *ent.EventType) *SetEventTypeOK {
+func (o *SetEventTypeOK) WithPayload(payload *ent.Event) *SetEventTypeOK {
 	o.Payload = payload
 	return o
 }
 
 // SetPayload sets the payload to the set event type o k response
-func (o *SetEventTypeOK) SetPayload(payload *ent.EventType) {
+func (o *SetEventTypeOK) SetPayload(payload *ent.Event) {
 	o.Payload = payload
 }
 
