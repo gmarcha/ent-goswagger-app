@@ -32,6 +32,6 @@ func createTestUsers(db *ent.Client) {
 
 	test, _ := db.EventType.Create().SetName("test").SetColor("test").Save(ctx)
 	if test != nil {
-		db.Event.Create().SetName("test").SetStartAt(startAt).SetEndAt(endAt).SetCategoryID(test.ID).Save(ctx)
+		_, _ = db.Event.Create().SetName("test").SetStartAt(startAt).SetEndAt(endAt).SetCategoryID(test.ID).Save(ctx)
 	}
 }
