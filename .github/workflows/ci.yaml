@@ -21,8 +21,6 @@ jobs:
       - uses: actions/setup-go@v2
       - name: build
         run: make ENV=ci
-      - name: test
-        run: docker ps -a
       - name: integration-test
         run: make test
   lint:
