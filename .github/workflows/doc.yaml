@@ -1,0 +1,46 @@
+name: Documentation
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'docs/swagger.yaml'
+  pull_request:
+    branches:
+      - main
+    paths:
+      - 'docs/swagger.yaml'
+
+jobs:
+  documentation:
+    name: Generate documentation
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-go@v2
+      - name: Install dependencies
+        run: |
+          go install github.com/go-swagger/go-swagger/cmd/swagger@latest
+      - name: Validate swagger specification
+        run: make validate
+      - name: Generate markdown documentation
+        run: make markdown
+      - name: Commit files
+        id: commit
+        run: |
+          git pull
+          git add docs/swagger.md
+          if [[ -z "$(git status --porcelain)" ]]; then
+            echo "::set-output name=push::false"
+          else
+            git config --local user.email "$(git log --format='%ae' HEAD^!)"
+            git config --local user.name "$(git log --format='%an' HEAD^!)"
+            git commit -m "update docs: auto-commit to update markdown from github-actions"
+            echo "::set-output name=push::true"
+          fi
+      - name: Push changes
+        if: steps.commit.outputs.push == 'true'
+        uses: ad-m/github-push-action@master
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
