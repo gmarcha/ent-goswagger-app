@@ -1,13 +1,12 @@
 #! /bin/bash
 
-# while ! echo exit | nc localhost $1 | grep HTTP > /dev/null; do
-#     sleep 5
-# done
-
-until $(curl --output /dev/null --silent --head http://localhost:$1); do
-    curl -v http://localhost:5000/
+while ! echo exit | nc localhost $1 | grep HTTP > /dev/null; do
     sleep 5
 done
+
+# until $(curl --output /dev/null --silent --head http://localhost:$1); do
+#     sleep 5
+# done
 
 echo 'Server up'
 
