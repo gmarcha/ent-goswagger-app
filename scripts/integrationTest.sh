@@ -5,7 +5,7 @@
 # done
 
 until $(curl --output /dev/null --silent --head http://localhost:$1); do
-    docker-compose -p tutor -f ./config/docker-compose.yaml -f ./config/docker-compose.ci.yaml logs goswagger
+    docker-compose -p tutor -f ./config/docker-compose.yaml -f ./config/docker-compose.ci.yaml --env-file ./config/.env.ci logs goswagger
     sleep 5
 done
 
