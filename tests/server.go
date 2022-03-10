@@ -2,7 +2,6 @@ package main
 
 import (
 	"net/http"
-	"strings"
 
 	"github.com/gin-gonic/gin"
 	"github.com/gmarcha/ent-goswagger-app/internal/utils"
@@ -18,10 +17,9 @@ func main() {
 		c.Redirect(http.StatusFound, "http://localhost:5000/v2/auth/callback?code=42&state="+c.Query("state"))
 	})
 	r.POST("/oauth/token", func(c *gin.Context) {
-		i++
 		c.Header("Cache-Control", "no-store")
 		c.JSON(200, gin.H{
-			"access_token":  names[i%len(names)],
+			"access_token":  utils.RandomString(64),
 			"token_type":    "Bearer",
 			"expires_in":    3600,
 			"refresh_token": utils.RandomString(64),
@@ -29,14 +27,13 @@ func main() {
 		})
 	})
 	r.GET("/v2/me", func(c *gin.Context) {
-		bearerToken := c.Request.Header.Get("Authorization")
-		token := strings.Split(bearerToken, " ")[1]
+		i++
 		c.JSON(200, gin.H{
-			"login":      token,
-			"first_name": "melissa",
-			"last_name":  "melissa",
-			"image_url":  "none",
+			"login":      names[i%len(names)],
+			"first_name": "test",
+			"last_name":  "test",
+			"image_url":  "test",
 		})
 	})
-	_ = r.Run("0.0.0.0:8080") // listen and serve on 0.0.0.0:8080 (for windows "localhost:8080")
+	_ = r.Run("0.0.0.0:8080")
 }
