@@ -2,83 +2,68 @@ version: "3.9"
 
 services:
   postgres:
-    restart: "unless-stopped"
     image: postgres:alpine
-    env_file:
-      - .env
     volumes:
       - postgres-volume:/var/lib/postgresql/data/
-      - ./postgres/init.sql:/docker-entrypoint-initdb.d/init.sql
-  pgadmin:
+      # - ./postgres/init.sql:/docker-entrypoint-initdb.d/init.sql
+    environment:
+      POSTGRES_HOST: ${POSTGRES_HOST}
+      POSTGRES_PORT: ${POSTGRES_PORT}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_SSLMODE: ${POSTGRES_SSLMODE}
     restart: "unless-stopped"
-    image: dpage/pgadmin4
-    depends_on:
-      - postgres
-    ports:
-      - "${PGADMIN_LISTEN_PORT}:${PGADMIN_LISTEN_PORT}"
-    env_file:
-      - .env
-    volumes:
-      - pgadmin-volume:/var/lib/pgadmin
-      - ./pgadmin/servers.json:/pgadmin4/servers.json
-    entrypoint: >
-      /bin/sh -c "
-      echo $${POSTGRES_HOST}:$${POSTGRES_PORT}:$${POSTGRES_DB}:$${POSTGRES_USER}:$${POSTGRES_PASSWORD} > /tmp/pgpass;
-      chmod 600 /tmp/pgpass;
-      /entrypoint.sh
-      "
   redis:
-    restart: "unless-stopped"
     image: redis:alpine
     command: redis-server --save 60 1 --loglevel warning --requirepass ${REDIS_PASSWORD}
-    env_file:
-      - .env
-    sysctls:
-      net.core.somaxconn: 1024
     volumes:
       - redis-volume:/data
-      - ./redis/sysctl.conf:/etc/sysctl.conf
-  goswagger:
+      # - ./redis/sysctl.conf:/etc/sysctl.conf
+    environment:
+      REDIS_HOST: ${REDIS_HOST}
+      REDIS_PORT: ${REDIS_PORT}
+      REDIS_PASSWORD: ${REDIS_PASSWORD}
+    sysctls:
+      net.core.somaxconn: 1024
     restart: "unless-stopped"
+  goswagger:
     build:
       context: ../
       dockerfile: ./config/Dockerfile
     image: goswagger
+    volumes:
+      - module-volume:/go/pkg/mod/cache/download
+      - build-volume:/root/.cache/go-build
+      - ..:/go/src/github.com/gmarcha/ent-goswagger-app
+    ports:
+      - "${PORT}:${PORT}"
+    environment:
+      HOST: ${HOST}
+      PORT: ${PORT}
+      REFRESH_TOKEN_STATE: ${REFRESH_TOKEN_STATE}
+      POSTGRES_HOST: ${POSTGRES_HOST}
+      POSTGRES_PORT: ${POSTGRES_PORT}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_SSLMODE: ${POSTGRES_SSLMODE}
+      REDIS_HOST: ${REDIS_HOST}
+      REDIS_PORT: ${REDIS_PORT}
+      REDIS_PASSWORD: ${REDIS_PASSWORD}
+      API_CLIENT_ID: ${API_CLIENT_ID}
+      API_CLIENT_SECRET: ${API_CLIENT_SECRET}
+      API_AUTH_URL: ${API_AUTH_URL}
+      API_TOKEN_URL: ${API_TOKEN_URL}
+      API_USERINFO_URL: ${API_USERINFO_URL}
+      API_CALLBACK_URL: ${API_CALLBACK_URL}
+    restart: "unless-stopped"
     depends_on:
       - postgres
       - redis
-    ports:
-      - "${PORT}:${PORT}"
-    env_file:
-      - .env
-    volumes:
-      - module-volume:/go/pkg/mod/cache/download
-      - build-volume:/root/.cache/go-build
-      - ..:/go/src/github.com/gmarcha/ent-goswagger-app
-  test:
-    restart: "unless-stopped"
-    image: golang:alpine
-    working_dir: /go/src/github.com/gmarcha/ent-goswagger-app
-    ports:
-      - "8080:8080"
-    environment:
-      - "POSTGRES_HOST=${POSTGRES_HOST}"
-      - "POSTGRES_PORT=${POSTGRES_PORT}"
-      - "POSTGRES_USER=${POSTGRES_USER}"
-      - "POSTGRES_PASSWORD=${POSTGRES_PASSWORD}"
-      - "POSTGRES_DB=${POSTGRES_DB}"
-      - "POSTGRES_SSLMODE=${POSTGRES_SSLMODE}"
-    command: >
-      go run tests/server.go
-    volumes:
-      - module-volume:/go/pkg/mod/cache/download
-      - build-volume:/root/.cache/go-build
-      - ..:/go/src/github.com/gmarcha/ent-goswagger-app
 
 volumes:
   postgres-volume:
-  pgadmin-volume:
   redis-volume:
   module-volume:
   build-volume:
-    # https://pkg.go.dev/cmd/go#hdr-Build_and_test_caching
