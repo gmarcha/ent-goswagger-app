@@ -1,0 +1,15 @@
+version: "3.9"
+
+services:
+  mock:
+    restart: "unless-stopped"
+    image: golang:alpine
+    working_dir: /go/src/github.com/gmarcha/ent-goswagger-app
+    ports:
+      - "8080:8080"
+    command: >
+      go run tests/server.go
+    volumes:
+      - module-volume:/go/pkg/mod/cache/download
+      - build-volume:/root/.cache/go-build
+      - ..:/go/src/github.com/gmarcha/ent-goswagger-app
