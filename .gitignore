@@ -15,8 +15,9 @@
 # vendor/
 
 # Specific to project
-.env
-config/pgadmin/servers.json
-42user.yaml
+.env.dev
+.env.prod
+servers.json
+
 user.yaml
-createUser.sh
+postgres.log
