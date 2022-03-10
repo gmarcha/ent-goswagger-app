@@ -14,7 +14,7 @@ A web API written in Go programming language with entgo and goswagger.
 
 - A Go [workspace](https://go.dev/doc/gopath_code), with Make[^1] and [Go Swagger](https://goswagger.io/install.html) already setup.
 - Install [Docker](https://docs.docker.com/get-docker/) and [Docker Compose](https://docs.docker.com/compose/install/).
-- Create `./config/.env.dev` file next to `./config/.env.sample` file (with valid credentials).
+- Create `./config/.env.dev` file next to `./config/.env.sample` file with valid credentials (or `./config/.env.prod` for deploying purpose).
 
 ## Usage
 
