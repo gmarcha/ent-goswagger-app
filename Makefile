@@ -67,10 +67,11 @@ reload:
 
 ######################################################################################################
 #
-#	API rules:
+#	API rules (used internally by compose or scripts):
 #
 #	- `install` performs API installation in GOPATH (i.e. /go with default value in container);
-#	- `run` launches installed server with host and port defined in environment.
+#	- `run` launches installed server with host and port defined in environment;
+#	- `exec` executes a SQL script received from stdin in database container
 #
 #		Note: 0.0.0.0 interface is required for server to be reachable
 #			  from outside the container.
@@ -118,6 +119,7 @@ gen.swag:
 #
 #	Continuous Integration (CI) rules:
 #
+#	- `test` waits server response to run integration test suite;
 #	- `validate` validates a swagger specification against 2.0 version;
 #	- `markdown` generates a markdown description of a swagger specification;
 #	- `tree` prints repository architecture with a tree representation.
