@@ -5,6 +5,7 @@
 # done
 
 until $(curl --output /dev/null --silent --head http://localhost:$1); do
+    docker-compose -p tutor logs goswagger
     sleep 5
 done
 
