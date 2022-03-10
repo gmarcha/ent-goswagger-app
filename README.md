@@ -14,7 +14,7 @@ A web API written in Go programming language with entgo and goswagger.
 
 - A Go [workspace](https://go.dev/doc/gopath_code), with Make[^1] and [Go Swagger](https://goswagger.io/install.html) already setup.
 - Install [Docker](https://docs.docker.com/get-docker/) and [Docker Compose](https://docs.docker.com/compose/install/).
-- Create `./config/.env` file next to `./config/.env.sample` file (with valid credentials).
+- Create `./config/.env.dev` file next to `./config/.env.sample` file (with valid credentials).
 
 ## Usage
 
@@ -47,6 +47,23 @@ Repository architecture follows some conventions:
 
 - `/cmd/` contains our applications, i.e. main packages responsible to launch them
     (it is a generated file in our case, but it won't be overwritten by further generation so it can be edited);
+
+- `/config/` contains all our configuration files:
+  - an environment file for each workflow: `.env.dev`, `.env.ci` and `.env.prod`;
+  - a swagger specification (`spec.yaml`) used to configure our API route paths and
+      our authentication model (data model definitions should be leave empty, they are added
+      in an other swagger specification which serves as a model to code generation and as a
+      documentation);
+  - a `Dockerfile` defining an image to our API (based on golang:alpine);
+  - a `docker-compose.yaml` for each workflow, responsible to launch needed application services
+      with their defined environment;
+
+- `/docs/` contains documentation about the project:
+  - a generated swagger specification (`swagger.yaml`) used to code generation and
+      documentation purposes (do not edit);
+  - a markdown conversion of the specification (`swagger.md`), a file tree of the project and
+      a workflow explaining the API processes;
+
 - `/internal/` contains all other Go packages used in our applications:
   - `/modules/` contains packages defining our API logic, i.e. our data services,
       route handlers initialisation and definition of them, grouped in a logical way
@@ -60,22 +77,10 @@ Repository architecture follows some conventions:
       module initialisation must be written in `/goswagger/restapi/configure_tutor.go`);
   - `/utils/` contains various useful packages.
 
-- `/config/` contains all our configuration files:
-  - an `.env` file used to configure all our environment variables;
-  - a swagger specification (`spec.yaml`) used to configure our API route paths and
-      our authentication model (data model definitions should be leave empty, they are added
-      in an other swagger specification which serves as a model to code generation and as a
-      documentation);
-  - a `Dockerfile` defining an image to our API (based on golang:alpine);
-  - a `docker-compose.yaml` used to launch our application with a postgres database and pgadmin tool,
-      and their other related configuration files;
-- `/docs/` contains documentation about the project:
-  - a generated swagger specification (`swagger.yaml`) used to code generation and
-      documentation purposes (do not edit);
-  - a markdown conversion of the specification (`swagger.md`), a file tree of the project and
-      a workflow explaining the API processes;
-- `/scripts/` contains scripts used by `Makefile` to generate documentation or
-    to setup a directory.
+- `/scripts/` contains scripts used by `Makefile` to run tests, to generate documentation or
+    to setup a directory;
+
+- `/tests/` contains Go integration tests to our API service.
 
 ## Roadmap
 
