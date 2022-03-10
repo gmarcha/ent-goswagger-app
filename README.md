@@ -20,6 +20,10 @@ A web API written in Go programming language with entgo and goswagger.
 
 Use Makefile rules to build and run application (see comments in `Makefile`).
 
+These rules run against a specific workflow specified with `ENV` variable.\
+Different environments are `dev`, `ci` and `prod`, `dev` is default value if none is provided.\
+*For example, `make delete all ENV=ci` uses continuous integration (CI) workflow.*
+
 - `make` triggers `make all`;
 - `make all` uses `make build` and `make up` internally;
 - `make re` uses `make down` and `make all` internally;
