@@ -1,0 +1,33 @@
+version: "3.9"
+
+services:
+  pgadmin:
+    image: dpage/pgadmin4
+    entrypoint: >
+      /bin/sh -c "
+      echo $${POSTGRES_HOST}:$${POSTGRES_PORT}:$${POSTGRES_DB}:$${POSTGRES_USER}:$${POSTGRES_PASSWORD} > /tmp/pgpass;
+      chmod 600 /tmp/pgpass;
+      /entrypoint.sh
+      "
+    volumes:
+      - pgadmin-volume:/var/lib/pgadmin
+      - ./pgadmin/servers.json:/pgadmin4/servers.json
+    ports:
+      - "${PGADMIN_LISTEN_PORT}:${PGADMIN_LISTEN_PORT}"
+    environment:
+      POSTGRES_HOST: ${POSTGRES_HOST}
+      POSTGRES_PORT: ${POSTGRES_PORT}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL}
+      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD}
+      PGADMIN_LISTEN_PORT: ${PGADMIN_LISTEN_PORT}
+      PGADMIN_CONFIG_SERVER_MODE: ${PGADMIN_CONFIG_SERVER_MODE}
+      PGADMIN_CONFIG_MASTER_PASSWORD_REQUIRED: ${PGADMIN_CONFIG_MASTER_PASSWORD_REQUIRED}
+    restart: "unless-stopped"
+    depends_on:
+      - postgres
+
+volumes:
+  pgadmin-volume:
