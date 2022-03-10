@@ -20,6 +20,7 @@ require (
 	github.com/jessevdk/go-flags v1.5.0
 	github.com/joho/godotenv v1.3.0
 	github.com/lib/pq v1.10.4
+	github.com/stretchr/testify v1.7.1-0.20210427113832-6241f9ab9942
 	golang.org/x/net v0.0.0-20220127200216-cd36cc0744dd
 	golang.org/x/oauth2 v0.0.0-20211104180415-d3ed0bb246c8
 )
@@ -62,7 +63,6 @@ require (
 	github.com/pquerna/cachecontrol v0.1.0 // indirect
 	github.com/stoewer/go-strcase v1.2.0 // indirect
 	github.com/stretchr/objx v0.3.0 // indirect
-	github.com/stretchr/testify v1.7.1-0.20210427113832-6241f9ab9942 // indirect
 	github.com/ugorji/go/codec v1.1.7 // indirect
 	github.com/zclconf/go-cty v1.8.0 // indirect
 	go.mongodb.org/mongo-driver v1.8.3 // indirect
