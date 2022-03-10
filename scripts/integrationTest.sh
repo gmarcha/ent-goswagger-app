@@ -5,7 +5,7 @@
 # done
 
 until $(curl --output /dev/null --silent --head http://localhost:$1); do
-    curl http://localhost:5000/
+    curl -v http://localhost:5000/
     sleep 5
 done
 
