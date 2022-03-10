@@ -7,6 +7,9 @@
 │       └── main.go
 ├── config
 │   ├── Dockerfile
+│   ├── docker-compose.ci.yaml
+│   ├── docker-compose.dev.yaml
+│   ├── docker-compose.prod.yaml
 │   ├── docker-compose.yaml
 │   ├── pgadmin
 │   │   └── servers.json.sample
@@ -354,6 +357,7 @@
 │       └── random.go
 ├── scripts
 │   ├── docgen.sh
+│   ├── integrationTest.sh
 │   ├── setup
 │   │   ├── README.md
 │   │   ├── entgo.sh
@@ -372,6 +376,8 @@
     │   ├── student_test.go
     │   ├── tutor_test.go
     │   └── unauthenticated_test.go
-    └── server.go
+    ├── server.go
+    ├── setup.sql
+    └── teardown.sql
 
-46 directories, 328 files
+46 directories, 334 files
