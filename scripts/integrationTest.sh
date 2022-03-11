@@ -1,6 +1,6 @@
 #! /bin/bash
 
-while ! echo exit | nc localhost $1 | grep HTTP > /dev/null; do
+while ! echo exit | nc localhost 5000 | grep HTTP > /dev/null; do
     sleep 5
 done
 
