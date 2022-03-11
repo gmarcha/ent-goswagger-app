@@ -4,8 +4,8 @@ on:
   push:
     branches:
       - main
-    paths:
-      - 'docs/swagger.yaml'
+    # paths:
+    #   - 'docs/swagger.yaml'
   pull_request:
     branches:
       - main
