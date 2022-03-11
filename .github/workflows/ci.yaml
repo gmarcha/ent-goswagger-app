@@ -19,6 +19,8 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-go@v2
+        with:
+          go-version: 'latest'
       - name: build
         run: make ENV=ci
       - name: integration-test
