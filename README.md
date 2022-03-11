@@ -2,9 +2,9 @@
 
 A web API written in Go programming language with entgo and goswagger.
 
-[![Golang Lint](https://github.com/gmarcha/ent-goswagger-app/actions/workflows/golangci-lint.yaml/badge.svg)](https://github.com/gmarcha/ent-goswagger-app/actions/workflows/golangci-lint.yaml)
-[![Swagger Validation](https://github.com/gmarcha/ent-goswagger-app/actions/workflows/swaggerci-validate.yaml/badge.svg)](https://github.com/gmarcha/ent-goswagger-app/actions/workflows/swaggerci-validate.yaml)
-[![Project Tree](https://github.com/gmarcha/ent-goswagger-app/actions/workflows/treeci.yaml/badge.svg)](https://github.com/gmarcha/ent-goswagger-app/actions/workflows/treeci.yaml)
+[![CI](https://github.com/gmarcha/ent-goswagger-app/actions/workflows/ci.yaml/badge.svg)](https://github.com/gmarcha/ent-goswagger-app/actions/workflows/ci.yaml)
+[![Doc](https://github.com/gmarcha/ent-goswagger-app/actions/workflows/doc.yaml/badge.svg)](https://github.com/gmarcha/ent-goswagger-app/actions/workflows/doc.yaml)
+[![Tree](https://github.com/gmarcha/ent-goswagger-app/actions/workflows/tree.yaml/badge.svg)](https://github.com/gmarcha/ent-goswagger-app/actions/workflows/tree.yaml)
 
 <!---
 [![asciicast](https://asciinema.org/a/dq1vqswGWWqiZj5Ihd68mPakn.svg)](https://asciinema.org/a/dq1vqswGWWqiZj5Ihd68mPakn)
