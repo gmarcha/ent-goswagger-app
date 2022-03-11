@@ -5,6 +5,8 @@ A web API written in Go programming language with entgo and goswagger.
 [![CI](https://github.com/gmarcha/ent-goswagger-app/actions/workflows/ci.yaml/badge.svg)](https://github.com/gmarcha/ent-goswagger-app/actions/workflows/ci.yaml)
 [![Doc](https://github.com/gmarcha/ent-goswagger-app/actions/workflows/doc.yaml/badge.svg)](https://github.com/gmarcha/ent-goswagger-app/actions/workflows/doc.yaml)
 [![Tree](https://github.com/gmarcha/ent-goswagger-app/actions/workflows/tree.yaml/badge.svg)](https://github.com/gmarcha/ent-goswagger-app/actions/workflows/tree.yaml)
+[![Go Report Card](https://goreportcard.com/badge/github.com/gmarcha/ent-goswagger-app)](https://goreportcard.com/report/github.com/gmarcha/ent-goswagger-app)
+[![Go Pkg](https://pkg.go.dev/badge/github.com/gmarcha/ent-goswagger-app?status.svg)](https://pkg.go.dev/github.com/gmarcha/ent-goswagger-app)
 
 <!---
 [![asciicast](https://asciinema.org/a/dq1vqswGWWqiZj5Ihd68mPakn.svg)](https://asciinema.org/a/dq1vqswGWWqiZj5Ihd68mPakn)
