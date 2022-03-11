@@ -17,6 +17,7 @@ func main() {
 		c.Redirect(http.StatusFound, "http://localhost:5000/v2/auth/callback?code=42&state="+c.Query("state"))
 	})
 	r.POST("/oauth/token", func(c *gin.Context) {
+		i++
 		c.Header("Cache-Control", "no-store")
 		c.JSON(200, gin.H{
 			"access_token":  utils.RandomString(64),
@@ -27,7 +28,6 @@ func main() {
 		})
 	})
 	r.GET("/v2/me", func(c *gin.Context) {
-		i++
 		c.JSON(200, gin.H{
 			"login":      names[i%len(names)],
 			"first_name": "test",
