@@ -84,9 +84,9 @@ install:
 run:		install
 			$(NAME)-server $(ENV) --host $(HOST) --port $(PORT)
 
-exec:
-			$(DOCKER-COMPOSE) -p $(NAME) -f $(DOCKER-COMPOSE-PATH) -f $(DOCKER-COMPOSE-ENVPATH) --env-file $(ENVFILE-PATH) \
-				exec -T -e POSTGRES_PASSWORD=$(POSTGRES_PASSWORD) postgres psql -U $(POSTGRES_USER) -d $(POSTGRES_DB)
+# exec:
+# 			$(DOCKER-COMPOSE) -p $(NAME) -f $(DOCKER-COMPOSE-PATH) -f $(DOCKER-COMPOSE-ENVPATH) --env-file $(ENVFILE-PATH) \
+# 				exec -T -e POSTGRES_PASSWORD=$(POSTGRES_PASSWORD) postgres psql -U $(POSTGRES_USER) -d $(POSTGRES_DB)
 
 ######################################################################################################
 #
