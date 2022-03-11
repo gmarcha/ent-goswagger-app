@@ -10,8 +10,12 @@ done
 
 echo 'Server up'
 
-cat tests/setup.sql | make -s exec > /dev/null
+cat tests/setup.sql | docker-compose -p tutor \
+    -f ./config/docker-compose.yaml -f ./config/docker-compose.ci.yaml --env-file ./config/.env.ci \
+    exec -T -e POSTGRES_PASSWORD=tutor postgres psql -U tutor -d tutor
 
 go test -v ./tests/integration
 
-cat tests/teardown.sql | make -s exec > /dev/null
+cat tests/teardown.sql | docker-compose -p tutor \
+    -f ./config/docker-compose.yaml -f ./config/docker-compose.ci.yaml --env-file ./config/.env.ci \
+    exec -T -e POSTGRES_PASSWORD=tutor postgres psql -U tutor -d tutor
