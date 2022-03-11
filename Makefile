@@ -127,7 +127,7 @@ gen.swag:
 ######################################################################################################
 
 test:
-			bash scripts/integrationTest.sh $(PORT)
+			bash scripts/integrationTest.sh
 
 validate:
 			swagger validate $(SWAGGER-DOC-PATH)
