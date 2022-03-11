@@ -21,3 +21,4 @@ servers.json
 
 user.yaml
 postgres.log
+test.log
