@@ -4,7 +4,7 @@ while ! echo exit | nc localhost 5000 | grep HTTP > /dev/null; do
     sleep 5
 done
 
-# until $(curl --output /dev/null --silent --head http://localhost:$1); do
+# until $(curl --output /dev/null --silent --head http://localhost:5000); do
 #     sleep 5
 # done
 
