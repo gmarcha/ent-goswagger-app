@@ -1406,8 +1406,7 @@
     │   │       ├── isatty_plan9.go
     │   │       ├── isatty_solaris.go
     │   │       ├── isatty_tcgets.go
-    │   │       ├── isatty_windows.go
-    │   │       └── renovate.json
+    │   │       └── isatty_windows.go
     │   ├── mitchellh
     │   │   ├── go-wordwrap
     │   │   │   ├── LICENSE.md
@@ -2598,4 +2597,4 @@
     │       └── yamlprivateh.go
     └── modules.txt
 
-370 directories, 2227 files
+370 directories, 2226 files
