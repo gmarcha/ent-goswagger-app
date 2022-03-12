@@ -8,10 +8,12 @@ import (
 	"github.com/google/uuid"
 )
 
+// Service holds an ent event type client.
 type Service struct {
 	Type *ent.EventTypeClient
 }
 
+// ListType returns a type list or an error.
 func (s *Service) ListType(ctx context.Context) ([]*ent.EventType, error) {
 
 	res, err := s.Type.Query().WithEvents().All(ctx)
@@ -21,6 +23,7 @@ func (s *Service) ListType(ctx context.Context) ([]*ent.EventType, error) {
 	return res, nil
 }
 
+// CreateType returns a new created type or an error.
 func (s *Service) CreateType(ctx context.Context, category *ent.EventType) (*ent.EventType, error) {
 
 	builder := s.Type.Create()
@@ -32,6 +35,7 @@ func (s *Service) CreateType(ctx context.Context, category *ent.EventType) (*ent
 	return res, nil
 }
 
+// ReadTypeByID returns a type or an error.
 func (s *Service) ReadTypeByID(ctx context.Context, id uuid.UUID) (*ent.EventType, error) {
 
 	res, err := s.Type.Query().Where(eventtype.ID(id)).WithEvents().Only(ctx)
@@ -41,6 +45,7 @@ func (s *Service) ReadTypeByID(ctx context.Context, id uuid.UUID) (*ent.EventTyp
 	return res, nil
 }
 
+// UpdateTypeByID returns an existing updated type or an error.
 func (s *Service) UpdateTypeByID(ctx context.Context, id uuid.UUID, category *ent.EventType) (*ent.EventType, error) {
 
 	builder := s.Type.UpdateOneID(id)
@@ -52,11 +57,13 @@ func (s *Service) UpdateTypeByID(ctx context.Context, id uuid.UUID, category *en
 	return res, nil
 }
 
+// DeleteTypeByID returns an error.
 func (s *Service) DeleteTypeByID(ctx context.Context, id uuid.UUID) error {
 
 	return s.Type.DeleteOneID(id).Exec(ctx)
 }
 
+// ListTypeEventsByID returns an event list with a certain type or an error.
 func (s *Service) ListTypeEventsByID(ctx context.Context, id uuid.UUID) ([]*ent.Event, error) {
 
 	res, err := s.ReadTypeByID(ctx, id)
