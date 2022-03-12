@@ -54,6 +54,7 @@ func (Event) Edges() []ent.Edge {
 	}
 }
 
+// Hooks of the Event.
 func (Event) Hooks() []ent.Hook {
 	return []ent.Hook{
 		hook.On(
