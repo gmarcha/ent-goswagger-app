@@ -339,7 +339,7 @@
 │   │   │   ├── handle.go
 │   │   │   ├── init.go
 │   │   │   └── service.go
-│   │   ├── eventType
+│   │   ├── eventtype
 │   │   │   ├── handler.go
 │   │   │   ├── init.go
 │   │   │   └── service.go
