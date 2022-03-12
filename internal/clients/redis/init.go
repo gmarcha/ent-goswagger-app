@@ -9,6 +9,7 @@ import (
 	"github.com/go-redis/redis/v8"
 )
 
+// Init returns a redis client.
 func Init() *redis.Client {
 
 	redisHost := os.Getenv("REDIS_HOST")
