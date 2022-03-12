@@ -8,13 +8,15 @@ import (
 
 	"github.com/gmarcha/ent-goswagger-app/internal/ent"
 	"github.com/gmarcha/ent-goswagger-app/internal/ent/migrate"
+	// Import postgres dependencies.
 	_ "github.com/lib/pq"
 )
 
+// Init returns an ent client.
 func Init() *ent.Client {
 
 	database := "postgres"
-	info := CreatePostgresInfo()
+	info := createPostgresInfo()
 
 	client, err := ent.Open(database, info)
 	if err != nil {
@@ -36,7 +38,7 @@ func Init() *ent.Client {
 	return client
 }
 
-func CreatePostgresInfo() string {
+func createPostgresInfo() string {
 
 	infos := []string{
 		"host=" + os.Getenv("POSTGRES_HOST"),
