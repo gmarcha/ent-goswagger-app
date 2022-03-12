@@ -9,6 +9,7 @@ import (
 	"github.com/google/uuid"
 )
 
+// Service holds an ent role client.
 type Service struct {
 	Role *ent.RoleClient
 }

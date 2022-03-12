@@ -8,6 +8,7 @@ import (
 	"golang.org/x/net/context"
 )
 
+// Service holds an ent user client.
 type Service struct {
 	User *ent.UserClient
 }
@@ -107,7 +108,7 @@ func (s *Service) SubscribeUserByLogin(ctx context.Context, login string, id uui
 	return res.Edges.Events, nil
 }
 
-// SubscribeUserByLogin returns an error.
+// UnsubscribeUserByLogin returns an error.
 func (s *Service) UnsubscribeUserByLogin(ctx context.Context, login string, id uuid.UUID) error {
 
 	user, err := s.ReadUserByLogin(ctx, login)
