@@ -43,7 +43,8 @@ Use them to perform code generation with entgo and goswagger.
 - `make gen.ent` generates entgo data models from data schemas in `./internal/ent/schema/`;
 - `make gen.doc` generates a swagger specification used to code generation and as a documentation in `./docs/`
     (an other swagger specification should be configure with routes and authentication model in `./config/`);
-- `make gen.swag` generates goswagger server code from swagger specification in `./docs/`;
+- `make gen.swag` generates goswagger server code from swagger specification in `./docs/` (do not use it
+    directly, use `make gen.serv` instead);
 
 Other rules are used by application Dockerfile (in `./config/`) and Github Actions (in `./.github/workflows/`).
 
