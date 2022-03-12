@@ -13,6 +13,7 @@ type Service struct {
 	Role *ent.RoleClient
 }
 
+// ReadRoleByName returns a role or an error.
 func (r *Service) ReadRoleByName(ctx context.Context, name string) (*ent.Role, error) {
 
 	res, err := r.Role.Query().Where(role.Name(name)).Only(ctx)
@@ -22,9 +23,10 @@ func (r *Service) ReadRoleByName(ctx context.Context, name string) (*ent.Role, e
 	return res, nil
 }
 
+// AddRole returns user roles or an error.
 func (r *Service) AddRole(ctx context.Context, user *user.Service, id uuid.UUID, name string) ([]*ent.Role, error) {
 
-	userRes, roleRes, err := r.GetUserAndRole(ctx, user, id, name)
+	userRes, roleRes, err := r.getUserAndRole(ctx, user, id, name)
 	if err != nil {
 		return nil, err
 	}
@@ -35,9 +37,10 @@ func (r *Service) AddRole(ctx context.Context, user *user.Service, id uuid.UUID,
 	return res.Edges.Roles, nil
 }
 
+// RemoveRole returns an error.
 func (r *Service) RemoveRole(ctx context.Context, user *user.Service, id uuid.UUID, name string) error {
 
-	userRes, roleRes, err := r.GetUserAndRole(ctx, user, id, name)
+	userRes, roleRes, err := r.getUserAndRole(ctx, user, id, name)
 	if err != nil {
 		return err
 	}
@@ -48,7 +51,7 @@ func (r *Service) RemoveRole(ctx context.Context, user *user.Service, id uuid.UU
 	return nil
 }
 
-func (r *Service) GetUserAndRole(ctx context.Context, user *user.Service, id uuid.UUID, name string) (*ent.User, *ent.Role, error) {
+func (r *Service) getUserAndRole(ctx context.Context, user *user.Service, id uuid.UUID, name string) (*ent.User, *ent.Role, error) {
 
 	userRes, err := user.ReadUserByID(ctx, id)
 	if err != nil {

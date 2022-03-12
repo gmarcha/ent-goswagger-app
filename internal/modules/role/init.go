@@ -10,6 +10,7 @@ import (
 	"github.com/gmarcha/ent-goswagger-app/internal/modules/user"
 )
 
+// Init creates role entries in database and sets role route handlers.
 func Init(api *operations.TutorAPI, db *ent.Client) {
 
 	userService := &user.Service{User: db.User}
@@ -31,11 +32,11 @@ func createRoles(db *ent.Client) {
 
 	ctx := context.Background()
 	for _, roleName := range []string{"tutor", "calendar", "admin"} {
-		setRole(db, ctx, roleName)
+		setRole(ctx, db, roleName)
 	}
 }
 
-func setRole(client *ent.Client, ctx context.Context, roleName string) {
+func setRole(ctx context.Context, client *ent.Client, roleName string) {
 
 	r, err := client.Role.Query().Where(role.Name(roleName)).Only(ctx)
 	if err != nil {
