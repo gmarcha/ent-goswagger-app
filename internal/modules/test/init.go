@@ -8,6 +8,8 @@ import (
 	"github.com/gmarcha/ent-goswagger-app/internal/ent/role"
 )
 
+// Init sets database entries for test purpose.
+// It is deprecated and it should be use only to generate SQL requests.
 func Init(db *ent.Client) {
 
 	createTestUsers(db)
