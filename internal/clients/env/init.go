@@ -7,6 +7,7 @@ import (
 	"github.com/joho/godotenv"
 )
 
+// Init loads environment variables from a .env file.
 func Init() {
 
 	env := os.Args[1]
