@@ -18,6 +18,7 @@ type userClaims struct {
 	jwt.RegisteredClaims
 }
 
+// Init sets authentication route handlers.
 func Init(api *operations.TutorAPI, db *ent.Client, rdb *redis.Client) {
 
 	accessTokenDuration := time.Minute * 30
