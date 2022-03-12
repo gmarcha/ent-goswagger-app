@@ -83,10 +83,14 @@ Repository architecture follows some conventions:
       module initialisation must be written in `/goswagger/restapi/configure_tutor.go`);
   - `/utils/` contains various useful packages.
 
-- `/scripts/` contains scripts used by `Makefile` to run tests, to generate documentation or
-    to setup a directory;
+- `/tests/` contains a mock-server (to mock authorization API) and Go integration tests to our API services;
 
-- `/tests/` contains Go integration tests to our API service.
+- `/vendor/` contains project dependencies, i.e. other Go modules needed by our API (dependencies are included
+  in source code to avoid breaking changes in modules and to skip modules downloading in workflows);
+
+- `/scripts/` contains scripts used by `Makefile` to run tests, to generate documentation or to setup a directory;
+    
+- `/.github/workflows/` contains our Github Actions' workflows, i.e. automated repository tasks triggered on specific events.
 
 ## Roadmap
 
