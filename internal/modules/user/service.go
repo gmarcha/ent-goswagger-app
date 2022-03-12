@@ -12,6 +12,7 @@ type Service struct {
 	User *ent.UserClient
 }
 
+// ListUser returns a user list or an error.
 func (s *Service) ListUser(ctx context.Context, tutor *bool) ([]*ent.User, error) {
 
 	builder := s.User.Query()
@@ -27,6 +28,7 @@ func (s *Service) ListUser(ctx context.Context, tutor *bool) ([]*ent.User, error
 	return res, nil
 }
 
+// CreateUser returns a new created user or an error.
 func (s *Service) CreateUser(ctx context.Context, user *ent.User) (*ent.User, error) {
 
 	builder := s.User.Create().SetLogin(user.Login)
@@ -38,6 +40,7 @@ func (s *Service) CreateUser(ctx context.Context, user *ent.User) (*ent.User, er
 	return res, nil
 }
 
+// ReadUserByLogin returns a user or an error.
 func (s *Service) ReadUserByLogin(ctx context.Context, login string) (*ent.User, error) {
 
 	res, err := s.User.Query().Where(user.Login(login)).WithRoles().WithEvents().Only(ctx)
@@ -47,6 +50,7 @@ func (s *Service) ReadUserByLogin(ctx context.Context, login string) (*ent.User,
 	return res, nil
 }
 
+// UpdateUserByLogin returns an existing updated user or an error.
 func (s *Service) UpdateUserByLogin(ctx context.Context, login string, userInfo *ent.User) (*ent.User, error) {
 
 	user, err := s.ReadUserByLogin(ctx, login)
@@ -62,12 +66,14 @@ func (s *Service) UpdateUserByLogin(ctx context.Context, login string, userInfo 
 	return res, nil
 }
 
+// DeleteUserByLogin returns an error.
 func (s *Service) DeleteUserByLogin(ctx context.Context, login string) error {
 
 	_, err := s.User.Delete().Where(user.Login(login)).Exec(ctx)
 	return err
 }
 
+// ListUserEventsByLogin returns an event list of a user or an error.
 func (s *Service) ListUserEventsByLogin(ctx context.Context, login string) ([]*ent.Event, error) {
 
 	res, err := s.ReadUserByLogin(ctx, login)
@@ -77,6 +83,7 @@ func (s *Service) ListUserEventsByLogin(ctx context.Context, login string) ([]*e
 	return res.Edges.Events, nil
 }
 
+// ListUserRolesByLogin returns a role list of a user or an error.
 func (s *Service) ListUserRolesByLogin(ctx context.Context, login string) ([]*ent.Role, error) {
 
 	res, err := s.ReadUserByLogin(ctx, login)
@@ -86,6 +93,7 @@ func (s *Service) ListUserRolesByLogin(ctx context.Context, login string) ([]*en
 	return res.Edges.Roles, nil
 }
 
+// SubscribeUserByLogin returns an event list of a user or an error.
 func (s *Service) SubscribeUserByLogin(ctx context.Context, login string, id uuid.UUID) ([]*ent.Event, error) {
 
 	user, err := s.ReadUserByLogin(ctx, login)
@@ -99,6 +107,7 @@ func (s *Service) SubscribeUserByLogin(ctx context.Context, login string, id uui
 	return res.Edges.Events, nil
 }
 
+// SubscribeUserByLogin returns an error.
 func (s *Service) UnsubscribeUserByLogin(ctx context.Context, login string, id uuid.UUID) error {
 
 	user, err := s.ReadUserByLogin(ctx, login)
@@ -112,6 +121,7 @@ func (s *Service) UnsubscribeUserByLogin(ctx context.Context, login string, id u
 	return nil
 }
 
+// ReadUserByID returns a user or an error.
 func (s *Service) ReadUserByID(ctx context.Context, id uuid.UUID) (*ent.User, error) {
 
 	res, err := s.User.Query().Where(user.ID(id)).WithRoles().WithEvents().Only(ctx)
@@ -121,6 +131,7 @@ func (s *Service) ReadUserByID(ctx context.Context, id uuid.UUID) (*ent.User, er
 	return res, nil
 }
 
+// UpdateUserByID returns an existing updated user or an error.
 func (s *Service) UpdateUserByID(ctx context.Context, id uuid.UUID, user *ent.User) (*ent.User, error) {
 
 	builder := s.User.UpdateOneID(id)
@@ -132,11 +143,13 @@ func (s *Service) UpdateUserByID(ctx context.Context, id uuid.UUID, user *ent.Us
 	return res, nil
 }
 
+// DeleteUserByID returns an error.
 func (s *Service) DeleteUserByID(ctx context.Context, id uuid.UUID) error {
 
 	return s.User.DeleteOneID(id).Exec(ctx)
 }
 
+// ListUserEventsByID returns an event list of a user or an error.
 func (s *Service) ListUserEventsByID(ctx context.Context, id uuid.UUID) ([]*ent.Event, error) {
 
 	res, err := s.ReadUserByID(ctx, id)
@@ -146,6 +159,7 @@ func (s *Service) ListUserEventsByID(ctx context.Context, id uuid.UUID) ([]*ent.
 	return res.Edges.Events, nil
 }
 
+// ListUserRolesByID returns a role list of a user or an error.
 func (s *Service) ListUserRolesByID(ctx context.Context, id uuid.UUID) ([]*ent.Role, error) {
 
 	res, err := s.ReadUserByID(ctx, id)
@@ -155,6 +169,7 @@ func (s *Service) ListUserRolesByID(ctx context.Context, id uuid.UUID) ([]*ent.R
 	return res.Edges.Roles, nil
 }
 
+// SubscribeUserByID returns an event list of a user or an error.
 func (s *Service) SubscribeUserByID(ctx context.Context, userId uuid.UUID, eventId uuid.UUID) ([]*ent.Event, error) {
 
 	user, err := s.ReadUserByID(ctx, userId)
@@ -168,6 +183,7 @@ func (s *Service) SubscribeUserByID(ctx context.Context, userId uuid.UUID, event
 	return res.Edges.Events, nil
 }
 
+// UnsubscribeUserByID returns an error.
 func (s *Service) UnsubscribeUserByID(ctx context.Context, userId uuid.UUID, eventId uuid.UUID) error {
 
 	user, err := s.ReadUserByID(ctx, userId)
@@ -181,6 +197,7 @@ func (s *Service) UnsubscribeUserByID(ctx context.Context, userId uuid.UUID, eve
 	return nil
 }
 
+// SetUserOnLogin returns a new or an updated user.
 func (s *Service) SetUserOnLogin(ctx context.Context, user *ent.User) (*ent.User, error) {
 
 	res, err := s.ReadUserByLogin(ctx, user.Login)

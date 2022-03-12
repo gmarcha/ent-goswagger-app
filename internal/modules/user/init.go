@@ -5,6 +5,7 @@ import (
 	"github.com/gmarcha/ent-goswagger-app/internal/goswagger/restapi/operations"
 )
 
+// Init sets user route handlers.
 func Init(api *operations.TutorAPI, db *ent.Client) {
 
 	userService := &Service{User: db.User}
