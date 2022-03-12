@@ -5,6 +5,7 @@ import (
 	"github.com/gmarcha/ent-goswagger-app/internal/goswagger/restapi/operations"
 )
 
+// Init sets event route handlers.
 func Init(api *operations.TutorAPI, db *ent.Client) {
 
 	eventService := &Service{Event: db.Event}

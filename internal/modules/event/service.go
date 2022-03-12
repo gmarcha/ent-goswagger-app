@@ -9,10 +9,12 @@ import (
 	"github.com/google/uuid"
 )
 
+// Service holds an ent event client.
 type Service struct {
 	Event *ent.EventClient
 }
 
+// ListEvent returns an event list (day and month filters available) or an error.
 func (s *Service) ListEvent(ctx context.Context, day, month *string) ([]*ent.Event, error) {
 
 	builder := s.Event.Query().WithCategory()
@@ -54,6 +56,7 @@ func (s *Service) ListEvent(ctx context.Context, day, month *string) ([]*ent.Eve
 	return res, nil
 }
 
+// CreateEvent returns a new created event or an error.
 func (s *Service) CreateEvent(ctx context.Context, event *ent.Event) (*ent.Event, error) {
 
 	builder := s.Event.Create()
@@ -65,6 +68,7 @@ func (s *Service) CreateEvent(ctx context.Context, event *ent.Event) (*ent.Event
 	return res, nil
 }
 
+// ReadEventByID returns an event or an error.
 func (s *Service) ReadEventByID(ctx context.Context, id uuid.UUID) (*ent.Event, error) {
 
 	res, err := s.Event.Query().Where(entEvent.ID(id)).WithCategory().WithUsers().Only(ctx)
@@ -74,6 +78,7 @@ func (s *Service) ReadEventByID(ctx context.Context, id uuid.UUID) (*ent.Event, 
 	return res, nil
 }
 
+// UpdateEventByID returns an existing updated event or an error.
 func (s *Service) UpdateEventByID(ctx context.Context, id uuid.UUID, event *ent.Event) (*ent.Event, error) {
 
 	builder := s.Event.UpdateOneID(id)
@@ -85,11 +90,13 @@ func (s *Service) UpdateEventByID(ctx context.Context, id uuid.UUID, event *ent.
 	return res, nil
 }
 
+// DeleteEventByID returns an error.
 func (s *Service) DeleteEventByID(ctx context.Context, id uuid.UUID) error {
 
 	return s.Event.DeleteOneID(id).Exec(ctx)
 }
 
+// ListEventUsersByID returns a list of subscribed users to an event or an error.
 func (s *Service) ListEventUsersByID(ctx context.Context, id uuid.UUID) ([]*ent.User, error) {
 
 	res, err := s.ReadEventByID(ctx, id)
@@ -99,6 +106,7 @@ func (s *Service) ListEventUsersByID(ctx context.Context, id uuid.UUID) ([]*ent.
 	return res.Edges.Users, nil
 }
 
+// ReadEventTypeByID returns the type of an event or an error.
 func (s *Service) ReadEventTypeByID(ctx context.Context, id uuid.UUID) (*ent.EventType, error) {
 
 	event, err := s.ReadEventByID(ctx, id)
@@ -108,6 +116,7 @@ func (s *Service) ReadEventTypeByID(ctx context.Context, id uuid.UUID) (*ent.Eve
 	return event.Edges.Category, nil
 }
 
+// UpdateEventTypeByID returns an event with type updated or an error.
 func (s *Service) UpdateEventTypeByID(ctx context.Context, eventID uuid.UUID, typeID uuid.UUID) (*ent.Event, error) {
 
 	event, err := s.ReadEventByID(ctx, eventID)
