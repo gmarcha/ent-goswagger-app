@@ -1,4 +1,4 @@
-package eventType
+package eventtype
 
 import (
 	"github.com/gmarcha/ent-goswagger-app/internal/ent"

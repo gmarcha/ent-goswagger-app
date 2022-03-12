@@ -1,4 +1,4 @@
-package eventType
+package eventtype
 
 import (
 	"context"
