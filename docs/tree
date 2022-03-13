@@ -3,6 +3,8 @@
 ├── LICENSE
 ├── Makefile
 ├── README.md
+├── assets
+│   └── setup.svg
 ├── cmd
 │   └── tutor-server
 │       └── main.go
@@ -2599,4 +2601,4 @@
     │       └── yamlprivateh.go
     └── modules.txt
 
-371 directories, 2227 files
+372 directories, 2228 files
