@@ -4,6 +4,7 @@
 ├── Makefile
 ├── README.md
 ├── assets
+│   ├── ptest.svg
 │   └── setup.svg
 ├── cmd
 │   └── tutor-server
@@ -2601,4 +2602,4 @@
     │       └── yamlprivateh.go
     └── modules.txt
 
-372 directories, 2228 files
+372 directories, 2229 files
