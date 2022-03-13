@@ -10,10 +10,6 @@ A web API written in Go programming language with entgo and goswagger.
 
 ![Image](assets/setup.svg)
 
-<!---
-[![asciicast](https://asciinema.org/a/dq1vqswGWWqiZj5Ihd68mPakn.svg)](https://asciinema.org/a/dq1vqswGWWqiZj5Ihd68mPakn)
--->
-
 ## Requirements
 
 - A Go [workspace](https://go.dev/doc/gopath_code), with Make[^1] and [Go Swagger](https://goswagger.io/install.html) already setup.
@@ -203,7 +199,7 @@ Continuous integration (with Github Actions) allows to run code validation, code
   *Links to [documentation](https://mikefarah.gitbook.io/yq/) and how to [install](https://github.com/mikefarah/yq/#install) it.*
 
 - **Useful links**\
-  *How to use [markdown](https://docs.github.com/en/get-started/writing-on-github/getting-started-with-writing-and-formatting-on-github/basic-writing-and-formatting-syntax) on Github ? to [makeareadme](https://www.makeareadme.com/)? to draw an application [workflow](https://asciiflow.com/#/)? to [record](https://asciinema.org/) a terminal session?*
+  *How to use [markdown](https://docs.github.com/en/get-started/writing-on-github/getting-started-with-writing-and-formatting-on-github/basic-writing-and-formatting-syntax) on Github ? to [makeareadme](https://www.makeareadme.com/)? to draw an application [workflow](https://asciiflow.com/#/)? to [record](https://asciinema.org/) a terminal session (and to [convert](https://github.com/marionebl/svg-term-cli/) it to an animated svg file)?*
 
 ## Author
 
