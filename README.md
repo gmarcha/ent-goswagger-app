@@ -43,7 +43,8 @@ Use them to perform code generation with entgo and goswagger.
 - `make gen.ent` generates entgo data models from data schemas in `./internal/ent/schema/`;
 - `make gen.doc` generates a swagger specification used to code generation and as a documentation in `./docs/`
     (an other swagger specification should be configure with routes and authentication model in `./config/`);
-- `make gen.swag` generates goswagger server code from swagger specification in `./docs/`;
+- `make gen.swag` generates goswagger server code from swagger specification in `./docs/` (do not use it
+    directly, use `make gen.serv` instead);
 
 Other rules are used by application Dockerfile (in `./config/`) and Github Actions (in `./.github/workflows/`).
 
@@ -83,10 +84,14 @@ Repository architecture follows some conventions:
       module initialisation must be written in `/goswagger/restapi/configure_tutor.go`);
   - `/utils/` contains various useful packages.
 
-- `/scripts/` contains scripts used by `Makefile` to run tests, to generate documentation or
-    to setup a directory;
+- `/tests/` contains a mock-server (to mock authorization API) and Go integration tests to our API services;
 
-- `/tests/` contains Go integration tests to our API service.
+- `/vendor/` contains project dependencies, i.e. other Go modules needed by our API (dependencies are included
+  in source code to avoid breaking changes in modules and to skip modules downloading in workflows);
+
+- `/scripts/` contains scripts used by `Makefile` to run tests, to generate documentation or to setup a directory;
+    
+- `/.github/workflows/` contains our Github Actions' workflows, i.e. automated repository tasks triggered on specific events.
 
 ## Roadmap
 
