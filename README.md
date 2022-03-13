@@ -9,6 +9,10 @@ A web API written in Go programming language with entgo and goswagger.
 [![Go Pkg](https://pkg.go.dev/badge/github.com/gmarcha/ent-goswagger-app?status.svg)](https://pkg.go.dev/github.com/gmarcha/ent-goswagger-app)
 
 <!---
+![Image](assets/setup.svg)
+-->
+
+<!---
 [![asciicast](https://asciinema.org/a/dq1vqswGWWqiZj5Ihd68mPakn.svg)](https://asciinema.org/a/dq1vqswGWWqiZj5Ihd68mPakn)
 -->
 
