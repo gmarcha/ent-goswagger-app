@@ -169,6 +169,13 @@ Continuous integration (with Github Actions) allows to run code validation, code
   It is used to run simultaneously all our application services.\
   *Links to [Docker documentation](https://docs.docker.com/get-started/overview/) and to [Compose manual](https://docs.docker.com/compose/).*
 
+- **Traefik Proxy**\
+  Traefik Proxy is an edge router which serves as a reverse proxy.\
+  Configuration rules are defined in a `docker-compose.yaml` file.\
+  Traefik intercepts and routes incoming request to our application.\
+  It automatically discovers our infrastructure and manages tls certificates.\
+  *Link to [documentation](https://doc.traefik.io/traefik/).*
+
 - **PostGreSQL _(or any SQL database)_**\
   A SQL relational database, running in a container in development phase or with a cloud provider in production.\
   *Links to [documentation](https://www.postgresql.org/docs/14/index.html) and [DockerHub](https://hub.docker.com/_/postgres).*
