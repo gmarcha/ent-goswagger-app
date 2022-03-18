@@ -95,6 +95,71 @@ func (c *callback) Handle(params authentication.CallbackParams) middleware.Respo
 	})
 }
 
+type authorize struct {
+	userInfoUrl          string
+	accessTokenDuration  time.Duration
+	refreshTokenDuration time.Duration
+	accessTokenState     string
+	refreshTokenState    string
+	oauthState           string
+	oauthConfig          *oauth2.Config
+	user                 *user.Service
+	rdb                  *redis.Client
+}
+
+func (c *authorize) Handle(params authentication.AuthorizeParams) middleware.Responder {
+
+	// Retrieve state and authorization code from query parameters;
+	// if state differs, return an error.
+	if params.HTTPRequest.URL.Query().Get("state") != c.oauthState {
+		return authentication.NewAuthorizeUnprocessableEntity().WithPayload(e.Err(422, fmt.Errorf("invalid state")))
+	}
+	authCode := params.HTTPRequest.URL.Query().Get("code")
+
+	ctx := context.Background()
+	client := &http.Client{}
+
+	// Retrieve an OAuth token from 42 API.
+	clientCtx := oidc.ClientContext(ctx, client)
+	token, err := c.oauthConfig.Exchange(clientCtx, authCode)
+	if err != nil {
+		return authentication.NewAuthorizeInternalServerError().WithPayload(e.Err(500, err))
+	}
+
+	// Fetch user informations in 42 API with access token.
+	userInfo, err := fetchUserInfo(client, c.userInfoUrl, token.AccessToken)
+	if err != nil {
+		return authentication.NewAuthorizeInternalServerError().WithPayload(e.Err(500, err))
+	}
+
+	// Create or update user informations in database.
+	user, err := c.user.SetUserOnLogin(ctx, userInfo)
+	if err != nil {
+		return authentication.NewAuthorizeInternalServerError().WithPayload(e.Err(500, err))
+	}
+
+	err = saveOauthTokenInStore(c.rdb, user.Login, token)
+	if err != nil {
+		return authentication.NewAuthorizeInternalServerError().WithPayload(e.Err(500, err))
+	}
+
+	// Create and return a JSON web token to authenticate API consumers.
+	accessToken, err := createToken(ctx, c.user, c.accessTokenState, user.Login, c.accessTokenDuration)
+	if err != nil {
+		return authentication.NewAuthorizeInternalServerError().WithPayload(e.Err(500, err))
+	}
+
+	refreshToken, err := createToken(ctx, c.user, c.refreshTokenState, user.Login, c.refreshTokenDuration)
+	if err != nil {
+		return authentication.NewAuthorizeInternalServerError().WithPayload(e.Err(500, err))
+	}
+
+	return middleware.ResponderFunc(
+		func(w http.ResponseWriter, pr runtime.Producer) {
+			http.Redirect(w, params.HTTPRequest, "https://tutor.localhost/callback?access_token="+accessToken+"&refresh_token="+refreshToken, http.StatusFound)
+		})
+}
+
 type tokenInfo struct {
 	accessTokenState string
 	rdb              *redis.Client

@@ -7,7 +7,6 @@ import (
 	"github.com/gmarcha/ent-goswagger-app/internal/ent"
 	"github.com/gmarcha/ent-goswagger-app/internal/goswagger/restapi/operations"
 	"github.com/gmarcha/ent-goswagger-app/internal/modules/user"
-	"github.com/gmarcha/ent-goswagger-app/internal/utils"
 	"github.com/go-redis/redis/v8"
 	"github.com/golang-jwt/jwt/v4"
 	"golang.org/x/oauth2"
@@ -23,9 +22,9 @@ func Init(api *operations.TutorAPI, db *ent.Client, rdb *redis.Client) {
 
 	accessTokenDuration := time.Minute * 30
 	refreshTokenDuration := time.Hour * 72
-	accessTokenState := utils.RandomString(128)
+	accessTokenState := os.Getenv("ACCESS_TOKEN_STATE")
 	refreshTokenState := os.Getenv("REFRESH_TOKEN_STATE")
-	oauthState := utils.RandomString(64)
+	oauthState := os.Getenv("AUTH_STATE")
 	oauthConfig := createConfig()
 	userInfoUrl := os.Getenv("API_USERINFO_URL")
 
@@ -37,6 +36,17 @@ func Init(api *operations.TutorAPI, db *ent.Client, rdb *redis.Client) {
 		oauthConfig: oauthConfig,
 	}
 	api.AuthenticationCallbackHandler = &callback{
+		userInfoUrl:          userInfoUrl,
+		accessTokenDuration:  accessTokenDuration,
+		refreshTokenDuration: refreshTokenDuration,
+		accessTokenState:     accessTokenState,
+		refreshTokenState:    refreshTokenState,
+		oauthState:           oauthState,
+		oauthConfig:          oauthConfig,
+		user:                 userService,
+		rdb:                  rdb,
+	}
+	api.AuthenticationAuthorizeHandler = &authorize{
 		userInfoUrl:          userInfoUrl,
 		accessTokenDuration:  accessTokenDuration,
 		refreshTokenDuration: refreshTokenDuration,
