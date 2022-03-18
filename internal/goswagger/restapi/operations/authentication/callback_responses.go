@@ -57,6 +57,50 @@ func (o *CallbackOK) WriteResponse(rw http.ResponseWriter, producer runtime.Prod
 	}
 }
 
+// CallbackUnauthorizedCode is the HTTP code returned for type CallbackUnauthorized
+const CallbackUnauthorizedCode int = 401
+
+/*CallbackUnauthorized Unprocessable Entity
+
+swagger:response callbackUnauthorized
+*/
+type CallbackUnauthorized struct {
+
+	/*
+	  In: Body
+	*/
+	Payload *models.Error `json:"body,omitempty"`
+}
+
+// NewCallbackUnauthorized creates CallbackUnauthorized with default headers values
+func NewCallbackUnauthorized() *CallbackUnauthorized {
+
+	return &CallbackUnauthorized{}
+}
+
+// WithPayload adds the payload to the callback unauthorized response
+func (o *CallbackUnauthorized) WithPayload(payload *models.Error) *CallbackUnauthorized {
+	o.Payload = payload
+	return o
+}
+
+// SetPayload sets the payload to the callback unauthorized response
+func (o *CallbackUnauthorized) SetPayload(payload *models.Error) {
+	o.Payload = payload
+}
+
+// WriteResponse to the client
+func (o *CallbackUnauthorized) WriteResponse(rw http.ResponseWriter, producer runtime.Producer) {
+
+	rw.WriteHeader(401)
+	if o.Payload != nil {
+		payload := o.Payload
+		if err := producer.Produce(rw, payload); err != nil {
+			panic(err) // let the recovery middleware deal with this
+		}
+	}
+}
+
 // CallbackUnprocessableEntityCode is the HTTP code returned for type CallbackUnprocessableEntity
 const CallbackUnprocessableEntityCode int = 422
 

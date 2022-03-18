@@ -33,9 +33,33 @@ func init() {
   },
   "basePath": "/v2",
   "paths": {
+    "/auth/authorize": {
+      "get": {
+        "description": "Handle authorization API response, authenticate user and redirect to client.",
+        "tags": [
+          "Authentication"
+        ],
+        "summary": "Handle authentication",
+        "operationId": "authorize",
+        "responses": {
+          "302": {
+            "description": "Found"
+          },
+          "401": {
+            "$ref": "#/responses/401"
+          },
+          "422": {
+            "$ref": "#/responses/422"
+          },
+          "500": {
+            "$ref": "#/responses/500"
+          }
+        }
+      }
+    },
     "/auth/callback": {
       "get": {
-        "description": "Receive token as a response from 42 API.",
+        "description": "Receive token from test server.",
         "tags": [
           "Authentication"
         ],
@@ -48,6 +72,9 @@ func init() {
               "$ref": "#/definitions/Token"
             }
           },
+          "401": {
+            "$ref": "#/responses/422"
+          },
           "422": {
             "$ref": "#/responses/422"
           },
@@ -59,7 +86,7 @@ func init() {
     },
     "/auth/login": {
       "get": {
-        "description": "Login a user with 42 API.",
+        "description": "Login a user for test purpose.",
         "tags": [
           "Authentication"
         ],
@@ -2099,9 +2126,42 @@ func init() {
   },
   "basePath": "/v2",
   "paths": {
+    "/auth/authorize": {
+      "get": {
+        "description": "Handle authorization API response, authenticate user and redirect to client.",
+        "tags": [
+          "Authentication"
+        ],
+        "summary": "Handle authentication",
+        "operationId": "authorize",
+        "responses": {
+          "302": {
+            "description": "Found"
+          },
+          "401": {
+            "description": "Unauthorized",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "422": {
+            "description": "Unprocessable Entity",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      }
+    },
     "/auth/callback": {
       "get": {
-        "description": "Receive token as a response from 42 API.",
+        "description": "Receive token from test server.",
         "tags": [
           "Authentication"
         ],
@@ -2112,6 +2172,12 @@ func init() {
             "description": "OK",
             "schema": {
               "$ref": "#/definitions/Token"
+            }
+          },
+          "401": {
+            "description": "Unprocessable Entity",
+            "schema": {
+              "$ref": "#/definitions/Error"
             }
           },
           "422": {
@@ -2131,7 +2197,7 @@ func init() {
     },
     "/auth/login": {
       "get": {
-        "description": "Login a user with 42 API.",
+        "description": "Login a user for test purpose.",
         "tags": [
           "Authentication"
         ],

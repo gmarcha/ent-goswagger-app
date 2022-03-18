@@ -33,7 +33,7 @@ func NewCallback(ctx *middleware.Context, handler CallbackHandler) *Callback {
 
 Receive token
 
-Receive token as a response from 42 API.
+Receive token from test server.
 
 */
 type Callback struct {

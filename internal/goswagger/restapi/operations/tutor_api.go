@@ -58,6 +58,9 @@ func NewTutorAPI(spec *loads.Document) *TutorAPI {
 		RoleAddTutorHandler: role.AddTutorHandlerFunc(func(params role.AddTutorParams, principal *models.Principal) middleware.Responder {
 			return middleware.NotImplemented("operation role.AddTutor has not yet been implemented")
 		}),
+		AuthenticationAuthorizeHandler: authentication.AuthorizeHandlerFunc(func(params authentication.AuthorizeParams) middleware.Responder {
+			return middleware.NotImplemented("operation authentication.Authorize has not yet been implemented")
+		}),
 		AuthenticationCallbackHandler: authentication.CallbackHandlerFunc(func(params authentication.CallbackParams) middleware.Responder {
 			return middleware.NotImplemented("operation authentication.Callback has not yet been implemented")
 		}),
@@ -224,6 +227,8 @@ type TutorAPI struct {
 	RoleAddCalendarHandler role.AddCalendarHandler
 	// RoleAddTutorHandler sets the operation handler for the add tutor operation
 	RoleAddTutorHandler role.AddTutorHandler
+	// AuthenticationAuthorizeHandler sets the operation handler for the authorize operation
+	AuthenticationAuthorizeHandler authentication.AuthorizeHandler
 	// AuthenticationCallbackHandler sets the operation handler for the callback operation
 	AuthenticationCallbackHandler authentication.CallbackHandler
 	// EventCreateEventHandler sets the operation handler for the create event operation
@@ -387,6 +392,9 @@ func (o *TutorAPI) Validate() error {
 	}
 	if o.RoleAddTutorHandler == nil {
 		unregistered = append(unregistered, "role.AddTutorHandler")
+	}
+	if o.AuthenticationAuthorizeHandler == nil {
+		unregistered = append(unregistered, "authentication.AuthorizeHandler")
 	}
 	if o.AuthenticationCallbackHandler == nil {
 		unregistered = append(unregistered, "authentication.CallbackHandler")
@@ -609,6 +617,10 @@ func (o *TutorAPI) initHandlerCache() {
 		o.handlers["POST"] = make(map[string]http.Handler)
 	}
 	o.handlers["POST"]["/users/{id}/role/tutor"] = role.NewAddTutor(o.context, o.RoleAddTutorHandler)
+	if o.handlers["GET"] == nil {
+		o.handlers["GET"] = make(map[string]http.Handler)
+	}
+	o.handlers["GET"]["/auth/authorize"] = authentication.NewAuthorize(o.context, o.AuthenticationAuthorizeHandler)
 	if o.handlers["GET"] == nil {
 		o.handlers["GET"] = make(map[string]http.Handler)
 	}
