@@ -169,13 +169,6 @@ Continuous integration (with Github Actions) allows to run code validation, code
   It is used to run simultaneously all our application services.\
   *Links to [Docker documentation](https://docs.docker.com/get-started/overview/) and to [Compose manual](https://docs.docker.com/compose/).*
 
-- **Traefik Proxy**\
-  Traefik Proxy is an edge router which serves as a reverse proxy.\
-  Configuration rules are defined in a `docker-compose.yaml` file.\
-  Traefik intercepts and routes incoming request to our application.\
-  It automatically discovers our infrastructure and manages tls certificates.\
-  *Link to [documentation](https://doc.traefik.io/traefik/).*
-
 - **PostGreSQL _(or any SQL database)_**\
   A SQL relational database, running in a container in development phase or with a cloud provider in production.\
   *Links to [documentation](https://www.postgresql.org/docs/14/index.html) and [DockerHub](https://hub.docker.com/_/postgres).*
@@ -189,6 +182,13 @@ Continuous integration (with Github Actions) allows to run code validation, code
   Redis is a lightweight key-value database.\
   It allows to easy manage caches or data stores in our application.\
   *Links to [documentation](https://redis.io/documentation) and Go [package](https://pkg.go.dev/github.com/go-redis/redis/v8).*
+
+- **Traefik Proxy**\
+  Traefik Proxy is an edge router which serves as a reverse proxy.\
+  It intercepts and routes incoming request to our application.\
+  Configuration rules are defined in a `docker-compose.yaml` file.\
+  Traefik automatically discovers our infrastructure and manages tls certificates.\
+  *Link to [documentation](https://doc.traefik.io/traefik/).*
 
 ---
 
