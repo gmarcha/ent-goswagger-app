@@ -1,3 +1,66 @@
 version: "3.9"
 
-services: {}
+services:
+  reverse-proxy:
+    image: "traefik:v2.4"
+    command:
+      - "--providers.docker=true"
+      - "--providers.docker.exposedbydefault=false"
+      - "--providers.docker.network=default"
+      - "--entrypoints.web.address=:80"
+      - "--entrypoints.web.http.redirections.entryPoint.to=websecure"
+      - "--entrypoints.web.http.redirections.entryPoint.scheme=https"
+      - "--entrypoints.websecure.address=:443"
+      - "--certificatesresolvers.letsencryptresolver.acme.tlschallenge=true"
+      - "--certificatesresolvers.letsencryptresolver.acme.email=gamarcha@student.42.fr"
+      - "--certificatesresolvers.letsencryptresolver.acme.storage=/letsencrypt/acme.json"
+
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock:ro"
+      - traefik-certificates:/letsencrypt
+    ports:
+      - "80:80"
+      - "443:443"
+      - "8080:8080"
+    restart: unless-stopped
+
+  goswagger:
+    ports: []
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.goswagger.rule=Host(`tutor.localhost`) && PathPrefix(`/api/`)"
+      - "traefik.http.services.goswagger.loadbalancer.server.port=5000"
+      - "traefik.http.middlewares.pathstrip.stripprefix.prefixes=/api"
+      - "traefik.http.routers.goswagger.middlewares=pathstrip@docker"
+      - "traefik.http.routers.goswagger.entrypoints=websecure"
+      - "traefik.http.routers.goswagger.tls=true"
+      - "traefik.http.routers.goswagger.tls.certresolver=letsencryptresolver"
+
+  client:
+    image: node:16-alpine
+    working_dir: /app
+    entrypoint: |
+      /bin/sh -c "
+        yarn dev --dotenv ../env/.env
+      "
+    volumes:
+      - ../../nuxt-app:/app
+      - ./.env.prod:/env/.env
+    ports: []
+    environment:
+      CLIENT_HOST: ${CLIENT_HOST}
+      CLIENT_PORT: ${CLIENT_PORT}
+      API_CLIENT_ID: ${API_CLIENT_ID}
+      API_AUTH_URL: ${API_AUTH_URL}
+      API_CALLBACK_URL: ${API_CALLBACK_URL}
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.client.rule=Host(`tutor.localhost`)"
+      - "traefik.http.services.client.loadbalancer.server.port=3000"
+      - "traefik.http.routers.client.entrypoints=websecure"
+      - "traefik.http.routers.client.tls=true"
+      - "traefik.http.routers.client.tls.certresolver=letsencryptresolver"
+    restart: unless-stopped
+
+volumes:
+  traefik-certificates:
