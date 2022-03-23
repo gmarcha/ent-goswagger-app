@@ -108,6 +108,10 @@
 │   │       ├── embedded_spec.go
 │   │       ├── operations
 │   │       │   ├── authentication
+│   │       │   │   ├── authorize.go
+│   │       │   │   ├── authorize_parameters.go
+│   │       │   │   ├── authorize_responses.go
+│   │       │   │   ├── authorize_urlbuilder.go
 │   │       │   │   ├── callback.go
 │   │       │   │   ├── callback_parameters.go
 │   │       │   │   ├── callback_responses.go
@@ -2601,4 +2605,4 @@
     │       └── yamlprivateh.go
     └── modules.txt
 
-372 directories, 2228 files
+372 directories, 2232 files
