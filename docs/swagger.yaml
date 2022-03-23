@@ -27,7 +27,7 @@ paths:
   /auth/login:
     get:
       summary: Login user
-      description: Login a user with 42 API.
+      description: Login a user for test purpose.
       tags:
         - Authentication
       operationId: login
@@ -39,7 +39,7 @@ paths:
   /auth/callback:
     get:
       summary: Receive token
-      description: Receive token as a response from 42 API.
+      description: Receive token from test server.
       tags:
         - Authentication
       operationId: callback
@@ -48,6 +48,24 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/Token'
+        "401":
+          $ref: '#/responses/422'
+        "422":
+          $ref: '#/responses/422'
+        "500":
+          $ref: '#/responses/500'
+  /auth/authorize:
+    get:
+      summary: Handle authentication
+      description: Handle authorization API response, authenticate user and redirect to client.
+      tags:
+        - Authentication
+      operationId: authorize
+      responses:
+        "302":
+          description: Found
+        "401":
+          $ref: '#/responses/401'
         "422":
           $ref: '#/responses/422'
         "500":
