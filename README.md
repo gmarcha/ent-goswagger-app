@@ -183,6 +183,13 @@ Continuous integration (with Github Actions) allows to run code validation, code
   It allows to easy manage caches or data stores in our application.\
   *Links to [documentation](https://redis.io/documentation) and Go [package](https://pkg.go.dev/github.com/go-redis/redis/v8).*
 
+- **Traefik Proxy**\
+  Traefik Proxy is an edge router which serves as a reverse proxy.\
+  It intercepts and routes incoming request to our application.\
+  Configuration rules are defined in a `docker-compose.yaml` file.\
+  Traefik automatically discovers our infrastructure and manages tls certificates.\
+  *Link to [documentation](https://doc.traefik.io/traefik/).*
+
 ---
 
 - **GitHub Actions**\
