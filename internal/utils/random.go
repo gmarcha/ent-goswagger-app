@@ -11,7 +11,7 @@ func init() {
 	rand.Seed(time.Now().UnixNano())
 }
 
-// RandomString returns a random generated string.
+// RandomString returns a random generated string (deprecated: use environment instead).
 func RandomString(size int) string {
 	b := make([]byte, size)
 	for i := range b {
