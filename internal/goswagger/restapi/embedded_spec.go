@@ -33,37 +33,13 @@ func init() {
   },
   "basePath": "/v2",
   "paths": {
-    "/auth/authorize": {
-      "get": {
-        "description": "Handle authorization API response, authenticate user and redirect to client.",
-        "tags": [
-          "Authentication"
-        ],
-        "summary": "Handle authentication",
-        "operationId": "authorize",
-        "responses": {
-          "302": {
-            "description": "Found"
-          },
-          "401": {
-            "$ref": "#/responses/401"
-          },
-          "422": {
-            "$ref": "#/responses/422"
-          },
-          "500": {
-            "$ref": "#/responses/500"
-          }
-        }
-      }
-    },
     "/auth/callback": {
       "get": {
-        "description": "Receive token from test server.",
+        "description": "Authenticate a user with an authorization code.",
         "tags": [
           "Authentication"
         ],
-        "summary": "Receive token",
+        "summary": "Authenticate user",
         "operationId": "callback",
         "responses": {
           "200": {
@@ -86,7 +62,7 @@ func init() {
     },
     "/auth/login": {
       "get": {
-        "description": "Login a user for test purpose.",
+        "description": "Login a user with redirection.",
         "tags": [
           "Authentication"
         ],
@@ -1988,6 +1964,14 @@ func init() {
         "accessToken": {
           "type": "string"
         },
+        "expiresAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "issuedAt": {
+          "type": "string",
+          "format": "date-time"
+        },
         "refreshToken": {
           "type": "string"
         }
@@ -2000,9 +1984,19 @@ func init() {
           "type": "string",
           "format": "date-time"
         },
+        "issuedAt": {
+          "type": "string",
+          "format": "date-time"
+        },
         "login": {
           "description": "username",
           "type": "string"
+        },
+        "roles": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
         }
       }
     },
@@ -2126,46 +2120,13 @@ func init() {
   },
   "basePath": "/v2",
   "paths": {
-    "/auth/authorize": {
-      "get": {
-        "description": "Handle authorization API response, authenticate user and redirect to client.",
-        "tags": [
-          "Authentication"
-        ],
-        "summary": "Handle authentication",
-        "operationId": "authorize",
-        "responses": {
-          "302": {
-            "description": "Found"
-          },
-          "401": {
-            "description": "Unauthorized",
-            "schema": {
-              "$ref": "#/definitions/Error"
-            }
-          },
-          "422": {
-            "description": "Unprocessable Entity",
-            "schema": {
-              "$ref": "#/definitions/Error"
-            }
-          },
-          "500": {
-            "description": "Internal Server Error",
-            "schema": {
-              "$ref": "#/definitions/Error"
-            }
-          }
-        }
-      }
-    },
     "/auth/callback": {
       "get": {
-        "description": "Receive token from test server.",
+        "description": "Authenticate a user with an authorization code.",
         "tags": [
           "Authentication"
         ],
-        "summary": "Receive token",
+        "summary": "Authenticate user",
         "operationId": "callback",
         "responses": {
           "200": {
@@ -2197,7 +2158,7 @@ func init() {
     },
     "/auth/login": {
       "get": {
-        "description": "Login a user for test purpose.",
+        "description": "Login a user with redirection.",
         "tags": [
           "Authentication"
         ],
@@ -4588,6 +4549,14 @@ func init() {
         "accessToken": {
           "type": "string"
         },
+        "expiresAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "issuedAt": {
+          "type": "string",
+          "format": "date-time"
+        },
         "refreshToken": {
           "type": "string"
         }
@@ -4600,9 +4569,19 @@ func init() {
           "type": "string",
           "format": "date-time"
         },
+        "issuedAt": {
+          "type": "string",
+          "format": "date-time"
+        },
         "login": {
           "description": "username",
           "type": "string"
+        },
+        "roles": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
         }
       }
     },

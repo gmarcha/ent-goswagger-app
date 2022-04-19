@@ -8,8 +8,10 @@ package models
 import (
 	"context"
 
+	"github.com/go-openapi/errors"
 	"github.com/go-openapi/strfmt"
 	"github.com/go-openapi/swag"
+	"github.com/go-openapi/validate"
 )
 
 // Token token
@@ -20,12 +22,57 @@ type Token struct {
 	// access token
 	AccessToken string `json:"accessToken,omitempty"`
 
+	// expires at
+	// Format: date-time
+	ExpiresAt strfmt.DateTime `json:"expiresAt,omitempty"`
+
+	// issued at
+	// Format: date-time
+	IssuedAt strfmt.DateTime `json:"issuedAt,omitempty"`
+
 	// refresh token
 	RefreshToken string `json:"refreshToken,omitempty"`
 }
 
 // Validate validates this token
 func (m *Token) Validate(formats strfmt.Registry) error {
+	var res []error
+
+	if err := m.validateExpiresAt(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateIssuedAt(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if len(res) > 0 {
+		return errors.CompositeValidationError(res...)
+	}
+	return nil
+}
+
+func (m *Token) validateExpiresAt(formats strfmt.Registry) error {
+	if swag.IsZero(m.ExpiresAt) { // not required
+		return nil
+	}
+
+	if err := validate.FormatOf("expiresAt", "body", "date-time", m.ExpiresAt.String(), formats); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (m *Token) validateIssuedAt(formats strfmt.Registry) error {
+	if swag.IsZero(m.IssuedAt) { // not required
+		return nil
+	}
+
+	if err := validate.FormatOf("issuedAt", "body", "date-time", m.IssuedAt.String(), formats); err != nil {
+		return err
+	}
+
 	return nil
 }
 

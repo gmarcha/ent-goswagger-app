@@ -33,7 +33,7 @@ func NewLogin(ctx *middleware.Context, handler LoginHandler) *Login {
 
 Login user
 
-Login a user for test purpose.
+Login a user with redirection.
 
 */
 type Login struct {

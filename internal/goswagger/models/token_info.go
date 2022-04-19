@@ -23,8 +23,15 @@ type TokenInfo struct {
 	// Format: date-time
 	ExpiresAt strfmt.DateTime `json:"expiresAt,omitempty"`
 
+	// issued at
+	// Format: date-time
+	IssuedAt strfmt.DateTime `json:"issuedAt,omitempty"`
+
 	// username
 	Login string `json:"login,omitempty"`
+
+	// roles
+	Roles []string `json:"roles"`
 }
 
 // Validate validates this token info
@@ -32,6 +39,10 @@ func (m *TokenInfo) Validate(formats strfmt.Registry) error {
 	var res []error
 
 	if err := m.validateExpiresAt(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateIssuedAt(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -47,6 +58,18 @@ func (m *TokenInfo) validateExpiresAt(formats strfmt.Registry) error {
 	}
 
 	if err := validate.FormatOf("expiresAt", "body", "date-time", m.ExpiresAt.String(), formats); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (m *TokenInfo) validateIssuedAt(formats strfmt.Registry) error {
+	if swag.IsZero(m.IssuedAt) { // not required
+		return nil
+	}
+
+	if err := validate.FormatOf("issuedAt", "body", "date-time", m.IssuedAt.String(), formats); err != nil {
 		return err
 	}
 
