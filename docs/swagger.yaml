@@ -27,7 +27,7 @@ paths:
   /auth/login:
     get:
       summary: Login user
-      description: Login a user for test purpose.
+      description: Login a user with redirection.
       tags:
         - Authentication
       operationId: login
@@ -38,8 +38,8 @@ paths:
           $ref: '#/responses/500'
   /auth/callback:
     get:
-      summary: Receive token
-      description: Receive token from test server.
+      summary: Authenticate user
+      description: Authenticate a user with an authorization code.
       tags:
         - Authentication
       operationId: callback
@@ -50,22 +50,6 @@ paths:
             $ref: '#/definitions/Token'
         "401":
           $ref: '#/responses/422'
-        "422":
-          $ref: '#/responses/422'
-        "500":
-          $ref: '#/responses/500'
-  /auth/authorize:
-    get:
-      summary: Handle authentication
-      description: Handle authorization API response, authenticate user and redirect to client.
-      tags:
-        - Authentication
-      operationId: authorize
-      responses:
-        "302":
-          description: Found
-        "401":
-          $ref: '#/responses/401'
         "422":
           $ref: '#/responses/422'
         "500":
@@ -1338,15 +1322,28 @@ definitions:
         type: string
       refreshToken:
         type: string
-  TokenInfo:
-    type: object
-    properties:
-      login:
-        type: string
-        description: username
       expiresAt:
         type: string
         format: date-time
+      issuedAt:
+        type: string
+        format: date-time
+  TokenInfo:
+    type: object
+    properties:
+      expiresAt:
+        type: string
+        format: date-time
+      issuedAt:
+        type: string
+        format: date-time
+      login:
+        type: string
+        description: username
+      roles:
+        type: array
+        items:
+          type: string
   Error:
     type: object
     properties:
