@@ -16,6 +16,7 @@
 
 # Specific to project
 .env.dev
+.env.stag
 .env.prod
 servers.json
 
