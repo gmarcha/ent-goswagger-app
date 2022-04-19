@@ -20,7 +20,7 @@ type userClaims struct {
 // Init sets authentication route handlers.
 func Init(api *operations.TutorAPI, db *ent.Client, rdb *redis.Client) {
 
-	accessTokenDuration := time.Minute * 30
+	accessTokenDuration := time.Minute * 1
 	refreshTokenDuration := time.Hour * 72
 	accessTokenState := os.Getenv("ACCESS_TOKEN_STATE")
 	refreshTokenState := os.Getenv("REFRESH_TOKEN_STATE")
@@ -36,17 +36,6 @@ func Init(api *operations.TutorAPI, db *ent.Client, rdb *redis.Client) {
 		oauthConfig: oauthConfig,
 	}
 	api.AuthenticationCallbackHandler = &callback{
-		userInfoUrl:          userInfoUrl,
-		accessTokenDuration:  accessTokenDuration,
-		refreshTokenDuration: refreshTokenDuration,
-		accessTokenState:     accessTokenState,
-		refreshTokenState:    refreshTokenState,
-		oauthState:           oauthState,
-		oauthConfig:          oauthConfig,
-		user:                 userService,
-		rdb:                  rdb,
-	}
-	api.AuthenticationAuthorizeHandler = &authorize{
 		userInfoUrl:          userInfoUrl,
 		accessTokenDuration:  accessTokenDuration,
 		refreshTokenDuration: refreshTokenDuration,
