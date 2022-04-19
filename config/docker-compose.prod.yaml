@@ -7,17 +7,21 @@ services:
       - "--providers.docker=true"
       - "--providers.docker.exposedbydefault=false"
       - "--providers.docker.network=default"
+      # - "--providers.file.directory=/etc/traefik"
+      # - "--providers.file.watch=true"
       - "--entrypoints.web.address=:80"
       - "--entrypoints.web.http.redirections.entryPoint.to=websecure"
       - "--entrypoints.web.http.redirections.entryPoint.scheme=https"
       - "--entrypoints.websecure.address=:443"
-      - "--certificatesresolvers.letsencryptresolver.acme.tlschallenge=true"
-      - "--certificatesresolvers.letsencryptresolver.acme.email=gamarcha@student.42.fr"
-      - "--certificatesresolvers.letsencryptresolver.acme.storage=/letsencrypt/acme.json"
+      - "--certificatesresolvers.leresolver.acme.tlschallenge=true"
+      - "--certificatesresolvers.leresolver.acme.email=gamarcha@student.42.fr"
+      - "--certificatesresolvers.leresolver.acme.storage=/letsencrypt/acme.json"
 
     volumes:
-      - "/var/run/docker.sock:/var/run/docker.sock:ro"
+      - /var/run/docker.sock:/var/run/docker.sock:ro
       - traefik-certificates:/letsencrypt
+      # - ./traefik/config.yaml:/etc/traefik/config.yaml:ro
+      # - ./traefik/certs:/etc/certs:ro
     ports:
       - "80:80"
       - "443:443"
@@ -34,7 +38,7 @@ services:
       - "traefik.http.routers.goswagger.middlewares=pathstrip@docker"
       - "traefik.http.routers.goswagger.entrypoints=websecure"
       - "traefik.http.routers.goswagger.tls=true"
-      - "traefik.http.routers.goswagger.tls.certresolver=letsencryptresolver"
+      - "traefik.http.routers.goswagger.tls.certresolver=leresolver"
 
   client:
     image: node:16-alpine
@@ -59,7 +63,7 @@ services:
       - "traefik.http.services.client.loadbalancer.server.port=3000"
       - "traefik.http.routers.client.entrypoints=websecure"
       - "traefik.http.routers.client.tls=true"
-      - "traefik.http.routers.client.tls.certresolver=letsencryptresolver"
+      - "traefik.http.routers.client.tls.certresolver=leresolver"
     restart: unless-stopped
 
 volumes:
