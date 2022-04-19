@@ -60,8 +60,7 @@ user:subscription | Subscribe to events
 
 | Method  | URI     | Name   | Summary |
 |---------|---------|--------|---------|
-| GET | /v2/auth/authorize | [authorize](#authorize) | Handle authentication |
-| GET | /v2/auth/callback | [callback](#callback) | Receive token |
+| GET | /v2/auth/callback | [callback](#callback) | Authenticate user |
 | GET | /v2/auth/login | [login](#login) | Login user |
 | GET | /v2/auth/token/info | [token info](#token-info) | Send token information |
 | GET | /v2/auth/token/refresh | [token refresh](#token-refresh) | Refresh token |
@@ -386,64 +385,13 @@ Status: Internal Server Error
 
 [Error](#error)
 
-### <span id="authorize"></span> Handle authentication (*authorize*)
-
-```
-GET /v2/auth/authorize
-```
-
-Handle authorization API response, authenticate user and redirect to client.
-
-#### All responses
-| Code | Status | Description | Has headers | Schema |
-|------|--------|-------------|:-----------:|--------|
-| [302](#authorize-302) | Found | Found |  | [schema](#authorize-302-schema) |
-| [401](#authorize-401) | Unauthorized | Unauthorized |  | [schema](#authorize-401-schema) |
-| [422](#authorize-422) | Unprocessable Entity | Unprocessable Entity |  | [schema](#authorize-422-schema) |
-| [500](#authorize-500) | Internal Server Error | Internal Server Error |  | [schema](#authorize-500-schema) |
-
-#### Responses
-
-
-##### <span id="authorize-302"></span> 302 - Found
-Status: Found
-
-###### <span id="authorize-302-schema"></span> Schema
-
-##### <span id="authorize-401"></span> 401 - Unauthorized
-Status: Unauthorized
-
-###### <span id="authorize-401-schema"></span> Schema
-   
-  
-
-[Error](#error)
-
-##### <span id="authorize-422"></span> 422 - Unprocessable Entity
-Status: Unprocessable Entity
-
-###### <span id="authorize-422-schema"></span> Schema
-   
-  
-
-[Error](#error)
-
-##### <span id="authorize-500"></span> 500 - Internal Server Error
-Status: Internal Server Error
-
-###### <span id="authorize-500-schema"></span> Schema
-   
-  
-
-[Error](#error)
-
-### <span id="callback"></span> Receive token (*callback*)
+### <span id="callback"></span> Authenticate user (*callback*)
 
 ```
 GET /v2/auth/callback
 ```
 
-Receive token from test server.
+Authenticate a user with an authorization code.
 
 #### All responses
 | Code | Status | Description | Has headers | Schema |
@@ -1717,7 +1665,7 @@ Status: Internal Server Error
 GET /v2/auth/login
 ```
 
-Login a user for test purpose.
+Login a user with redirection.
 
 #### All responses
 | Code | Status | Description | Has headers | Schema |
@@ -3149,6 +3097,8 @@ Status: Internal Server Error
 | Name | Type | Go type | Required | Default | Description | Example |
 |------|------|---------|:--------:| ------- |-------------|---------|
 | accessToken | string| `string` |  | |  |  |
+| expiresAt | date-time (formatted string)| `strfmt.DateTime` |  | |  |  |
+| issuedAt | date-time (formatted string)| `strfmt.DateTime` |  | |  |  |
 | refreshToken | string| `string` |  | |  |  |
 
 
@@ -3165,7 +3115,9 @@ Status: Internal Server Error
 | Name | Type | Go type | Required | Default | Description | Example |
 |------|------|---------|:--------:| ------- |-------------|---------|
 | expiresAt | date-time (formatted string)| `strfmt.DateTime` |  | |  |  |
+| issuedAt | date-time (formatted string)| `strfmt.DateTime` |  | |  |  |
 | login | string| `string` |  | | username |  |
+| roles | []string| `[]string` |  | |  |  |
 
 
 
