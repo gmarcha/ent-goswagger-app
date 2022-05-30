@@ -14,6 +14,16 @@ type Service struct {
 	Role *ent.RoleClient
 }
 
+// ListRole returns a role array or an error.
+func (r *Service) ListRole(ctx context.Context) ([]*ent.Role, error) {
+
+	res, err := r.Role.Query().All(ctx)
+	if err != nil {
+		return nil, err
+	}
+	return res, nil
+}
+
 // ReadRoleByName returns a role or an error.
 func (r *Service) ReadRoleByName(ctx context.Context, name string) (*ent.Role, error) {
 

@@ -12,6 +12,19 @@ import (
 	"github.com/google/uuid"
 )
 
+type listRole struct {
+	role *Service
+}
+
+func (r *listRole) Handle(params role.ListRoleParams, principal *models.Principal) middleware.Responder {
+	ctx := context.Background()
+	res, err := r.role.ListRole(ctx)
+	if err != nil {
+		return role.NewListRoleInternalServerError().WithPayload(e.Err(500, err))
+	}
+	return role.NewListRoleOK().WithPayload(res)
+}
+
 type addTutor struct {
 	user *user.Service
 	role *Service

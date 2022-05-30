@@ -18,6 +18,8 @@ func Init(api *operations.TutorAPI, db *ent.Client) {
 
 	createRoles(db)
 
+	api.RoleListRoleHandler = &listRole{role: roleService}
+
 	api.RoleAddTutorHandler = &addTutor{user: userService, role: roleService}
 	api.RoleRemoveTutorHandler = &removeTutor{user: userService, role: roleService}
 
