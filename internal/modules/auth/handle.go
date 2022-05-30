@@ -157,7 +157,7 @@ func (t *tokenRefresh) Handle(params authentication.TokenRefreshParams) middlewa
 	client := t.oauthConfig.Client(ctx, oauthToken)
 	res, err := client.Get(t.userInfoUrl)
 	if err != nil {
-		return authentication.NewTokenRefreshInternalServerError().WithPayload(e.Err(500, err))
+		return authentication.NewTokenRefreshUnauthorized().WithPayload(e.Err(401, err))
 	}
 
 	if res.StatusCode != 200 {

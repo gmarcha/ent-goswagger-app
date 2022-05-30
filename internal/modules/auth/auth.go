@@ -1,6 +1,8 @@
 package auth
 
 import (
+	"fmt"
+
 	"github.com/gmarcha/ent-goswagger-app/internal/goswagger/models"
 	"github.com/go-openapi/errors"
 	"github.com/go-redis/redis/v8"
@@ -22,7 +24,8 @@ func authenticate(rdb *redis.Client, accessTokenState string) authenticator {
 
 		token, err := parseToken(rdb, accessTokenState, tokenString)
 		if err != nil || !token.Valid {
-			return nil, errors.New(401, "Unauthorized")
+			fmt.Println(err.Error())
+			return nil, errors.New(401, err.Error())
 		}
 
 		claims := token.Claims.(*userClaims)
