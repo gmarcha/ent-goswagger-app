@@ -13,6 +13,7 @@
 │   ├── docker-compose.ci.yaml
 │   ├── docker-compose.dev.yaml
 │   ├── docker-compose.prod.yaml
+│   ├── docker-compose.stag.yaml
 │   ├── docker-compose.yaml
 │   ├── pgadmin
 │   │   └── servers.json.sample
@@ -2605,4 +2606,4 @@
     │       └── yamlprivateh.go
     └── modules.txt
 
-372 directories, 2232 files
+372 directories, 2233 files
