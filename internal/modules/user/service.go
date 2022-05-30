@@ -21,6 +21,8 @@ func (s *Service) ListUser(ctx context.Context, tutor *bool) ([]*ent.User, error
 		builder.WithRoles(func(q *ent.RoleQuery) {
 			q.Where(role.Name("tutor"))
 		})
+	} else {
+		builder.WithRoles()
 	}
 	res, err := builder.All(ctx)
 	if err != nil {
@@ -44,7 +46,7 @@ func (s *Service) CreateUser(ctx context.Context, user *ent.User) (*ent.User, er
 // ReadUserByLogin returns a user or an error.
 func (s *Service) ReadUserByLogin(ctx context.Context, login string) (*ent.User, error) {
 
-	res, err := s.User.Query().Where(user.Login(login)).WithRoles().WithEvents().Only(ctx)
+	res, err := s.User.Query().Where(user.Login(login)).WithRoles().WithEvents(func(q *ent.EventQuery) { q.WithCategory() }).Only(ctx)
 	if err != nil {
 		return nil, err
 	}
