@@ -11,6 +11,7 @@ func Init(api *operations.TutorAPI, db *ent.Client) {
 	eventService := &Service{Event: db.Event}
 
 	api.EventListEventHandler = &listEvent{event: eventService}
+	api.EventListEventWithUsersHandler = &listEventWithUsers{event: eventService}
 	api.EventCreateEventHandler = &createEvent{event: eventService}
 
 	api.EventReadEventHandler = &readEvent{event: eventService}

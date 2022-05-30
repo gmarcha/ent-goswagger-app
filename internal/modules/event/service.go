@@ -14,40 +14,46 @@ type Service struct {
 	Event *ent.EventClient
 }
 
-// ListEvent returns an event list (day and month filters available) or an error.
-func (s *Service) ListEvent(ctx context.Context, day, month *string) ([]*ent.Event, error) {
+// ListEvent returns an event list with category, or an error.
+func (s *Service) ListEvent(ctx context.Context, start, end *string) ([]*ent.Event, error) {
 
 	builder := s.Event.Query().WithCategory()
-	if day != nil {
-		filter, err := time.Parse(time.RFC3339, *day)
+	if start != nil {
+		filter, err := time.Parse(time.RFC3339, *start)
 		if err != nil {
 			return nil, err
 		}
-		builder.Where(entEvent.Or(
-			entEvent.And(
-				entEvent.StartAtGT(time.Date(filter.Year(), filter.Month(), filter.Day(), 0, 0, 0, 0, filter.Location())),
-				entEvent.StartAtLT(time.Date(filter.Year(), filter.Month(), filter.Day()+1, 0, 0, 0, 0, filter.Location())),
-			),
-			entEvent.And(
-				entEvent.EndAtGT(time.Date(filter.Year(), filter.Month(), filter.Day(), 0, 0, 0, 0, filter.Location())),
-				entEvent.EndAtLT(time.Date(filter.Year(), filter.Month(), filter.Day()+1, 0, 0, 0, 0, filter.Location())),
-			),
-		))
-	} else if month != nil {
-		filter, err := time.Parse(time.RFC3339, *month)
+		builder.Where(entEvent.StartAtGTE(filter))
+	} else if end != nil {
+		filter, err := time.Parse(time.RFC3339, *end)
 		if err != nil {
 			return nil, err
 		}
-		builder.Where(entEvent.Or(
-			entEvent.And(
-				entEvent.StartAtGT(time.Date(filter.Year(), filter.Month(), 0, 0, 0, 0, 0, filter.Location())),
-				entEvent.StartAtLT(time.Date(filter.Year(), filter.Month()+1, 0, 0, 0, 0, 0, filter.Location())),
-			),
-			entEvent.And(
-				entEvent.EndAtGT(time.Date(filter.Year(), filter.Month(), 0, 0, 0, 0, 0, filter.Location())),
-				entEvent.EndAtLT(time.Date(filter.Year(), filter.Month()+1, 0, 0, 0, 0, 0, filter.Location())),
-			),
-		))
+		builder.Where(entEvent.EndAtLTE(filter))
+	}
+	res, err := builder.All(ctx)
+	if err != nil {
+		return nil, err
+	}
+	return res, nil
+}
+
+// ListEventWithUsers returns an event list with category and users, or an error.
+func (s *Service) ListEventWithUsers(ctx context.Context, start, end *string) ([]*ent.Event, error) {
+
+	builder := s.Event.Query().WithCategory().WithUsers()
+	if start != nil {
+		filter, err := time.Parse(time.RFC3339, *start)
+		if err != nil {
+			return nil, err
+		}
+		builder.Where(entEvent.StartAtGTE(filter))
+	} else if end != nil {
+		filter, err := time.Parse(time.RFC3339, *end)
+		if err != nil {
+			return nil, err
+		}
+		builder.Where(entEvent.EndAtLTE(filter))
 	}
 	res, err := builder.All(ctx)
 	if err != nil {

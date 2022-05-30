@@ -17,11 +17,24 @@ type listEvent struct {
 
 func (e *listEvent) Handle(params event.ListEventParams, principal *models.Principal) middleware.Responder {
 	ctx := context.Background()
-	res, err := e.event.ListEvent(ctx, params.Day, params.Month)
+	res, err := e.event.ListEvent(ctx, params.Start, params.End)
 	if err != nil {
 		event.NewListEventInternalServerError().WithPayload(u.Err(500, err))
 	}
 	return event.NewListEventOK().WithPayload(res)
+}
+
+type listEventWithUsers struct {
+	event *Service
+}
+
+func (e *listEventWithUsers) Handle(params event.ListEventWithUsersParams, principal *models.Principal) middleware.Responder {
+	ctx := context.Background()
+	res, err := e.event.ListEventWithUsers(ctx, params.Start, params.End)
+	if err != nil {
+		event.NewListEventWithUsersInternalServerError().WithPayload(u.Err(500, err))
+	}
+	return event.NewListEventWithUsersOK().WithPayload(res)
 }
 
 type createEvent struct {
