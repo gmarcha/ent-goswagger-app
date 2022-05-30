@@ -110,12 +110,12 @@ paths:
             - public
       parameters:
         - in: query
-          name: day
-          description: Day filter.
+          name: start
+          description: From start day.
           type: string
         - in: query
-          name: month
-          description: Month filter.
+          name: end
+          description: To end day.
           type: string
       responses:
         "200":
@@ -142,6 +142,18 @@ paths:
             - event
             - event:write
       parameters:
+        - in: query
+          name: repeatCount
+          description: Event repetition count.
+          type: integer
+        - in: query
+          name: repeatType
+          description: Event repetition type.
+          type: string
+          enum:
+            - day
+            - week
+            - month
         - in: body
           name: event
           required: true
@@ -155,6 +167,39 @@ paths:
             $ref: '#/definitions/Event'
         "400":
           $ref: '#/responses/400'
+        "401":
+          $ref: '#/responses/401'
+        "403":
+          $ref: '#/responses/403'
+        "500":
+          $ref: '#/responses/500'
+  /events/users:
+    get:
+      summary: List events with users.
+      description: List all events with all subscribed users.
+      tags:
+        - Event
+      operationId: listEventWithUsers
+      security:
+        - OAuth2:
+            - public
+            - event
+      parameters:
+        - in: query
+          name: start
+          description: From start day.
+          type: string
+        - in: query
+          name: end
+          description: To end day.
+          type: string
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Event'
         "401":
           $ref: '#/responses/401'
         "403":
@@ -986,6 +1031,30 @@ paths:
           $ref: '#/responses/403'
         "404":
           $ref: '#/responses/404'
+        "500":
+          $ref: '#/responses/500'
+  /users/roles:
+    get:
+      summary: List roles
+      description: List all roles.
+      tags:
+        - Role
+      operationId: listRole
+      security:
+        - OAuth2:
+            - public
+            - user
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Role'
+        "401":
+          $ref: '#/responses/401'
+        "403":
+          $ref: '#/responses/401'
         "500":
           $ref: '#/responses/500'
   /users/{id}/role/tutor:
