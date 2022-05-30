@@ -162,6 +162,10 @@
 │   │       │   │   ├── list_event_users_parameters.go
 │   │       │   │   ├── list_event_users_responses.go
 │   │       │   │   ├── list_event_users_urlbuilder.go
+│   │       │   │   ├── list_event_with_users.go
+│   │       │   │   ├── list_event_with_users_parameters.go
+│   │       │   │   ├── list_event_with_users_responses.go
+│   │       │   │   ├── list_event_with_users_urlbuilder.go
 │   │       │   │   ├── list_type.go
 │   │       │   │   ├── list_type_parameters.go
 │   │       │   │   ├── list_type_responses.go
@@ -224,6 +228,10 @@
 │   │       │   │   ├── add_tutor_parameters.go
 │   │       │   │   ├── add_tutor_responses.go
 │   │       │   │   ├── add_tutor_urlbuilder.go
+│   │       │   │   ├── list_role.go
+│   │       │   │   ├── list_role_parameters.go
+│   │       │   │   ├── list_role_responses.go
+│   │       │   │   ├── list_role_urlbuilder.go
 │   │       │   │   ├── remove_admin.go
 │   │       │   │   ├── remove_admin_parameters.go
 │   │       │   │   ├── remove_admin_responses.go
@@ -2606,4 +2614,4 @@
     │       └── yamlprivateh.go
     └── modules.txt
 
-372 directories, 2233 files
+372 directories, 2241 files
