@@ -47,12 +47,12 @@ An API for 42 tutors.
 
 Name | Description
 -----|-------------
-user:write | Read-write users
 public | Public access
 event | Read events
 event:write | Read-write events
 user | Read users
 user:subscription | Subscribe to events
+user:write | Read-write users
 
 ## All endpoints
 
@@ -76,6 +76,7 @@ user:subscription | Subscribe to events
 | GET | /v2/events/{id}/types | [get event type](#get-event-type) | Get event type |
 | GET | /v2/events | [list event](#list-event) | List events |
 | GET | /v2/events/{id}/users | [list event users](#list-event-users) | List event users |
+| GET | /v2/events/users | [list event with users](#list-event-with-users) | List events with users. |
 | GET | /v2/events/{id} | [read event](#read-event) | Read event |
 | PATCH | /v2/events/{eventID}/types/{typeID} | [set event type](#set-event-type) | Set event type |
 | PATCH | /v2/events/{id} | [update event](#update-event) | Update event |
@@ -102,6 +103,7 @@ user:subscription | Subscribe to events
 | POST | /v2/users/{id}/role/admin | [add admin](#add-admin) | Add admin |
 | POST | /v2/users/{id}/role/calendar | [add calendar](#add-calendar) | Add calendar |
 | POST | /v2/users/{id}/role/tutor | [add tutor](#add-tutor) | Add tutor |
+| GET | /v2/users/roles | [list role](#list-role) | List roles |
 | DELETE | /v2/users/{id}/role/admin | [remove admin](#remove-admin) | Remove admin |
 | DELETE | /v2/users/{id}/role/calendar | [remove calendar](#remove-calendar) | Remove calendar |
 | DELETE | /v2/users/{id}/role/tutor | [remove tutor](#remove-tutor) | Remove tutor |
@@ -455,6 +457,8 @@ Create a new event.
 
 | Name | Source | Type | Go type | Separator | Required | Default | Description |
 |------|--------|------|---------|-----------| :------: |---------|-------------|
+| repeatCount | `query` | integer | `int64` |  |  |  | Event repetition count. |
+| repeatType | `query` | string | `string` |  |  |  | Event repetition type. |
 | event | `body` | [Event](#event) | `ent.Event` | | ✓ | | Event to create. |
 
 #### All responses
@@ -1045,8 +1049,8 @@ List all events.
 
 | Name | Source | Type | Go type | Separator | Required | Default | Description |
 |------|--------|------|---------|-----------| :------: |---------|-------------|
-| day | `query` | string | `string` |  |  |  | Day filter. |
-| month | `query` | string | `string` |  |  |  | Month filter. |
+| end | `query` | string | `string` |  |  |  | To end day. |
+| start | `query` | string | `string` |  |  |  | From start day. |
 
 #### All responses
 | Code | Status | Description | Has headers | Schema |
@@ -1179,6 +1183,71 @@ Status: Internal Server Error
 
 [Error](#error)
 
+### <span id="list-event-with-users"></span> List events with users. (*listEventWithUsers*)
+
+```
+GET /v2/events/users
+```
+
+List all events with all subscribed users.
+
+#### Security Requirements
+  * OAuth2: event, public
+
+#### Parameters
+
+| Name | Source | Type | Go type | Separator | Required | Default | Description |
+|------|--------|------|---------|-----------| :------: |---------|-------------|
+| end | `query` | string | `string` |  |  |  | To end day. |
+| start | `query` | string | `string` |  |  |  | From start day. |
+
+#### All responses
+| Code | Status | Description | Has headers | Schema |
+|------|--------|-------------|:-----------:|--------|
+| [200](#list-event-with-users-200) | OK | OK |  | [schema](#list-event-with-users-200-schema) |
+| [401](#list-event-with-users-401) | Unauthorized | Unauthorized |  | [schema](#list-event-with-users-401-schema) |
+| [403](#list-event-with-users-403) | Forbidden | Forbidden |  | [schema](#list-event-with-users-403-schema) |
+| [500](#list-event-with-users-500) | Internal Server Error | Internal Server Error |  | [schema](#list-event-with-users-500-schema) |
+
+#### Responses
+
+
+##### <span id="list-event-with-users-200"></span> 200 - OK
+Status: OK
+
+###### <span id="list-event-with-users-200-schema"></span> Schema
+   
+  
+
+[][Event](#event)
+
+##### <span id="list-event-with-users-401"></span> 401 - Unauthorized
+Status: Unauthorized
+
+###### <span id="list-event-with-users-401-schema"></span> Schema
+   
+  
+
+[Error](#error)
+
+##### <span id="list-event-with-users-403"></span> 403 - Forbidden
+Status: Forbidden
+
+###### <span id="list-event-with-users-403-schema"></span> Schema
+   
+  
+
+[Error](#error)
+
+##### <span id="list-event-with-users-500"></span> 500 - Internal Server Error
+Status: Internal Server Error
+
+###### <span id="list-event-with-users-500-schema"></span> Schema
+   
+  
+
+[Error](#error)
+
 ### <span id="list-me-events"></span> List authenticated user events (*listMeEvents*)
 
 ```
@@ -1290,6 +1359,64 @@ Status: Forbidden
 Status: Internal Server Error
 
 ###### <span id="list-me-roles-500-schema"></span> Schema
+   
+  
+
+[Error](#error)
+
+### <span id="list-role"></span> List roles (*listRole*)
+
+```
+GET /v2/users/roles
+```
+
+List all roles.
+
+#### Security Requirements
+  * OAuth2: public, user
+
+#### All responses
+| Code | Status | Description | Has headers | Schema |
+|------|--------|-------------|:-----------:|--------|
+| [200](#list-role-200) | OK | OK |  | [schema](#list-role-200-schema) |
+| [401](#list-role-401) | Unauthorized | Unauthorized |  | [schema](#list-role-401-schema) |
+| [403](#list-role-403) | Forbidden | Unauthorized |  | [schema](#list-role-403-schema) |
+| [500](#list-role-500) | Internal Server Error | Internal Server Error |  | [schema](#list-role-500-schema) |
+
+#### Responses
+
+
+##### <span id="list-role-200"></span> 200 - OK
+Status: OK
+
+###### <span id="list-role-200-schema"></span> Schema
+   
+  
+
+[][Role](#role)
+
+##### <span id="list-role-401"></span> 401 - Unauthorized
+Status: Unauthorized
+
+###### <span id="list-role-401-schema"></span> Schema
+   
+  
+
+[Error](#error)
+
+##### <span id="list-role-403"></span> 403 - Unauthorized
+Status: Forbidden
+
+###### <span id="list-role-403-schema"></span> Schema
+   
+  
+
+[Error](#error)
+
+##### <span id="list-role-500"></span> 500 - Internal Server Error
+Status: Internal Server Error
+
+###### <span id="list-role-500-schema"></span> Schema
    
   
 
