@@ -91,11 +91,17 @@ func NewTutorAPI(spec *loads.Document) *TutorAPI {
 		EventListEventUsersHandler: event.ListEventUsersHandlerFunc(func(params event.ListEventUsersParams, principal *models.Principal) middleware.Responder {
 			return middleware.NotImplemented("operation event.ListEventUsers has not yet been implemented")
 		}),
+		EventListEventWithUsersHandler: event.ListEventWithUsersHandlerFunc(func(params event.ListEventWithUsersParams, principal *models.Principal) middleware.Responder {
+			return middleware.NotImplemented("operation event.ListEventWithUsers has not yet been implemented")
+		}),
 		UserListMeEventsHandler: user.ListMeEventsHandlerFunc(func(params user.ListMeEventsParams, principal *models.Principal) middleware.Responder {
 			return middleware.NotImplemented("operation user.ListMeEvents has not yet been implemented")
 		}),
 		UserListMeRolesHandler: user.ListMeRolesHandlerFunc(func(params user.ListMeRolesParams, principal *models.Principal) middleware.Responder {
 			return middleware.NotImplemented("operation user.ListMeRoles has not yet been implemented")
+		}),
+		RoleListRoleHandler: role.ListRoleHandlerFunc(func(params role.ListRoleParams, principal *models.Principal) middleware.Responder {
+			return middleware.NotImplemented("operation role.ListRole has not yet been implemented")
 		}),
 		EventTypeListTypeHandler: event_type.ListTypeHandlerFunc(func(params event_type.ListTypeParams, principal *models.Principal) middleware.Responder {
 			return middleware.NotImplemented("operation event_type.ListType has not yet been implemented")
@@ -246,10 +252,14 @@ type TutorAPI struct {
 	EventListEventHandler event.ListEventHandler
 	// EventListEventUsersHandler sets the operation handler for the list event users operation
 	EventListEventUsersHandler event.ListEventUsersHandler
+	// EventListEventWithUsersHandler sets the operation handler for the list event with users operation
+	EventListEventWithUsersHandler event.ListEventWithUsersHandler
 	// UserListMeEventsHandler sets the operation handler for the list me events operation
 	UserListMeEventsHandler user.ListMeEventsHandler
 	// UserListMeRolesHandler sets the operation handler for the list me roles operation
 	UserListMeRolesHandler user.ListMeRolesHandler
+	// RoleListRoleHandler sets the operation handler for the list role operation
+	RoleListRoleHandler role.ListRoleHandler
 	// EventTypeListTypeHandler sets the operation handler for the list type operation
 	EventTypeListTypeHandler event_type.ListTypeHandler
 	// EventTypeListTypeEventsHandler sets the operation handler for the list type events operation
@@ -421,11 +431,17 @@ func (o *TutorAPI) Validate() error {
 	if o.EventListEventUsersHandler == nil {
 		unregistered = append(unregistered, "event.ListEventUsersHandler")
 	}
+	if o.EventListEventWithUsersHandler == nil {
+		unregistered = append(unregistered, "event.ListEventWithUsersHandler")
+	}
 	if o.UserListMeEventsHandler == nil {
 		unregistered = append(unregistered, "user.ListMeEventsHandler")
 	}
 	if o.UserListMeRolesHandler == nil {
 		unregistered = append(unregistered, "user.ListMeRolesHandler")
+	}
+	if o.RoleListRoleHandler == nil {
+		unregistered = append(unregistered, "role.ListRoleHandler")
 	}
 	if o.EventTypeListTypeHandler == nil {
 		unregistered = append(unregistered, "event_type.ListTypeHandler")
@@ -656,11 +672,19 @@ func (o *TutorAPI) initHandlerCache() {
 	if o.handlers["GET"] == nil {
 		o.handlers["GET"] = make(map[string]http.Handler)
 	}
+	o.handlers["GET"]["/events/users"] = event.NewListEventWithUsers(o.context, o.EventListEventWithUsersHandler)
+	if o.handlers["GET"] == nil {
+		o.handlers["GET"] = make(map[string]http.Handler)
+	}
 	o.handlers["GET"]["/users/me/events"] = user.NewListMeEvents(o.context, o.UserListMeEventsHandler)
 	if o.handlers["GET"] == nil {
 		o.handlers["GET"] = make(map[string]http.Handler)
 	}
 	o.handlers["GET"]["/users/me/roles"] = user.NewListMeRoles(o.context, o.UserListMeRolesHandler)
+	if o.handlers["GET"] == nil {
+		o.handlers["GET"] = make(map[string]http.Handler)
+	}
+	o.handlers["GET"]["/users/roles"] = role.NewListRole(o.context, o.RoleListRoleHandler)
 	if o.handlers["GET"] == nil {
 		o.handlers["GET"] = make(map[string]http.Handler)
 	}

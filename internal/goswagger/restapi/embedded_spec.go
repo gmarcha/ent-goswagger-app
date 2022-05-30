@@ -162,14 +162,14 @@ func init() {
         "parameters": [
           {
             "type": "string",
-            "description": "Day filter.",
-            "name": "day",
+            "description": "From start day.",
+            "name": "start",
             "in": "query"
           },
           {
             "type": "string",
-            "description": "Month filter.",
-            "name": "month",
+            "description": "To end day.",
+            "name": "end",
             "in": "query"
           }
         ],
@@ -211,6 +211,23 @@ func init() {
         "summary": "Create event",
         "operationId": "createEvent",
         "parameters": [
+          {
+            "type": "integer",
+            "description": "Event repetition count.",
+            "name": "repeatCount",
+            "in": "query"
+          },
+          {
+            "enum": [
+              "day",
+              "week",
+              "month"
+            ],
+            "type": "string",
+            "description": "Event repetition type.",
+            "name": "repeatType",
+            "in": "query"
+          },
           {
             "description": "Event to create.",
             "name": "event",
@@ -519,6 +536,58 @@ func init() {
           "required": true
         }
       ]
+    },
+    "/events/users": {
+      "get": {
+        "security": [
+          {
+            "OAuth2": [
+              "public",
+              "event"
+            ]
+          }
+        ],
+        "description": "List all events with all subscribed users.",
+        "tags": [
+          "Event"
+        ],
+        "summary": "List events with users.",
+        "operationId": "listEventWithUsers",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "From start day.",
+            "name": "start",
+            "in": "query"
+          },
+          {
+            "type": "string",
+            "description": "To end day.",
+            "name": "end",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Event"
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/responses/401"
+          },
+          "403": {
+            "$ref": "#/responses/403"
+          },
+          "500": {
+            "$ref": "#/responses/500"
+          }
+        }
+      }
     },
     "/events/{eventID}/types/{typeID}": {
       "patch": {
@@ -1173,6 +1242,44 @@ func init() {
           },
           "403": {
             "$ref": "#/responses/403"
+          },
+          "500": {
+            "$ref": "#/responses/500"
+          }
+        }
+      }
+    },
+    "/users/roles": {
+      "get": {
+        "security": [
+          {
+            "OAuth2": [
+              "public",
+              "user"
+            ]
+          }
+        ],
+        "description": "List all roles.",
+        "tags": [
+          "Role"
+        ],
+        "summary": "List roles",
+        "operationId": "listRole",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Role"
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/responses/401"
+          },
+          "403": {
+            "$ref": "#/responses/401"
           },
           "500": {
             "$ref": "#/responses/500"
@@ -2273,14 +2380,14 @@ func init() {
         "parameters": [
           {
             "type": "string",
-            "description": "Day filter.",
-            "name": "day",
+            "description": "From start day.",
+            "name": "start",
             "in": "query"
           },
           {
             "type": "string",
-            "description": "Month filter.",
-            "name": "month",
+            "description": "To end day.",
+            "name": "end",
             "in": "query"
           }
         ],
@@ -2331,6 +2438,23 @@ func init() {
         "summary": "Create event",
         "operationId": "createEvent",
         "parameters": [
+          {
+            "type": "integer",
+            "description": "Event repetition count.",
+            "name": "repeatCount",
+            "in": "query"
+          },
+          {
+            "enum": [
+              "day",
+              "week",
+              "month"
+            ],
+            "type": "string",
+            "description": "Event repetition type.",
+            "name": "repeatType",
+            "in": "query"
+          },
           {
             "description": "Event to create.",
             "name": "event",
@@ -2732,6 +2856,67 @@ func init() {
           "required": true
         }
       ]
+    },
+    "/events/users": {
+      "get": {
+        "security": [
+          {
+            "OAuth2": [
+              "event",
+              "public"
+            ]
+          }
+        ],
+        "description": "List all events with all subscribed users.",
+        "tags": [
+          "Event"
+        ],
+        "summary": "List events with users.",
+        "operationId": "listEventWithUsers",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "From start day.",
+            "name": "start",
+            "in": "query"
+          },
+          {
+            "type": "string",
+            "description": "To end day.",
+            "name": "end",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Event"
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      }
     },
     "/events/{eventID}/types/{typeID}": {
       "patch": {
@@ -3557,6 +3742,53 @@ func init() {
           },
           "403": {
             "description": "Forbidden",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      }
+    },
+    "/users/roles": {
+      "get": {
+        "security": [
+          {
+            "OAuth2": [
+              "public",
+              "user"
+            ]
+          }
+        ],
+        "description": "List all roles.",
+        "tags": [
+          "Role"
+        ],
+        "summary": "List roles",
+        "operationId": "listRole",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Role"
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "403": {
+            "description": "Unauthorized",
             "schema": {
               "$ref": "#/definitions/Error"
             }

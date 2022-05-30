@@ -14,19 +14,19 @@ import (
 	"github.com/go-openapi/strfmt"
 )
 
-// NewListEventParams creates a new ListEventParams object
+// NewListEventWithUsersParams creates a new ListEventWithUsersParams object
 //
 // There are no default values defined in the spec.
-func NewListEventParams() ListEventParams {
+func NewListEventWithUsersParams() ListEventWithUsersParams {
 
-	return ListEventParams{}
+	return ListEventWithUsersParams{}
 }
 
-// ListEventParams contains all the bound params for the list event operation
+// ListEventWithUsersParams contains all the bound params for the list event with users operation
 // typically these are obtained from a http.Request
 //
-// swagger:parameters listEvent
-type ListEventParams struct {
+// swagger:parameters listEventWithUsers
+type ListEventWithUsersParams struct {
 
 	// HTTP Request Object
 	HTTPRequest *http.Request `json:"-"`
@@ -44,8 +44,8 @@ type ListEventParams struct {
 // BindRequest both binds and validates a request, it assumes that complex things implement a Validatable(strfmt.Registry) error interface
 // for simple values it will use straight method calls.
 //
-// To ensure default values, the struct must have been initialized with NewListEventParams() beforehand.
-func (o *ListEventParams) BindRequest(r *http.Request, route *middleware.MatchedRoute) error {
+// To ensure default values, the struct must have been initialized with NewListEventWithUsersParams() beforehand.
+func (o *ListEventWithUsersParams) BindRequest(r *http.Request, route *middleware.MatchedRoute) error {
 	var res []error
 
 	o.HTTPRequest = r
@@ -68,7 +68,7 @@ func (o *ListEventParams) BindRequest(r *http.Request, route *middleware.Matched
 }
 
 // bindEnd binds and validates parameter End from query.
-func (o *ListEventParams) bindEnd(rawData []string, hasKey bool, formats strfmt.Registry) error {
+func (o *ListEventWithUsersParams) bindEnd(rawData []string, hasKey bool, formats strfmt.Registry) error {
 	var raw string
 	if len(rawData) > 0 {
 		raw = rawData[len(rawData)-1]
@@ -86,7 +86,7 @@ func (o *ListEventParams) bindEnd(rawData []string, hasKey bool, formats strfmt.
 }
 
 // bindStart binds and validates parameter Start from query.
-func (o *ListEventParams) bindStart(rawData []string, hasKey bool, formats strfmt.Registry) error {
+func (o *ListEventWithUsersParams) bindStart(rawData []string, hasKey bool, formats strfmt.Registry) error {
 	var raw string
 	if len(rawData) > 0 {
 		raw = rawData[len(rawData)-1]

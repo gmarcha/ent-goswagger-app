@@ -9,11 +9,18 @@ import (
 	"errors"
 	"net/url"
 	golangswaggerpaths "path"
+
+	"github.com/go-openapi/swag"
 )
 
 // CreateEventURL generates an URL for the create event operation
 type CreateEventURL struct {
+	RepeatCount *int64
+	RepeatType  *string
+
 	_basePath string
+	// avoid unkeyed usage
+	_ struct{}
 }
 
 // WithBasePath sets the base path for this url builder, only required when it's different from the
@@ -42,6 +49,26 @@ func (o *CreateEventURL) Build() (*url.URL, error) {
 		_basePath = "/v2"
 	}
 	_result.Path = golangswaggerpaths.Join(_basePath, _path)
+
+	qs := make(url.Values)
+
+	var repeatCountQ string
+	if o.RepeatCount != nil {
+		repeatCountQ = swag.FormatInt64(*o.RepeatCount)
+	}
+	if repeatCountQ != "" {
+		qs.Set("repeatCount", repeatCountQ)
+	}
+
+	var repeatTypeQ string
+	if o.RepeatType != nil {
+		repeatTypeQ = *o.RepeatType
+	}
+	if repeatTypeQ != "" {
+		qs.Set("repeatType", repeatTypeQ)
+	}
+
+	_result.RawQuery = qs.Encode()
 
 	return &_result, nil
 }
