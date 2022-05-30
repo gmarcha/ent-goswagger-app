@@ -60,7 +60,7 @@ services:
     ports: []
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.goswagger.rule=Host(`tutor.localhost`) && PathPrefix(`/api/`)"
+      - "traefik.http.routers.goswagger.rule=Host(`tutor.localhost:8080`) && PathPrefix(`/api/`)"
       - "traefik.http.services.goswagger.loadbalancer.server.port=5000"
       - "traefik.http.middlewares.pathstrip.stripprefix.prefixes=/api"
       - "traefik.http.routers.goswagger.middlewares=pathstrip@docker"
@@ -87,7 +87,7 @@ services:
       API_CALLBACK_URL: ${API_CALLBACK_URL}
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.client.rule=Host(`tutor.localhost`)"
+      - "traefik.http.routers.client.rule=Host(`tutor.localhost:8080`)"
       - "traefik.http.services.client.loadbalancer.server.port=3000"
       - "traefik.http.routers.client.entrypoints=websecure"
       - "traefik.http.routers.client.tls=true"
