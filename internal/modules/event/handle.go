@@ -19,7 +19,7 @@ func (e *listEvent) Handle(params event.ListEventParams, principal *models.Princ
 	ctx := context.Background()
 	res, err := e.event.ListEvent(ctx, params.Start, params.End)
 	if err != nil {
-		event.NewListEventInternalServerError().WithPayload(u.Err(500, err))
+		return event.NewListEventInternalServerError().WithPayload(u.Err(500, err))
 	}
 	return event.NewListEventOK().WithPayload(res)
 }
@@ -32,7 +32,7 @@ func (e *listEventWithUsers) Handle(params event.ListEventWithUsersParams, princ
 	ctx := context.Background()
 	res, err := e.event.ListEventWithUsers(ctx, params.Start, params.End)
 	if err != nil {
-		event.NewListEventWithUsersInternalServerError().WithPayload(u.Err(500, err))
+		return event.NewListEventWithUsersInternalServerError().WithPayload(u.Err(500, err))
 	}
 	return event.NewListEventWithUsersOK().WithPayload(res)
 }
