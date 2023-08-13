@@ -1,5 +1,6 @@
  ent-goswagger-app git:(main) ✗ tree
 .
+├── LICENSE
 ├── Makefile
 ├── README.md
 ├── assets
@@ -2613,4 +2614,4 @@
     │       └── yamlprivateh.go
     └── modules.txt
 
-372 directories, 2240 files
+372 directories, 2241 files
